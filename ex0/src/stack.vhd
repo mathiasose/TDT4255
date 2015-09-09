@@ -19,11 +19,34 @@ entity stack is
 end entity stack;
 
 architecture behavioural of stack is
-
+	type ramType is array(0 to size - 1) of std_logic_vector(7 downto 0);
+	signal ram : ramType;
+	signal address : std_logic_vector(7 downto 0);
   -- Fill in type and signal declarations here.
 
 begin  -- architecture behavioural
-
+		process (clk, rst) is
+			begin
+				if rst = '1' then
+					address <= (others => '0');
+					top <= (others => '0');
+					ram(to_integer(unsigned(address))) <= (others => '0');
+				else
+					if rising_edge(clk) then
+						top <= ram(to_integer(unsigned(address)));
+					elsif falling_edge(clk) then
+						if push = '1' then
+							address <= std_logic_vector(unsigned(address) + 1);
+							ram(to_integer(unsigned(address)) + 1) <= value_in;
+						elsif pop = '1' then
+							if unsigned(address) = 0 then
+								-- i'm emitting zero.
+							else
+								address <= std_logic_vector(unsigned(address) - 1);
+							end if;
+						end if;
+					end if;
+				end if;
+			end process;
   -- Fill in processes here.
-
 end architecture behavioural;
