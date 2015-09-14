@@ -19,32 +19,29 @@ entity stack is
 end entity stack;
 
 architecture behavioural of stack is
-	type ramType is array(0 to size - 1) of std_logic_vector(7 downto 0);
+	type ramType is array(size downto 0) of operand_t;
 	signal ram : ramType;
-	signal address : std_logic_vector(7 downto 0) := (others => '0');
+	signal stack_pointer : integer := 0;
 
 begin  -- architecture behavioural
-		process (clk, rst) is
-			begin
-				if rst = '1' then
-					address <= (others => '0');
-					top <= (others => '0');
-					ram(0) <= (others => '0');
-				else
-					if rising_edge(clk) then
-						top <= ram(to_integer(unsigned(address)));
-					elsif falling_edge(clk) then
-						if push = '1' then
-							address <= std_logic_vector(unsigned(address) + 1);
-							ram(to_integer(unsigned(address)) + 1) <= value_in;
-						elsif pop = '1' then
-							if unsigned(address) = 0 then
-								-- i'm emitting zero.
-							else
-								address <= std_logic_vector(unsigned(address) - 1);
-							end if;
-						end if;
-					end if;
-				end if;
-			end process;
+    process (clk, rst) is
+    begin
+        if rst = '1' then
+            stack_pointer <= 0;
+            ram(0) <= (others => '0');
+        elsif rising_edge(clk) then
+            if push = '1' then
+                stack_pointer <= stack_pointer + 1;
+                ram(stack_pointer + 1) <= value_in;
+            elsif pop = '1' then
+                if stack_pointer = 0 then
+                    -- i'm emitting zero.
+                else
+                    stack_pointer <=stack_pointer - 1;
+                end if;
+            end if;
+        end if;
+    end process;
+
+    top <= ram(stack_pointer);
 end architecture behavioural;
