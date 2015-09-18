@@ -31,9 +31,11 @@
 *.twr
 *.twx
 *.txt
+*.ucf
 *.unroutes
 *.ut
 *.wdb
+*.xco
 *.xise
 *.xml
 *.xpi

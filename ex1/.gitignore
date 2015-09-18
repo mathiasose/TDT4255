@@ -1,0 +1,9 @@
+_ngo/
+_xmsgs/
+iseconfig/
+isim/
+stack.spl
+testbench/
+uart/
+xlnx_auto_0_xdb/
+xst/
