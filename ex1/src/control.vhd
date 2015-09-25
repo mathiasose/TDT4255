@@ -4,10 +4,7 @@ use IEEE.NUMERIC_STD.ALL;
 use defs.all;
 
 entity control is
-	type (STALL, FETCH, EXECUTE, LOAD_STORE) is state_t;
-	type (ADD, SUB, SLT, ALU_AND, ALU_OR) is alu_t;
-	signal state, next_state: state_t;
-	port(
+		port(
 		clk : in std_logic;
 		reset : in std_logic;	
 		instruction : in instruction_t;
@@ -23,7 +20,8 @@ entity control is
 end control;
 
 architecture Behavioral of control is
-	signal opcode : std_logic_vector(5 downto 0);
+	signal opcode : opcode_t;
+	signal state, next_state: state_t;
 begin
 	opcode <= instruction(31 downto 26);
 	with state select
@@ -47,6 +45,7 @@ begin
 		-- Non default outputs
 		case state is
 			when EXECUTE =>
+				
 		end case;
 	end process DrivingOutputs;
 	
