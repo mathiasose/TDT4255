@@ -1,0 +1,116 @@
+\usepackage[margin=1in]{geometry}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{listings} % Allows code-listings
+\usepackage{wrapfig}
+\usepackage{courier} % proper monospace font for code
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{epstopdf}
+\usepackage{hyperref} %linking fra content  table
+\usepackage{xstring} %string-manipulation
+\usepackage{enumitem} %used for enumerate-manipulation
+\usepackage{float} %used to properly place float-objects (figures)
+\usepackage[T1]{fontenc}
+\usepackage{titlesec, blindtext, color}
+%\usepackage[norsk]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\usepackage{ulem} %used for strikeout
+\usepackage{verbatim} %used for block-commenting
+\usepackage[toc,page]{appendix}
+\usepackage{url}
+\usepackage{amsmath}
+
+\definecolor{gray75}{gray}{0.75}
+\definecolor{gray1}{gray}{0.97}
+\definecolor{gray2}{gray}{0.90}
+\definecolor{gray3}{gray}{0.80}
+\definecolor{gray4}{gray}{0.63}
+
+\lstset{
+    basicstyle=\footnotesize\ttfamily, % Standardschrift
+    %numbers=left,               % Ort der Zeilennummern
+    numberstyle=\tiny,          % Stil der Zeilennummern
+    %stepnumber=2,               % Abstand zwischen den Zeilennummern
+    numbersep=5pt,              % Abstand der Nummern zum Text
+    tabsize=2,                  % Groesse von Tabs
+    extendedchars=true,         %
+    breaklines=true,            % Zeilen werden Umgebrochen
+    keywordstyle=\color{red},
+    frame=b,         
+ %  keywordstyle=[1]\textbf,    % Stil der Keywords
+ %  keywordstyle=[2]\textbf,    %
+ %  keywordstyle=[3]\textbf,    %
+ %  keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+ %  stringstyle=\color{white}\ttfamily, % Farbe der String
+    showspaces=false,           % Leerzeichen anzeigen ?
+    showtabs=false,             % Tabs anzeigen ?
+    xleftmargin=17pt,
+    framexleftmargin=17pt,
+    framexrightmargin=5pt,
+    framexbottommargin=4pt,
+    %backgroundcolor=\color{lightgray},
+    showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+}
+
+%\DeclareCaptionFont{blue}{\color{blue}} 
+
+%\captionsetup[lstlisting]{singlelinecheck=false, labelfont={blue}, textfont={blue}}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+
+\newcommand{\hsp}{\hspace{20pt}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+
+
+\newcommand{\img}[2]{ %images with borders
+	\begin{figure}[H]
+	\centering
+	\fcolorbox{black}{black}{\includegraphics[width=14cm]{img/#1}}
+	\caption[#2]{#2}
+	\end{figure}
+}
+
+\newcommand{\imgC}[3]{ %images with borders and custom parameters
+	\begin{figure}[H]
+	\centering
+	\fcolorbox{black}{black}{\includegraphics[#2]{img/#1}}
+	\caption[#3]{#3}
+	\end{figure}
+}
+
+
+\newcommand{\liste}[1]{\begin{enumerate}[label=\textbf{#1:\arabic*}]}
+\newcommand{\inn}{\begin{enumerate}[label*=\textbf{.\arabic*}]}
+\newcommand{\ut}{\end{enumerate}}
+
+
+\newcommand{\refer}[5]{\bibitem {#1} #2. "#3" \textit{#4} (#5).}
+
+%\newcommand{\labs}{\label{sec:utdypning}}
+%\newcommand{\labl}[1]{\label{itm:#1}}
+%\newcommand{\refs}{(se side~\pageref{sec:utdypning})}
+%\newcommand{\refl}[1]{\ref{itm:#1} - }
+
+
+%\parindent=5pt
+%\baselineskip=0pt
+%\parskip=0pt
+
+\hypersetup{ %Brukes for � fjerne farger fra linker i content table
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{|}\hsp}{0pt}{\Huge\bfseries}
+
+
