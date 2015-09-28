@@ -19,6 +19,7 @@ package body testutil is
       error_msg : in string) is
     begin  -- procedure check
       assert condition report error_msg severity failure;
+      report "TEST SUCCESS: " & error_msg;
     end procedure check;
 
 end package body testutil;
