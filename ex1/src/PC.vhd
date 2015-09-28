@@ -28,7 +28,11 @@ begin
 			if jump = '1' then
                 pc <= jump_addr;
             else
-                pc <= STD_LOGIC_VECTOR(unsigned(pc) + 1);
+                if branch = '1' and alu_zero = '1' then
+                    pc <= STD_LOGIC_VECTOR(signed(pc) + signed(instr_in(15 downto 0)));
+                else
+                    pc <= STD_LOGIC_VECTOR(signed(pc) + 1);
+                end if;
             end if;
 		end if;
 	end process;
