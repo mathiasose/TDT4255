@@ -66,6 +66,13 @@ BEGIN
       wait for clk_period;
       check(addr_out = x"00000001", "PC should increment by 1");
 
+      wait for clk_period;
+      instr_in <= X"08000013"; --j 19
+      jump <= '1';
+      wait for clk_period;
+      jump <= '0';
+      check(addr_out = x"00000013", "PC should have jumped to 19");
+
       report "Test success";
       wait;
    end process;

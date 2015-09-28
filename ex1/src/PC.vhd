@@ -26,14 +26,14 @@ begin
 			pc <= (others => '0');
 		elsif rising_edge(clk) then
 			if jump = '1' then
-                --pc <= jump_addr;
+                pc <= jump_addr;
             else
                 pc <= STD_LOGIC_VECTOR(unsigned(pc) + 1);
             end if;
 		end if;
 	end process;
     
-    --jump_addr <= pc(31 downto 26) & instr_in(25 downto 0);
+    jump_addr <= pc(31 downto 26) & instr_in(25 downto 0);
     addr_out <= pc;
 end Behavioral;
 
