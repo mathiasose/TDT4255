@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use defs.all;
+use work.defs.all;
 
 entity control is
 		port(
@@ -40,7 +40,7 @@ begin
 		Branch <= '0';
 		MemRead <= '0';
 		MemtoReg <= '0';
-		AluOp <= (others => '0');
+		AluOp <= NO_OP;
 		MemWrite <= '0';
 		AluSrc <= '0';
 		RegWrite <= '0';
@@ -59,6 +59,7 @@ begin
 						AluOp <= SLT;
 					when "100101" =>
 						AluOp <= ALU_OR;
+					when others => AluOp <= NO_OP;
 				end case;
 		end case;
 		
