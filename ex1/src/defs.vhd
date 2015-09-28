@@ -6,3 +6,4 @@ package defs is
 	type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR);
 	type state_t is (STALL, FETCH, EXECUTE, LOAD_STORE);
 	subtype opcode_t is std_logic_vector(5 downto 0);
+end package defs;

@@ -21,9 +21,12 @@ end control;
 
 architecture Behavioral of control is
 	signal opcode : opcode_t;
+	signal funct : std_logic_vector(5 downto 0);
 	signal state, next_state: state_t;
 begin
 	opcode <= instruction(31 downto 26);
+	opcode <= instruction(5 downto 0);
+	
 	with state select
 	-- State transitions
 	next_state <=
@@ -45,8 +48,20 @@ begin
 		-- Non default outputs
 		case state is
 			when EXECUTE =>
-				
+				case funct is
+					when "100000" =>
+						AluOp <= ADD;
+					when "100010" =>
+						AluOp <= ALU_AND;
+					when "100010" =>
+						AluOp <= SUB;
+					when "101010" =>
+						AluOp <= SLT;
+					when "100101" =>
+						AluOp <= ALU_OR;
+				end case;
 		end case;
+		
 	end process DrivingOutputs;
 	
 	process (clk, reset) is
