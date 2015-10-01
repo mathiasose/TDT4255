@@ -7,4 +7,7 @@ package defs is
 	type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, NO_OP);
 	type state_t is (STALL, FETCH, EXECUTE, LOAD_STORE);
 	subtype opcode_t is std_logic_vector(5 downto 0);
+
+    constant OPERAND_0 : operand_t := x"00000000";
+    constant OPERAND_1 : operand_t := x"00000001";
 end package defs;

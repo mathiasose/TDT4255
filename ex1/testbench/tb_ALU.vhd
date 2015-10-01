@@ -15,8 +15,8 @@ ARCHITECTURE behavior OF tb_ALU IS
     Port (
         clk : in  STD_LOGIC
         ; rst : in  STD_LOGIC
-        ; data_in_1 : in operand_t
-        ; data_in_2 : in operand_t
+        ; operand_A : in operand_t
+        ; operand_B : in operand_t
         ; operation : in alu_operation_t
         ; result : out operand_t
         ; zero : out STD_LOGIC
@@ -27,8 +27,8 @@ ARCHITECTURE behavior OF tb_ALU IS
    --Inputs
    signal clk : std_logic := '0';
    signal rst : std_logic := '0';
-   signal data_in_1 : operand_t := (others => '0');
-   signal data_in_2 : operand_t := (others => '0');
+   signal operand_A : operand_t := (others => '0');
+   signal operand_B : operand_t := (others => '0');
    signal operation :  alu_operation_t := NO_OP;
 
  	--Outputs
@@ -44,8 +44,8 @@ BEGIN
    uut: ALU PORT MAP (
           clk => clk,
           rst => rst,
-          data_in_1 => data_in_1,
-          data_in_2 => data_in_2,
+          operand_A => operand_A,
+          operand_B => operand_B,
           operation => operation,
           result => result,
           zero => zero
@@ -69,17 +69,35 @@ BEGIN
       
       wait for clk_period;
 
-      data_in_1 <= x"00000001";
-      data_in_2 <= x"00000001";
+      operand_A <= OPERAND_1;
+      operand_B <= OPERAND_1;
       operation <= ADD;
       wait for clk_period;
       check(result = x"00000002", "1 + 1 = 2");
       check(zero /= '1', "1 + 1 does not raise zero flag");
-      
+
       operation <= SUB;
       wait for clk_period;
-      check(result = x"00000000", "1 - 1 = 0");
+      check(result = OPERAND_0, "1 - 1 = 0");
       check(zero = '1', "1 - 1 raises zero flag");
+
+      operation <= SLT;
+      wait for clk_period;
+      check(result = OPERAND_0, "SLT 1 1 results in 0");
+
+      operand_A <= OPERAND_0;
+      wait for clk_period;
+      check(result = OPERAND_1, "SLT 0 1 results in 1");
+
+      operand_A <= OPERAND_0;
+      operand_B <= x"FFFFFFFF";
+      operation <= ALU_AND;
+      wait for clk_period;
+      check(result = OPERAND_0, "1 AND 0 = 0");
+
+      operation <= ALU_OR;
+      wait for clk_period;
+      check(result = x"FFFFFFFF", "1 OR 0 = 1");
 
       report "ALL TESTS SUCCESSFUL";
 
