@@ -6,9 +6,9 @@ use work.defs.all;
 entity registers is
     Port ( 
 		clock : in STD_LOGIC;
-		read_register_1 : in  STD_LOGIC_VECTOR (5 downto 0);
-		read_register_2 : in  STD_LOGIC_VECTOR (5 downto 0);
-		write_register : in  STD_LOGIC_VECTOR (5 downto 0);
+		read_register_1 : in register_address_t;
+		read_register_2 : in  register_address_t;
+		write_register : in  register_address_t;
 		write_data : in  STD_LOGIC_VECTOR (31 downto 0);
 		read_data_1 : out  STD_LOGIC_VECTOR (31 downto 0);
 		read_data_2 : out  STD_LOGIC_VECTOR (31 downto 0);
