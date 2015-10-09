@@ -8,13 +8,14 @@ entity control is
         clk : in std_logic;
         reset : in std_logic;
         instruction : in instruction_t;
-        RegDst : out std_logic;
+        ALUOp : out alu_operation_t;
+        ALUSrc : out std_logic;
         Branch : out std_logic;
+        Jump : out std_logic;
         MemRead : out std_logic;
         MemtoReg : out std_logic;
-        ALUOp : out alu_operation_t;
         MemWrite : out std_logic;
-        ALUSrc : out std_logic;
+        RegDst : out std_logic;
         RegWrite : out std_logic
     );
 end control;
@@ -22,10 +23,18 @@ end control;
 architecture Behavioral of control is
     signal opcode : opcode_t;
     signal funct : std_logic_vector(5 downto 0);
+    signal rs : register_address_t;
+    signal rt : register_address_t;
+    signal rd : register_address_t;
+    signal immediate_value : std_logic_vector(15 downto 0);
     signal state, next_state: state_t;
 begin
     opcode <= instruction(31 downto 26);
-    opcode <= instruction(5 downto 0);
+    funct <= instruction(5 downto 0);
+    rs <= instruction(25 downto 21);
+    rs <= instruction(20 downto 16);
+    rd <= instruction(15 downto 11);
+    immediate_value <= instruction(15 downto 0);
 
     with state select
     -- State transitions
@@ -34,11 +43,12 @@ begin
         EXECUTE when FETCH,
         STALL when others;
 
-    DrivingOutputs : process(state) is
+    DrivingOutputs : process(clk, state, opcode) is
     begin
         -- Setting defaults to avoid latches
         RegDst <= '0';
         Branch <= '0';
+        Jump <= '0';
         MemRead <= '0';
         MemtoReg <= '0';
         AluOp <= NO_OP;
@@ -52,19 +62,33 @@ begin
                 case funct is
                     when "100000" =>
                         AluOp <= ADD;
+                        RegWrite <= '1';
                     when "100010" =>
                         AluOp <= SUB;
+                        RegWrite <= '1';
                     when "100100" =>
                         AluOp <= ALU_AND;
+                        RegWrite <= '1';
                     when "100101" =>
                         AluOp <= ALU_OR;
+                        RegWrite <= '1';
                     when "101010" =>
                         AluOp <= SLT;
-                    when others => AluOp <= NO_OP;
+                        RegWrite <= '1';
+                    when others =>
+                        --
                 end case;
             when others => AluOp <= NO_OP;
         end case;
 
+        case opcode is
+            when JUMP_OPCODE =>
+                Jump <= '1';
+            when BEQ_OPCODE =>
+                Branch <= '1';
+            when others =>
+                --
+        end case;
     end process DrivingOutputs;
 
     process (clk, reset) is

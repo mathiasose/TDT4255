@@ -16,13 +16,14 @@ ARCHITECTURE behavior OF tb_control IS
         clk : in std_logic;
         reset : in std_logic;
         instruction : in instruction_t;
-        RegDst : out std_logic;
+        ALUOp : out alu_operation_t;
+        ALUSrc : out std_logic;
         Branch : out std_logic;
+        Jump : out std_logic;
         MemRead : out std_logic;
         MemtoReg : out std_logic;
-        ALUOp : out alu_operation_t;
         MemWrite : out std_logic;
-        ALUSrc : out std_logic;
+        RegDst : out std_logic;
         RegWrite : out std_logic
     );
     END COMPONENT;
@@ -36,6 +37,7 @@ ARCHITECTURE behavior OF tb_control IS
      --Outputs
    signal RegDst : std_logic;
    signal Branch : std_logic;
+   signal Jump : std_logic;
    signal MemRead : std_logic;
    signal MemtoReg : std_logic;
    signal ALUOp : alu_operation_t;
@@ -55,6 +57,7 @@ BEGIN
           instruction => instruction,
           RegDst => RegDst,
           Branch => Branch,
+          Jump => Jump,
           MemRead => MemRead,
           MemtoReg => MemtoReg,
           ALUOp => ALUOp,
@@ -77,11 +80,12 @@ BEGIN
    stim_proc: process
    begin
       -- hold reset state for 100 ns.
-      wait for 100 ns;    
+      wait for clk_period;
 
-      wait for clk_period*10;
-
-      check(1 = 1, "dummy test");
+      instruction <= x"00221820"; --add $3, $1, $2
+      wait for clk_period;
+      check(ALUOP = ADD, "Add instruction sets ALUOp to ADD");
+      check(RegWrite = '1', "Add instruction sets RegWrite high");
 
       report "ALL TESTS SUCCESSFUL";
 
