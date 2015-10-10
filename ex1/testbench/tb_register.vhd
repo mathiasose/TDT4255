@@ -55,7 +55,7 @@ BEGIN
       reset <= '0';
       check(data_out = x"00000000", "Register should default to 0 after reset");
 
-		-- Update register value
+	  -- Update register value
       wait for clk_period;
       enable <= '1';
 		data_in <= x"00001337";
