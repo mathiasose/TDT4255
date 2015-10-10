@@ -27,7 +27,6 @@ ARCHITECTURE behavior OF tb_control IS
         RegWrite : out std_logic
     );
     END COMPONENT;
-    
 
    --Inputs
    signal clk : std_logic := '0';
@@ -87,8 +86,20 @@ BEGIN
       check(ALUOP = ADD, "Add instruction sets ALUOp to ADD");
       check(RegWrite = '1', "Add instruction sets RegWrite high");
 
-      report "ALL TESTS SUCCESSFUL";
+      instruction <= x"08000013"; --j 19
+      wait for clk_period;
+      check(Jump = '1', "Jump instructions sets jump flag high");
 
+      instruction <= x"10000002"; --beq $0, $0, 2
+      wait for clk_period;
+      check(Jump = '0', "Jump flag goes back to low");
+      check(Branch = '1', "Branch instructions sets branch flag high");
+
+      instruction <= x"00000000";
+      wait for clk_period;
+      check(Branch = '0', "Branch flag goes back to low");
+
+      report "ALL TESTS SUCCESSFUL";
       wait;
    end process;
 

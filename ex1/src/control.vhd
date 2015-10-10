@@ -23,9 +23,7 @@ end control;
 architecture Behavioral of control is
     signal opcode : opcode_t;
     signal funct : std_logic_vector(5 downto 0);
-    signal rs : register_address_t;
-    signal rt : register_address_t;
-    signal rd : register_address_t;
+    signal rs, rt, rd : register_address_t;
     signal immediate_value : std_logic_vector(15 downto 0);
     signal state, next_state: state_t;
 begin
