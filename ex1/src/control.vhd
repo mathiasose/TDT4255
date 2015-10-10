@@ -12,7 +12,7 @@ entity control is
         ALUSrc : out std_logic;
         Branch : out std_logic;
         Jump : out std_logic;
-        MemRead : out std_logic;
+        --MemRead : out std_logic;
         MemtoReg : out std_logic;
         MemWrite : out std_logic;
         RegDst : out std_logic;
@@ -23,16 +23,16 @@ end control;
 architecture Behavioral of control is
     signal opcode : opcode_t;
     signal funct : std_logic_vector(5 downto 0);
-    signal rs, rt, rd : register_address_t;
-    signal immediate_value : std_logic_vector(15 downto 0);
+    --signal rs, rt, rd : register_address_t;
+    --signal immediate_value : std_logic_vector(15 downto 0);
     signal state, next_state: state_t;
 begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
-    rs <= instruction(25 downto 21);
-    rt <= instruction(20 downto 16);
-    rd <= instruction(15 downto 11);
-    immediate_value <= instruction(15 downto 0);
+    --rs <= instruction(25 downto 21);
+    --rt <= instruction(20 downto 16);
+    --rd <= instruction(15 downto 11);
+    --immediate_value <= instruction(15 downto 0);
 
     DrivingOutputs : process(clk, state, opcode) is
     begin
@@ -40,7 +40,7 @@ begin
         RegDst <= '0';
         Branch <= '0';
         Jump <= '0';
-        MemRead <= '0';
+        --MemRead <= '0';
         MemtoReg <= '0';
         AluOp <= NO_OP;
         MemWrite <= '0';
