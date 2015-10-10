@@ -1,4 +1,4 @@
-LIBRARY ieee;
+    LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 use work.defs.all;
@@ -73,31 +73,71 @@ BEGIN
         clk <= '1';
         wait for clk_period/2;
    end process;
- 
+
 
    -- Stimulus process
    stim_proc: process
    begin
       -- hold reset state for 100 ns.
-      wait for clk_period;
+      -- resets to state STALL
 
+      wait for clk_period; -- go to fetch
       instruction <= x"00221820"; --add $3, $1, $2
-      wait for clk_period;
-      check(ALUOP = ADD, "Add instruction sets ALUOp to ADD");
-      check(RegWrite = '1', "Add instruction sets RegWrite high");
+      wait for clk_period; -- go to execute
+      check(ALUOP = ADD, "ADD instruction sets ALUOp to ADD");
+      check(RegWrite = '1', "ADD instruction sets RegWrite high");
 
+      wait for clk_period; -- go to fetch
+      instruction <= x"00622022"; --sub $4, $3, $2
+      wait for clk_period; -- go to execute
+      check(ALUOP = SUB, "SUB instruction sets ALUOp to SUB");
+      check(RegWrite = '1', "SUB instruction sets RegWrite high");
+
+      wait for clk_period; -- go to fetch
+      instruction <= x"00432024"; --and $4, $2, $3
+      wait for clk_period; -- go to execute
+      check(ALUOP = ALU_AND, "AND instruction sets ALUOp to AND");
+      check(RegWrite = '1', "AND instruction sets RegWrite high");
+
+      wait for clk_period; -- go to fetch
+      instruction <= x"00432825"; --or $5, $2, $3
+      wait for clk_period; -- go to execute
+      check(ALUOP = ALU_OR, "OR instruction sets ALUOp to OR");
+      check(RegWrite = '1', "OR instruction sets RegWrite high");
+
+      wait for clk_period; -- go to fetch
+      instruction <= x"0001982A"; --slt $19, $0, $1
+      wait for clk_period; -- go to execute
+      check(ALUOP = SLT, "SLT instruction sets ALUOp to SLT");
+      check(RegWrite = '1', "SLT instruction sets RegWrite high");
+
+      wait for clk_period; -- go to fetch
       instruction <= x"08000013"; --j 19
-      wait for clk_period;
+      wait for clk_period; -- go to execute
       check(Jump = '1', "Jump instructions sets jump flag high");
 
+      wait for clk_period; -- go to fetch
       instruction <= x"10000002"; --beq $0, $0, 2
-      wait for clk_period;
+      wait for clk_period; -- go to execute
       check(Jump = '0', "Jump flag goes back to low");
       check(Branch = '1', "Branch instructions sets branch flag high");
 
+      wait for clk_period; -- go to fetch
       instruction <= x"00000000";
-      wait for clk_period;
+      wait for clk_period; -- go to execute
       check(Branch = '0', "Branch flag goes back to low");
+
+      wait for clk_period; -- go to fetch
+      instruction <= x"8C010001"; --lw $1, 1($0)
+      wait for clk_period; -- go to execute
+      wait for clk_period; -- go to stall
+      check(MemtoReg = '1', "LW instruction sets MemtoReg high in STALL state");
+
+      wait for clk_period; -- go to fetch
+      instruction <= x"AC030005"; --sw $3, 5($0)
+      wait for clk_period; -- go to execute
+      check(MemWrite = '1', "SW instruction sets MemWrite high in EXECUTE state");
+      wait for clk_period; -- go to stall
 
       report "ALL TESTS SUCCESSFUL";
       wait;

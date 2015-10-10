@@ -30,16 +30,9 @@ begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
     rs <= instruction(25 downto 21);
-    rs <= instruction(20 downto 16);
+    rt <= instruction(20 downto 16);
     rd <= instruction(15 downto 11);
     immediate_value <= instruction(15 downto 0);
-
-    with state select
-    -- State transitions
-    next_state <=
-        FETCH when STALL,
-        EXECUTE when FETCH,
-        STALL when others;
 
     DrivingOutputs : process(clk, state, opcode) is
     begin
@@ -56,34 +49,78 @@ begin
 
         -- Non default outputs
         case state is
-            when EXECUTE =>
-                case funct is
-                    when "100000" =>
-                        AluOp <= ADD;
-                        RegWrite <= '1';
-                    when "100010" =>
-                        AluOp <= SUB;
-                        RegWrite <= '1';
-                    when "100100" =>
-                        AluOp <= ALU_AND;
-                        RegWrite <= '1';
-                    when "100101" =>
-                        AluOp <= ALU_OR;
-                        RegWrite <= '1';
-                    when "101010" =>
-                        AluOp <= SLT;
-                        RegWrite <= '1';
+            when STALL =>
+                next_state <= FETCH;
+                case opcode is
+                    when ALU_OP_OPCODE =>
+                        --
+                    when JUMP_OPCODE =>
+                        --
+                    when BEQ_OPCODE =>
+                        --
+                    when LW_OPCODE =>
+                        MemtoReg <= '1';
+                    when SW_OPCODE =>
+                        --
+                    when LUI_OPCODE =>
+                        --
                     when others =>
                         --
                 end case;
-            when others => AluOp <= NO_OP;
-        end case;
-
-        case opcode is
-            when JUMP_OPCODE =>
-                Jump <= '1';
-            when BEQ_OPCODE =>
-                Branch <= '1';
+            when FETCH =>
+                next_state <= EXECUTE;
+                case opcode is
+                    when ALU_OP_OPCODE =>
+                        --
+                    when JUMP_OPCODE =>
+                        --
+                    when BEQ_OPCODE =>
+                        AluSrc <= '1';
+                    when LW_OPCODE =>
+                        AluSrc <= '1';
+                    when SW_OPCODE =>
+                        AluSrc <= '1';
+                    when LUI_OPCODE =>
+                        ALUSrc <= '1';
+                    when others =>
+                        --
+                end case;
+            when EXECUTE =>
+                case opcode is
+                    when ALU_OP_OPCODE =>
+                        next_state <= FETCH;
+                        RegWrite <= '1';
+                        RegDst <= '1';
+                        case funct is
+                            when "100000" =>
+                                AluOp <= ADD;
+                            when "100010" =>
+                                AluOp <= SUB;
+                            when "100100" =>
+                                AluOp <= ALU_AND;
+                            when "100101" =>
+                                AluOp <= ALU_OR;
+                            when "101010" =>
+                                AluOp <= SLT;
+                            when others =>
+                                AluOp <= NO_OP;
+                        end case;
+                    when JUMP_OPCODE =>
+                        next_state <= FETCH;
+                        Jump <= '1';
+                    when BEQ_OPCODE =>
+                        next_state <= FETCH;
+                        Branch <= '1';
+                    when LW_OPCODE =>
+                        next_state <= STALL;
+                    when SW_OPCODE =>
+                        MemWrite <= '1';
+                        next_state <= STALL;
+                    when LUI_OPCODE =>
+                        next_state <= FETCH;
+                    when others =>
+                        next_state <= FETCH;
+                end case;
             when others =>
                 --
         end case;

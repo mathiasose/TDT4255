@@ -12,6 +12,10 @@ package defs is
     constant OPERAND_0 : operand_t := x"00000000";
     constant OPERAND_1 : operand_t := x"00000001";
 
-    constant JUMP_OPCODE : std_logic_vector(5 downto 0) := "000010";
-    constant BEQ_OPCODE : std_logic_vector(5 downto 0) := "000100";
+    constant ALU_OP_OPCODE : opcode_t := "000000";
+    constant JUMP_OPCODE : opcode_t := "000010";
+    constant BEQ_OPCODE : opcode_t := "000100";
+    constant LW_OPCODE : opcode_t := "100011";
+    constant SW_OPCODE : opcode_t := "101011";
+    constant LUI_OPCODE : opcode_t := "001111";
 end package defs;
