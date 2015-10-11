@@ -4,9 +4,13 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity ALU is
+    generic (
+        ADDR_WIDTH : integer := 8;
+        DATA_WIDTH : integer := 32
+    );
     Port (
-        clk : in  STD_LOGIC
-        ; rst : in  STD_LOGIC
+        clock : in  STD_LOGIC
+        ; reset : in  STD_LOGIC
         ; operand_A : in operand_t := OPERAND_0
         ; operand_B : in operand_t := OPERAND_0
         ; operation : in alu_operation_t := NO_OP
@@ -19,11 +23,11 @@ architecture Behavioral of ALU is
     signal alu_result : operand_t;
 begin
 
-    process(clk, rst)
+    process(clock, reset)
 	begin
-		if rst = '1' then
+		if reset = '1' then
 
-		elsif rising_edge(clk) then
+		elsif rising_edge(clock) then
 			if operation = ADD then
                 alu_result <= operand_t(signed(operand_A) + signed(operand_B));
 			elsif operation = SUB then

@@ -6,7 +6,6 @@
 -- MIPSProcessor.vhd
 -- The MIPS processor component to be used in Exercise 1 and 2.
 
--- TODO replace the architecture DummyArch with a working Behavioral
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -19,32 +18,39 @@ entity MIPSProcessor is
         DATA_WIDTH : integer := 32
     );
     port (
-        clk, reset                 : in std_logic;
-        processor_enable        : in std_logic;
-        imem_data_in            : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        imem_address            : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-        dmem_data_in            : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        dmem_address            : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-        dmem_data_out            : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        dmem_write_enable        : out std_logic
+        clock, reset : in std_logic;
+        processor_enable : in std_logic;
+        imem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        imem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0);
+        dmem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        dmem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0);
+        dmem_data_out : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        dmem_write_enable : out std_logic
     );
 end entity MIPSProcessor;
 
-architecture NotSoDummyArch of MIPSProcessor is
-    signal ALUOp : alu_operation_t;
-    signal ALUSrc : std_logic;
-    signal Branch : std_logic;
-    signal Jump : std_logic;
-    signal MemtoReg : std_logic;
-    signal RegDst : std_logic;
-    signal RegWrite : std_logic;
+architecture Behavioral of MIPSProcessor is
+    signal alu_op : alu_operation_t;
+    signal alu_src : std_logic;
+    signal branch : std_logic;
+    signal jump : std_logic;
+    signal mem_to_reg : std_logic;
+    signal reg_dst : std_logic;
+    signal reg_write : std_logic;
+    signal alu_zero : std_logic;
+    signal reg_out_a : operand_t;
+    signal reg_out_b : operand_t;
+    signal operand_b : operand_t;
+    signal alu_result : operand_t;
+    signal write_register : register_address_t;
+    signal write_data : operand_t;
 begin
 
-    process(clk, reset)
+    process(clock, reset)
     begin
         if reset = '1' then
 
-        elsif rising_edge(clk) then
+        elsif rising_edge(clock) then
             if processor_enable = '1' then
 
             end if;
@@ -53,19 +59,55 @@ begin
 
     control : entity work.control
     port map(
-        clk => clk,
+        clock => clock,
         reset => reset,
         instruction => imem_data_in,
-        ALUOp => ALUOp,
-        ALUSrc => ALUSrc,
-        Branch => Branch,
-        Jump => Jump,
-        --MemRead => MemRead,
-        MemtoReg => MemtoReg,
-        MemWrite => dmem_write_enable,
-        RegDst => RegDst,
-        RegWrite => RegWrite
+        alu_op => alu_op,
+        alu_src => alu_src,
+        branch => branch,
+        jump => jump,
+        --mem_read => mem_read,
+        mem_to_reg => mem_to_reg,
+        mem_write => dmem_write_enable,
+        reg_dst => reg_dst,
+        reg_write => reg_write
     );
 
-end NotSoDummyArch;
+    operand_b <= operand_t(resize(signed(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
+    alu : entity work.alu
+    port map (
+        clock => clock,
+        reset => reset,
+        operation => alu_op,
+        operand_A => reg_out_a,
+        operand_B => operand_b,
+        result => alu_result
+    );
+
+    pc : entity work.pc
+    port map (
+        clock => clock,
+        reset => reset,
+        instr_in => imem_data_in,
+        jump => jump,
+        branch => branch,
+        alu_zero => alu_zero,
+        addr_out => imem_address
+    );
+
+    write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);
+    write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
+    registers : entity work.registers
+    port map (
+        clock => clock,
+        read_register_1 => imem_data_in(25 downto 21),
+        read_register_2 => imem_data_in(20 downto 16),
+        write_register => write_register,
+        write_data => write_data,
+        read_data_1 => reg_out_a,
+        read_data_2 => reg_out_b,
+        register_write => reg_write
+    );
+
+end Behavioral;
 

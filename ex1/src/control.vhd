@@ -4,19 +4,23 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity control is
+    generic (
+        ADDR_WIDTH : integer := 8;
+        DATA_WIDTH : integer := 32
+    );
     port(
-        clk : in std_logic;
+        clock : in std_logic;
         reset : in std_logic;
         instruction : in instruction_t;
-        ALUOp : out alu_operation_t;
-        ALUSrc : out std_logic;
-        Branch : out std_logic;
-        Jump : out std_logic;
-        --MemRead : out std_logic;
-        MemtoReg : out std_logic;
-        MemWrite : out std_logic;
-        RegDst : out std_logic;
-        RegWrite : out std_logic
+        alu_op : out alu_operation_t;
+        alu_src : out std_logic;
+        branch : out std_logic;
+        jump : out std_logic;
+        --mem_read : out std_logic;
+        mem_to_reg : out std_logic;
+        mem_write : out std_logic;
+        reg_dst : out std_logic;
+        reg_write : out std_logic
     );
 end control;
 
@@ -34,18 +38,18 @@ begin
     --rd <= instruction(15 downto 11);
     --immediate_value <= instruction(15 downto 0);
 
-    DrivingOutputs : process(clk, state, opcode) is
+    DrivingOutputs : process(clock, state, opcode) is
     begin
         -- Setting defaults to avoid latches
-        RegDst <= '0';
-        Branch <= '0';
-        Jump <= '0';
-        --MemRead <= '0';
-        MemtoReg <= '0';
-        AluOp <= NO_OP;
-        MemWrite <= '0';
-        AluSrc <= '0';
-        RegWrite <= '0';
+        reg_dst <= '0';
+        branch <= '0';
+        jump <= '0';
+        --mem_read <= '0';
+        mem_to_reg <= '0';
+        alu_op <= NO_OP;
+        mem_write <= '0';
+        alu_src <= '0';
+        reg_write <= '0';
 
         -- Non default outputs
         case state is
@@ -54,12 +58,12 @@ begin
                 case opcode is
                     when ALU_OP_OPCODE =>
                         --
-                    when JUMP_OPCODE =>
+                    when jump_OPCODE =>
                         --
                     when BEQ_OPCODE =>
                         --
                     when LW_OPCODE =>
-                        MemtoReg <= '1';
+                        mem_to_reg <= '1';
                     when SW_OPCODE =>
                         --
                     when LUI_OPCODE =>
@@ -72,16 +76,16 @@ begin
                 case opcode is
                     when ALU_OP_OPCODE =>
                         --
-                    when JUMP_OPCODE =>
+                    when jump_OPCODE =>
                         --
                     when BEQ_OPCODE =>
-                        AluSrc <= '1';
+                        alu_src <= '1';
                     when LW_OPCODE =>
-                        AluSrc <= '1';
+                        alu_src <= '1';
                     when SW_OPCODE =>
-                        AluSrc <= '1';
+                        alu_src <= '1';
                     when LUI_OPCODE =>
-                        ALUSrc <= '1';
+                        alu_src <= '1';
                     when others =>
                         --
                 end case;
@@ -89,32 +93,32 @@ begin
                 case opcode is
                     when ALU_OP_OPCODE =>
                         next_state <= FETCH;
-                        RegWrite <= '1';
-                        RegDst <= '1';
+                        reg_write <= '1';
+                        reg_dst <= '1';
                         case funct is
                             when "100000" =>
-                                AluOp <= ADD;
+                                alu_op <= ADD;
                             when "100010" =>
-                                AluOp <= SUB;
+                                alu_op <= SUB;
                             when "100100" =>
-                                AluOp <= ALU_AND;
+                                alu_op <= ALU_AND;
                             when "100101" =>
-                                AluOp <= ALU_OR;
+                                alu_op <= ALU_OR;
                             when "101010" =>
-                                AluOp <= SLT;
+                                alu_op <= SLT;
                             when others =>
-                                AluOp <= NO_OP;
+                                alu_op <= NO_OP;
                         end case;
-                    when JUMP_OPCODE =>
+                    when jump_OPCODE =>
                         next_state <= FETCH;
-                        Jump <= '1';
+                        jump <= '1';
                     when BEQ_OPCODE =>
                         next_state <= FETCH;
-                        Branch <= '1';
+                        branch <= '1';
                     when LW_OPCODE =>
                         next_state <= STALL;
                     when SW_OPCODE =>
-                        MemWrite <= '1';
+                        mem_write <= '1';
                         next_state <= STALL;
                     when LUI_OPCODE =>
                         next_state <= FETCH;
@@ -126,11 +130,11 @@ begin
         end case;
     end process DrivingOutputs;
 
-    process (clk, reset) is
+    process (clock, reset) is
     begin
         if reset = '1' then
             state <= STALL;
-        elsif rising_edge(clk) then
+        elsif rising_edge(clock) then
             state <= next_state;
         end if;
     end process;

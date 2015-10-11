@@ -4,6 +4,10 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity registers is
+    generic (
+        ADDR_WIDTH : integer := 8;
+        DATA_WIDTH : integer := 32
+    );
     Port ( 
         clock : in STD_LOGIC;
         read_register_1 : in register_address_t;
@@ -12,7 +16,8 @@ entity registers is
         write_data : in  STD_LOGIC_VECTOR (31 downto 0);
         read_data_1 : out  STD_LOGIC_VECTOR (31 downto 0);
         read_data_2 : out  STD_LOGIC_VECTOR (31 downto 0);
-        register_write : in  STD_LOGIC);
+        register_write : in  STD_LOGIC
+        );
 end registers;
 
 architecture Behavioral of registers is

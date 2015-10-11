@@ -21,7 +21,7 @@ ARCHITECTURE behavior OF tb_MIPSProcessor IS
 	constant DATA_WIDTH : integer := 32;
 	
 	--Inputs
-   signal clk : std_logic := '0';
+   signal clock : std_logic := '0';
    signal reset : std_logic := '0';
    signal processor_enable : std_logic := '0';
    signal imem_data_in : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
@@ -48,11 +48,11 @@ ARCHITECTURE behavior OF tb_MIPSProcessor IS
 	signal tb_dmem_address : std_logic_vector(ADDR_WIDTH-1 downto 0) := (others => '0');
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns; 
+   constant clock_period : time := 10 ns;
 BEGIN
 -- Instantiate the processor
 Processor: entity work.MIPSProcessor(Behavioral) port map (
-						clk => clk,	reset => reset,
+						clock => clock,	reset => reset,
 						processor_enable => processor_enable,
 						imem_data_in => imem_data_in,
 						imem_address => proc_imem_address,
@@ -64,7 +64,7 @@ Processor: entity work.MIPSProcessor(Behavioral) port map (
 		  
 -- instantiate the instruction memory
 InstrMem:		entity work.DualPortMem port map (
-						clka => clk, clkb => clk,
+						clka => clock, clkb => clock,
 						wea => imem_write_enable, 
 						dina => imem_data_out,
 						addra => imem_address, douta => imem_data_in,
@@ -74,7 +74,7 @@ InstrMem:		entity work.DualPortMem port map (
  
  -- instantiate the data memory
 DataMem:			entity work.DualPortMem port map (
-						clka => clk, clkb => clk,
+						clka => clock, clkb => clock,
 						wea => dmem_write_enable, dina => dmem_data_out,
 						addra => dmem_address, douta => dmem_data_in,
 						-- plug unused memory port
@@ -82,12 +82,12 @@ DataMem:			entity work.DualPortMem port map (
 					);		  
 
    -- Clock process definitions
-   clk_process :process
+   clock_process :process
    begin
-		clk <= '0';
-		wait for clk_period/2;
-		clk <= '1';
-		wait for clk_period/2;
+		clock <= '0';
+		wait for clock_period/2;
+		clock <= '1';
+		wait for clock_period/2;
    end process;
 	
 	imem_address <= proc_imem_address when processor_enable = '1' else tb_imem_address;
@@ -106,7 +106,7 @@ DataMem:			entity work.DualPortMem port map (
 			tb_imem_address <= std_logic_vector(address);
 			imem_data_out <= instruction;
 			imem_write_enable <= "1";
-			wait until rising_edge(clk);
+			wait until rising_edge(clock);
 			imem_write_enable <= "0";
 		end WriteInstructionWord;
 		
@@ -159,7 +159,7 @@ DataMem:			entity work.DualPortMem port map (
 			tb_dmem_address <= std_logic_vector(to_unsigned(address, ADDR_WIDTH));
 			tb_dmem_data_out <= data;
 			tb_dmem_write_enable <= "1";
-			wait until rising_edge(clk);
+			wait until rising_edge(clock);
 			tb_dmem_write_enable <= "0";
 		end WriteDataWord;
 		
@@ -178,8 +178,8 @@ DataMem:			entity work.DualPortMem port map (
 			
 			tb_dmem_address <= std_logic_vector(to_unsigned(address, ADDR_WIDTH));
 			tb_dmem_write_enable <= "0";
-			wait until rising_edge(clk);
-			wait for 0.5 * clk_period;
+			wait until rising_edge(clock);
+			wait for 0.5 * clock_period;
 			assert data = dmem_data_in report "Expected data not found at datamem addr " 
 													& integer'image(address) & " found = " 
 													& integer'image(to_integer(unsigned(dmem_data_in))) 
@@ -215,12 +215,12 @@ DataMem:			entity work.DualPortMem port map (
 		FillInstructionMemory;
 		FillDataMemory;
 
-      wait for clk_period*10;
+      wait for clock_period*10;
 
       -- enable the processor
 		processor_enable <= '1';
 		-- execute for 200 cycles and stop
-		wait for clk_period*200;
+		wait for clock_period*200;
 		
 		processor_enable <= '0';
 		

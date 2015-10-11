@@ -3,14 +3,18 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity PC is
+    generic (
+        ADDR_WIDTH : integer := 8;
+        DATA_WIDTH : integer := 32
+    );
     Port (
-        clk : in  STD_LOGIC
-        ; rst : in  STD_LOGIC := '0'
+        clock : in  STD_LOGIC
+        ; reset : in  STD_LOGIC := '0'
         ; instr_in : in  STD_LOGIC_VECTOR(31 downto 0) := (others => '0')
         ; jump : in  STD_LOGIC := '0'
         ; branch : in STD_LOGIC := '0'
         ; alu_zero : in STD_LOGIC := '0'
-        ; addr_out : out  STD_LOGIC_VECTOR(31 downto 0)
+        ; addr_out : out STD_LOGIC_VECTOR(31 downto 0)
     );
 end PC;
 
@@ -18,13 +22,13 @@ architecture Behavioral of PC is
     signal pc : STD_LOGIC_VECTOR(31 downto 0) := (others => '0'); -- register
     signal jump_addr : STD_LOGIC_VECTOR(31 downto 0); -- bus
     signal imm_value : STD_LOGIC_VECTOR(15 downto 0); -- bus
-    signal imm_value_extended : STD_LOGIC_VECTOR(31 downto 0); --bus
+    --signal imm_value_extended : STD_LOGIC_VECTOR(31 downto 0); --bus
 begin
-    process(clk, rst)
+    process(clock, reset)
 	begin
-		if rst = '1' then
+		if reset = '1' then
 			pc <= (others => '0');
-		elsif rising_edge(clk) then
+		elsif rising_edge(clock) then
 			if jump = '1' then
                 pc <= jump_addr;
             else
