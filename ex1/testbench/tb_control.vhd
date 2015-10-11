@@ -24,7 +24,8 @@ ARCHITECTURE behavior OF tb_control IS
         mem_to_reg : out std_logic;
         mem_write : out std_logic;
         reg_dst : out std_logic;
-        reg_write : out std_logic
+        reg_write : out std_logic;
+        pc_write : out std_logic
     );
     END COMPONENT;
 
@@ -43,6 +44,7 @@ ARCHITECTURE behavior OF tb_control IS
    signal mem_write : std_logic;
    signal alu_src : std_logic;
    signal reg_write : std_logic;
+   signal pc_write : std_logic;
 
    -- Clock period definitions
    constant clock_period : time := 10 ns;
@@ -62,7 +64,8 @@ BEGIN
           alu_op => alu_op,
           mem_write => mem_write,
           alu_src => alu_src,
-          reg_write => reg_write
+          reg_write => reg_write,
+          pc_write => pc_write
         );
 
    -- Clock process definitions
@@ -137,6 +140,11 @@ BEGIN
       instruction <= x"AC030005"; --sw $3, 5($0)
       wait for clock_period; -- go to execute
       check(mem_write = '1', "SW instruction sets mem_write high in EXECUTE state");
+      wait for clock_period; -- go to stall
+      
+      wait for clock_period; -- go to fetch
+      check(pc_write = '1', "Program counter write signal should go high in fetch state");
+      wait for clock_period; -- go to execute
       wait for clock_period; -- go to stall
 
       report "ALL TESTS SUCCESSFUL";

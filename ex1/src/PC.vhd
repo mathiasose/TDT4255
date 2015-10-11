@@ -14,6 +14,7 @@ entity PC is
         ; jump : in  STD_LOGIC := '0'
         ; branch : in STD_LOGIC := '0'
         ; alu_zero : in STD_LOGIC := '0'
+        ; write_enable : in STD_LOGIC := '0'
         ; addr_out : out STD_LOGIC_VECTOR(ADDR_WIDTH-1 downto 0)
     );
 end PC;
@@ -28,7 +29,7 @@ begin
 	begin
 		if reset = '1' then
 			pc <= (others => '0');
-		elsif rising_edge(clock) then
+		elsif rising_edge(clock) and write_enable = '1' then
 			if jump = '1' then
                 pc <= jump_addr;
             else

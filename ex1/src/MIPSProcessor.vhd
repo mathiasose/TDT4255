@@ -44,6 +44,7 @@ architecture Behavioral of MIPSProcessor is
     signal alu_result : operand_t;
     signal write_register : register_address_t;
     signal write_data : operand_t;
+    signal pc_write_enable : std_logic;
 begin
 
     process(clock, reset)
@@ -70,7 +71,8 @@ begin
         mem_to_reg => mem_to_reg,
         mem_write => dmem_write_enable,
         reg_dst => reg_dst,
-        reg_write => reg_write
+        reg_write => reg_write,
+        pc_write => pc_write_enable
     );
 
     operand_b <= operand_t(resize(signed(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
@@ -92,7 +94,8 @@ begin
         jump => jump,
         branch => branch,
         alu_zero => alu_zero,
-        addr_out => imem_address
+        addr_out => imem_address,
+        write_enable => pc_write_enable
     );
 
     write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);

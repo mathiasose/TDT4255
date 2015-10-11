@@ -20,7 +20,8 @@ entity control is
         mem_to_reg : out std_logic;
         mem_write : out std_logic;
         reg_dst : out std_logic;
-        reg_write : out std_logic
+        reg_write : out std_logic;
+        pc_write : out std_logic
     );
 end control;
 
@@ -50,6 +51,7 @@ begin
         mem_write <= '0';
         alu_src <= '0';
         reg_write <= '0';
+        pc_write <= '0';
 
         -- Non default outputs
         case state is
@@ -73,6 +75,7 @@ begin
                 end case;
             when FETCH =>
                 next_state <= EXECUTE;
+                pc_write <= '1';
                 case opcode is
                     when ALU_OP_OPCODE =>
                         --
