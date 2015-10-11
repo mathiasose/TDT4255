@@ -14,7 +14,7 @@ entity PC is
         ; jump : in  STD_LOGIC := '0'
         ; branch : in STD_LOGIC := '0'
         ; alu_zero : in STD_LOGIC := '0'
-        ; addr_out : out STD_LOGIC_VECTOR(31 downto 0)
+        ; addr_out : out STD_LOGIC_VECTOR(ADDR_WIDTH-1 downto 0)
     );
 end PC;
 
@@ -42,6 +42,6 @@ begin
 	end process;
     
     jump_addr <= pc(31 downto 26) & instr_in(25 downto 0);
-    addr_out <= pc;
+    addr_out <= pc(ADDR_WIDTH-1 downto 0);
 end Behavioral;
 
