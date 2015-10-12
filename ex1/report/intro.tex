@@ -1,7 +1,27 @@
 \chapter{Introduction}
 
 \section{MIPS Processor}
-In this exercise we were tasked to create a multi cycle mips processor. Our implementation only contains a subset of MIPS instruction set.
+In this exercise we were tasked to create a multi cycle mips processor. Our implementation only contains a subset of a MIPS instruction set.
+
+\subsection{Instruction set}
+MIPS instruction set contains 3 types of instructions: R-type, I-type and J-type. Our instruction set contains: ADD, BEQ, JUMP, SUB, LW, SLT, SW, AND, OR. The instruction type to each instruction is given in table \ref{table:instruction-types}.
+
+\begin{table}
+\centering
+\begin{tabular}{ |l|l|l| }
+  \hline
+  R-type & I-type & J-type \\
+  \hline
+  ADD & BEQ & JUMP \\
+  SUB & LW & \\
+  SLT & SW & \\
+  AND & & \\
+  OR & & \\
+  \hline
+\end{tabular}
+\caption{Instruction set types}
+\label{table:instruction-types}
+\end{table}
 
 \section{Architecture}
 Hardward architecture
