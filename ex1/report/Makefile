@@ -1,13 +1,16 @@
-.PHONY: clean all
+.PHONY: clean all watch
 FILE=report
+TEX=$(FILE).tex
+PDF=$(FILE).pdf
+TEXMAKE=latexmk -pdf
 
-all: $(FILE).pdf
+all: $(PDF)
 
-$(FILE).pdf: $(FILE).tex
-	pdflatex $(FILE).tex
-	bibtex $(FILE).aux
-	pdflatex $(FILE).tex
-	pdflatex $(FILE).tex
+$(PDF): $(TEX)
+	$(TEXMAKE) $(TEX)
+
+watch:
+	$(TEXMAKE) -pvc $(TEX)
 
 clean:
 	rm -rf *.aux *.bbl *.blg *dvi *.log *.out *.synctex.gz *.toc *.lot *.lof
