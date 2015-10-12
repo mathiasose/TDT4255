@@ -59,6 +59,8 @@ begin
             case state is
                 when FETCH =>
                     next_state <= EXECUTE;
+                    pc_write <= '1';
+
                     case opcode is
                         when ALU_OP_OPCODE =>
                             --
@@ -79,7 +81,6 @@ begin
                     case opcode is
                         when ALU_OP_OPCODE =>
                             next_state <= FETCH;
-                            pc_write <= '1';
 
                             reg_write <= '1';
                             reg_dst <= '1';
@@ -99,12 +100,10 @@ begin
                             end case;
                         when jump_OPCODE =>
                             next_state <= FETCH;
-                            pc_write <= '1';
 
                             jump <= '1';
                         when BEQ_OPCODE =>
                             next_state <= FETCH;
-                            pc_write <= '1';
 
                             branch <= '1';
                         when LW_OPCODE =>
@@ -115,10 +114,8 @@ begin
                             mem_write <= '1';
                         when LUI_OPCODE =>
                             next_state <= FETCH;
-                            pc_write <= '1';
                         when others =>
                             next_state <= FETCH;
-                            pc_write <= '1';
                     end case;
                 when STALL =>
                     next_state <= FETCH;
@@ -130,10 +127,8 @@ begin
                         when BEQ_OPCODE =>
                             --
                         when LW_OPCODE =>
-                            pc_write <= '1';
                             mem_to_reg <= '1';
                         when SW_OPCODE =>
-                            pc_write <= '1';
                             mem_write <= '1';
                         when LUI_OPCODE =>
                             --
