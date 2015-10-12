@@ -1,4 +1,4 @@
-            -- Part of TDT4255 Computer Design laboratory exercises
+-- Part of TDT4255 Computer Design laboratory exercises
 -- Group for Computer Architecture and Design
 -- Department of Computer and Information Science
 -- Norwegian University of Science and Technology
@@ -49,21 +49,14 @@ architecture Behavioral of MIPSProcessor is
     signal mem_write : std_logic;
 begin
 
-    process(clock, reset)
-    begin
-        if reset = '1' then
+    -- processor_enable dependent wirings
+    imem_address <= pc_addr when processor_enable = '1' else (others => '0');
+    dmem_address <= alu_result(ADDR_WIDTH-1 downto 0) when processor_enable = '1' else (others => '0');
+    dmem_write_enable <= mem_write when processor_enable = '1' else '0';
+    dmem_data_out <= reg_out_b when processor_enable = '1' else (others => '0');
 
-        elsif rising_edge(clock) then
-            if processor_enable = '1' then
-                imem_address <= pc_addr;
-                dmem_address <= alu_result(ADDR_WIDTH-1 downto 0);
-                dmem_write_enable <= mem_write;
-                dmem_data_out <= reg_out_b;
-            end if;
-        end if;
-    end process;
-
-    operand_b <= operand_t(resize(signed(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
+    -- other wirings
+    operand_b <= operand_t(resize(unsigned(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
     write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
     write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);
 
@@ -99,7 +92,7 @@ begin
     port map (
         clock => clock,
         reset => reset,
-        instr_in => imem_data_in,
+        instruction => imem_data_in,
         jump => jump,
         branch => branch,
         alu_zero => alu_zero,

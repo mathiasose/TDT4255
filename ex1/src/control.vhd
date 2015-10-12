@@ -29,9 +29,10 @@ end control;
 architecture Behavioral of control is
     signal opcode : opcode_t;
     signal funct : std_logic_vector(5 downto 0);
-    --signal rs, rt, rd : register_address_t;
-    --signal immediate_value : std_logic_vector(15 downto 0);
-    signal state, next_state: state_t;
+
+    constant INIT_STATE : state_t := STALL;
+    signal state : state_t := INIT_STATE;
+    signal next_state: state_t;
 begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
@@ -144,7 +145,7 @@ begin
     process (clock, reset, processor_enable) is
     begin
         if reset = '1' then
-            state <= STALL;
+            state <= INIT_STATE;
         elsif rising_edge(clock) and processor_enable = '1' then
             state <= next_state;
         end if;
