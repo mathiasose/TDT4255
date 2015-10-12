@@ -11,6 +11,7 @@ entity control is
     port(
         clock : in std_logic;
         reset : in std_logic;
+        processor_enable : in std_logic := '0';
         instruction : in instruction_t;
         alu_op : out alu_operation_t;
         alu_src : out std_logic;
@@ -39,7 +40,7 @@ begin
     --rd <= instruction(15 downto 11);
     --immediate_value <= instruction(15 downto 0);
 
-    DrivingOutputs : process(clock, state, opcode) is
+    DrivingOutputs : process(state, opcode) is
     begin
         -- Setting defaults to avoid latches
         reg_dst <= '0';
@@ -133,11 +134,11 @@ begin
         end case;
     end process DrivingOutputs;
 
-    process (clock, reset) is
+    process (clock, reset, processor_enable) is
     begin
         if reset = '1' then
             state <= STALL;
-        elsif rising_edge(clock) then
+        elsif rising_edge(clock) and processor_enable = '1' then
             state <= next_state;
         end if;
     end process;

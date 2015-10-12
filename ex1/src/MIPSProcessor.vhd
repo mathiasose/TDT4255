@@ -1,4 +1,4 @@
--- Part of TDT4255 Computer Design laboratory exercises
+            -- Part of TDT4255 Computer Design laboratory exercises
 -- Group for Computer Architecture and Design
 -- Department of Computer and Information Science
 -- Norwegian University of Science and Technology
@@ -18,14 +18,14 @@ entity MIPSProcessor is
         DATA_WIDTH : integer := 32
     );
     port (
-        clock, reset : in std_logic;
-        processor_enable : in std_logic;
-        imem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        imem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-        dmem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        dmem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-        dmem_data_out : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        dmem_write_enable : out std_logic
+        clock, reset : in std_logic := '0';
+        processor_enable : in std_logic := '0';
+        imem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        imem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0) := (others => '0');
+        dmem_data_in : in std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        dmem_address : out std_logic_vector(ADDR_WIDTH-1 downto 0) := (others => '0');
+        dmem_data_out : out std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+        dmem_write_enable : out std_logic := '0'
     );
 end entity MIPSProcessor;
 
@@ -45,6 +45,8 @@ architecture Behavioral of MIPSProcessor is
     signal write_register : register_address_t;
     signal write_data : operand_t;
     signal pc_write_enable : std_logic;
+    signal pc_addr : std_logic_vector(ADDR_WIDTH-1 downto 0);
+    signal mem_write : std_logic;
 begin
 
     process(clock, reset)
@@ -53,15 +55,23 @@ begin
 
         elsif rising_edge(clock) then
             if processor_enable = '1' then
-
+                imem_address <= pc_addr;
+                dmem_address <= alu_result(ADDR_WIDTH-1 downto 0);
+                dmem_write_enable <= mem_write;
+                dmem_data_out <= reg_out_b;
             end if;
         end if;
     end process;
+
+    operand_b <= operand_t(resize(signed(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
+    write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
+    write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);
 
     control : entity work.control
     port map(
         clock => clock,
         reset => reset,
+        processor_enable => processor_enable,
         instruction => imem_data_in,
         alu_op => alu_op,
         alu_src => alu_src,
@@ -69,13 +79,12 @@ begin
         jump => jump,
         --mem_read => mem_read,
         mem_to_reg => mem_to_reg,
-        mem_write => dmem_write_enable,
+        mem_write => mem_write,
         reg_dst => reg_dst,
         reg_write => reg_write,
         pc_write => pc_write_enable
     );
 
-    operand_b <= operand_t(resize(signed(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
     alu : entity work.alu
     port map (
         clock => clock,
@@ -94,12 +103,10 @@ begin
         jump => jump,
         branch => branch,
         alu_zero => alu_zero,
-        addr_out => imem_address,
+        addr_out => pc_addr,
         write_enable => pc_write_enable
     );
 
-    write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);
-    write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
     registers : entity work.registers
     port map (
         clock => clock,
@@ -111,7 +118,6 @@ begin
         read_data_2 => reg_out_b,
         register_write => reg_write
     );
-	 dmem_data_out <= reg_out_b;
 
 end Behavioral;
 

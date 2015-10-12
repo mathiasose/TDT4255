@@ -15,6 +15,7 @@ ARCHITECTURE behavior OF tb_control IS
     port(
         clock : in std_logic;
         reset : in std_logic;
+        processor_enable : in std_logic;
         instruction : in instruction_t;
         alu_op : out alu_operation_t;
         alu_src : out std_logic;
@@ -32,6 +33,7 @@ ARCHITECTURE behavior OF tb_control IS
    --Inputs
    signal clock : std_logic := '0';
    signal reset : std_logic := '0';
+   signal processor_enable : std_logic := '0';
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
 
      --Outputs
@@ -55,6 +57,7 @@ BEGIN
    uut: control PORT MAP (
           clock => clock,
           reset => reset,
+          processor_enable => processor_enable,
           instruction => instruction,
           reg_dst => reg_dst,
           branch => branch,
@@ -84,6 +87,7 @@ BEGIN
       -- hold reset state for 100 ns.
       -- resets to state STALL
 
+      processor_enable <= '1';
       wait for clock_period; -- go to fetch
       instruction <= x"00221820"; --add $3, $1, $2
       wait for clock_period; -- go to execute

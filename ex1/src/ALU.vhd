@@ -23,7 +23,7 @@ architecture Behavioral of ALU is
     signal alu_result : operand_t;
 begin
 
-    process(clock, reset)
+   process(clock, reset)
 	begin
 		if reset = '1' then
 
