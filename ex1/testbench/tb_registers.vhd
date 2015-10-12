@@ -40,7 +40,7 @@ BEGIN
 
    -- Instantiate the Unit Under Test (UUT)
    uut: registers PORT MAP (
-             clock => clock,
+			 clock => clock,
           read_register_1 => read_register_1,
           read_register_2 => read_register_2,
           write_register => write_register,
@@ -63,7 +63,7 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin
-       -- Save data to register and retrive afterwards
+       -- Save data to register and retrieve afterwards
       wait for clock_period;
         register_write <= '1';
         write_register <= "11100";
@@ -80,14 +80,14 @@ BEGIN
         wait for clock_period;
         register_write <= '1';
         write_register <= "11111";
-        write_data <= x"00001337";
+        write_data <= x"13371337";
         wait for clock_period;
         register_write <= '0';
         wait for clock_period;
         read_register_2 <= "11111";
         wait for clock_period;
         check(read_data_1 = x"00001337", "Read_data_1 should contain 00001337 at address 11100");
-        check(read_data_2 = x"00001337", "Read_data_2 should contain 00001337 at address 11111");
+        check(read_data_2 = x"13371337", "Read_data_2 should contain 00001337 at address 11111");
 
         report "ALL TESTS SUCCESSFUL";
         wait;

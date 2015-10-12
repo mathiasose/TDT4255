@@ -66,7 +66,8 @@ begin
 MIPSProcInst:	entity work.MIPSProcessor(Behavioral) 
 					generic map (ADDR_WIDTH => ADDR_WIDTH, DATA_WIDTH => DATA_WIDTH) 
 					port map (
-						clk => clk, reset => processorReset,
+						clock => clk,
+						reset => processorReset,
 						processor_enable	=> processorEnable,
 						-- instruction memory connection
 						imem_data_in		=> procIMemReadData,		-- instruction data from memory

@@ -31,11 +31,10 @@ begin
             if register_write = '1' then
                 registers(to_integer(unsigned(write_register))) <= write_data;
             end if;
-
-            read_data_1 <= registers(to_integer(unsigned(read_register_1)));
-            read_data_2 <= registers(to_integer(unsigned(read_register_2)));
         end if;
 
     end process;
-end Behavioral;
 
+	read_data_1 <= registers(to_integer(unsigned(read_register_1)));
+	read_data_2 <= registers(to_integer(unsigned(read_register_2)));
+end Behavioral;

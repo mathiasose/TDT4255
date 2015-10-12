@@ -111,6 +111,7 @@ begin
         read_data_2 => reg_out_b,
         register_write => reg_write
     );
+	 dmem_data_out <= reg_out_b;
 
 end Behavioral;
 
