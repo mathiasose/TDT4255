@@ -40,7 +40,7 @@ begin
     --rd <= instruction(15 downto 11);
     --immediate_value <= instruction(15 downto 0);
 
-    DrivingOutputs : process(state, opcode) is
+    DrivingOutputs : process(state, opcode, processor_enable) is
     begin
         -- Setting defaults to avoid latches
         reg_dst <= '0';
@@ -54,84 +54,96 @@ begin
         reg_write <= '0';
         pc_write <= '0';
 
-        -- Non default outputs
-        case state is
-            when STALL =>
-                next_state <= FETCH;
-                case opcode is
-                    when ALU_OP_OPCODE =>
-                        --
-                    when jump_OPCODE =>
-                        --
-                    when BEQ_OPCODE =>
-                        --
-                    when LW_OPCODE =>
-                        mem_to_reg <= '1';
-                    when SW_OPCODE =>
-                        --
-                    when LUI_OPCODE =>
-                        --
-                    when others =>
-                        --
-                end case;
-            when FETCH =>
-                next_state <= EXECUTE;
-                pc_write <= '1';
-                case opcode is
-                    when ALU_OP_OPCODE =>
-                        --
-                    when jump_OPCODE =>
-                        --
-                    when BEQ_OPCODE =>
-                        alu_src <= '1';
-                    when LW_OPCODE =>
-                        alu_src <= '1';
-                    when SW_OPCODE =>
-                        alu_src <= '1';
-                    when LUI_OPCODE =>
-                        alu_src <= '1';
-                    when others =>
-                        --
-                end case;
-            when EXECUTE =>
-                case opcode is
-                    when ALU_OP_OPCODE =>
-                        next_state <= FETCH;
-                        reg_write <= '1';
-                        reg_dst <= '1';
-                        case funct is
-                            when "100000" =>
-                                alu_op <= ADD;
-                            when "100010" =>
-                                alu_op <= SUB;
-                            when "100100" =>
-                                alu_op <= ALU_AND;
-                            when "100101" =>
-                                alu_op <= ALU_OR;
-                            when "101010" =>
-                                alu_op <= SLT;
-                            when others =>
-                                alu_op <= NO_OP;
-                        end case;
-                    when jump_OPCODE =>
-                        next_state <= FETCH;
-                        jump <= '1';
-                    when BEQ_OPCODE =>
-                        next_state <= FETCH;
-                        branch <= '1';
-                    when LW_OPCODE =>
-                        next_state <= STALL;
-                    when SW_OPCODE =>
-                        mem_write <= '1';
-                        next_state <= STALL;
-                    when LUI_OPCODE =>
-                        next_state <= FETCH;
-                    when others =>
-                        next_state <= FETCH;
-                end case;
-            when others =>
-                --
-        end case;
+        if processor_enable = '1' then
+            -- Non default outputs
+            case state is
+                when FETCH =>
+                    next_state <= EXECUTE;
+                    case opcode is
+                        when ALU_OP_OPCODE =>
+                            --
+                        when jump_OPCODE =>
+                            --
+                        when BEQ_OPCODE =>
+                            alu_src <= '1';
+                        when LW_OPCODE =>
+                            alu_src <= '1';
+                        when SW_OPCODE =>
+                            alu_src <= '1';
+                        when LUI_OPCODE =>
+                            alu_src <= '1';
+                        when others =>
+                            --
+                    end case;
+                when EXECUTE =>
+                    case opcode is
+                        when ALU_OP_OPCODE =>
+                            next_state <= FETCH;
+                            pc_write <= '1';
+
+                            reg_write <= '1';
+                            reg_dst <= '1';
+                            case funct is
+                                when "100000" =>
+                                    alu_op <= ADD;
+                                when "100010" =>
+                                    alu_op <= SUB;
+                                when "100100" =>
+                                    alu_op <= ALU_AND;
+                                when "100101" =>
+                                    alu_op <= ALU_OR;
+                                when "101010" =>
+                                    alu_op <= SLT;
+                                when others =>
+                                    alu_op <= NO_OP;
+                            end case;
+                        when jump_OPCODE =>
+                            next_state <= FETCH;
+                            pc_write <= '1';
+
+                            jump <= '1';
+                        when BEQ_OPCODE =>
+                            next_state <= FETCH;
+                            pc_write <= '1';
+
+                            branch <= '1';
+                        when LW_OPCODE =>
+                            next_state <= STALL;
+                        when SW_OPCODE =>
+                            next_state <= STALL;
+
+                            mem_write <= '1';
+                        when LUI_OPCODE =>
+                            next_state <= FETCH;
+                            pc_write <= '1';
+                        when others =>
+                            next_state <= FETCH;
+                            pc_write <= '1';
+                    end case;
+                when STALL =>
+                    next_state <= FETCH;
+                    case opcode is
+                        when ALU_OP_OPCODE =>
+                            --
+                        when jump_OPCODE =>
+                            --
+                        when BEQ_OPCODE =>
+                            --
+                        when LW_OPCODE =>
+                            pc_write <= '1';
+                            mem_to_reg <= '1';
+                        when SW_OPCODE =>
+                            pc_write <= '1';
+                            mem_write <= '1';
+                        when LUI_OPCODE =>
+                            --
+                        when others =>
+                            --
+                    end case;
+                when others =>
+                    --
+            end case;
+        end if;
     end process DrivingOutputs;
 
     process (clock, reset, processor_enable) is
