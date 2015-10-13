@@ -17,7 +17,7 @@ ARCHITECTURE behavior OF tb_PC IS
     Port (
         clock : in  STD_LOGIC
         ; reset : in  STD_LOGIC := '0'
-        ; instr_in : in  STD_LOGIC_VECTOR(31 downto 0) := (others => '0')
+        ; instruction : in  STD_LOGIC_VECTOR(31 downto 0) := (others => '0')
         ; jump : in  STD_LOGIC := '0'
         ; branch : in STD_LOGIC := '0'
         ; alu_zero : in STD_LOGIC := '0'
@@ -47,7 +47,7 @@ BEGIN
    uut: PC PORT MAP (
           clock => clock,
           reset => reset,
-          instr_in => instruction,
+          instruction => instruction,
           jump => jump,
           branch => branch,
           alu_zero => alu_zero,
@@ -72,13 +72,14 @@ BEGIN
       reset <= '1';
       wait for clock_period;
       reset <= '0';
-      check(addr_out = x"00", "PC should reset to 0 address");
+      check(addr_out = x"FF", "PC should reset to FF address");
 
       wait for clock_period;
       write_enable <= '1';
       wait for clock_period; -- pc += 1
+      wait for clock_period; -- pc += 1
       write_enable <= '0';
-      check(addr_out = x"01", "PC should increment by 1");
+      check(addr_out = x"01", "PC should increment by 1 each clock period when write enabled");
 
       wait for clock_period;
       write_enable <= '1';
@@ -88,18 +89,19 @@ BEGIN
       wait for clock_period;
       write_enable <= '0';
       jump <= '0';
-      check(addr_out = x"13", "PC should have jumped to 0x13");
+      check(addr_out = x"14", "PC should have jumped to 0x13 + 1");
 
-      wait for clock_period;
+      wait for clock_period; -- fetch state
       instruction <= X"10000002"; --beq $0, $0, 2
+      wait for clock_period; -- execute state
       branch <= '1';
       alu_zero <= '1';
       write_enable <= '1';
-      wait for clock_period;
+      wait for clock_period; -- fetch state
       branch <= '0';
       alu_zero <= '0';
       write_enable <= '0';
-      check(addr_out = x"15", "PC should have branched to 0x15");
+      check(addr_out = x"17", "PC should have branched to 0x16 + 1");
 
       wait for clock_period;
       write_enable <= '1';
@@ -112,7 +114,7 @@ BEGIN
       branch <= '0';
       alu_zero <= '0';
       write_enable <= '0';
-      check(addr_out = x"13", "PC should have branched to 0x13");
+      check(addr_out = x"16", "PC should have branched to 0x18 - 3 + 1");
 
       report "ALL TESTS SUCCESSFUL";
       wait;

@@ -35,14 +35,14 @@ begin
     begin
         if reset = '1' then
             pc <= PC_INIT;
-        elsif falling_edge(clock) and write_enable = '1' then
-            if jump = '1' then
-                pc <= jump_address;
-            else
+        elsif write_enable = '1' then
+            if rising_edge(clock) then
                 if branch = '1' and alu_zero = '1' then
-                    pc <= STD_LOGIC_VECTOR(signed(pc) + signed(immediate_value)); -- +1 ?
+                    pc <= STD_LOGIC_VECTOR(to_signed(to_integer(unsigned(pc)), pc'length) + signed(immediate_value) + PC_INCREMENT);
+                elsif jump = '1' then
+                    pc <= STD_LOGIC_VECTOR(unsigned(jump_address) + PC_INCREMENT);
                 else
-                    pc <= STD_LOGIC_VECTOR(signed(pc) + PC_INCREMENT);
+                    pc <= STD_LOGIC_VECTOR(unsigned(pc) + PC_INCREMENT);
                 end if;
             end if;
         end if;
