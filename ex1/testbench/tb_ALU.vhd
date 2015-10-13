@@ -31,7 +31,7 @@ ARCHITECTURE behavior OF tb_ALU IS
    signal operand_B : operand_t := (others => '0');
    signal operation :  alu_operation_t := NO_OP;
 
- 	--Outputs
+     --Outputs
    signal result : operand_t;
    signal zero : std_logic;
 
@@ -40,7 +40,7 @@ ARCHITECTURE behavior OF tb_ALU IS
  
 BEGIN
  
-	-- Instantiate the Unit Under Test (UUT)
+    -- Instantiate the Unit Under Test (UUT)
    uut: ALU PORT MAP (
           clock => clock,
           reset => reset,
@@ -54,23 +54,28 @@ BEGIN
    -- Clock process definitions
    clock_process :process
    begin
-		clock <= '0';
-		wait for clock_period/2;
-		clock <= '1';
-		wait for clock_period/2;
+        clock <= '0';
+        wait for clock_period/2;
+        clock <= '1';
+        wait for clock_period/2;
    end process;
  
 
    -- Stimulus process
    stim_proc: process
    begin
-      
+
       -- ADD, SUB, SLT, ALU_AND, ALU_OR, NO_OP
       
       wait for clock_period;
 
-      operand_A <= OPERAND_1;
+      operand_A <= (others => '1');
       operand_B <= OPERAND_1;
+
+      wait for clock_period;
+      check(result = OPERAND_1, "NO_OP means result <= operand_B");
+
+      operand_A <= OPERAND_1;
       operation <= ADD;
       wait for clock_period;
       check(result = x"00000002", "1 + 1 = 2");

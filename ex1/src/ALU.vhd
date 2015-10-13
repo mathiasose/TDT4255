@@ -42,6 +42,8 @@ begin
                 alu_result <= operand_A AND operand_B;
             elsif operation = ALU_OR then
                 alu_result <= operand_A OR operand_B;
+            else -- NO_OP
+                alu_result <= operand_B;    -- useful when doing LUI
             end if;
         end if;
     end process;
