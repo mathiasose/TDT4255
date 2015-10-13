@@ -89,7 +89,7 @@ BEGIN
       wait for clock_period;
       write_enable <= '0';
       jump <= '0';
-      check(addr_out = x"14", "PC should have jumped to 0x13 + 1");
+      check(addr_out = x"13", "PC should have jumped to 0x13");
 
       wait for clock_period; -- fetch state
       instruction <= X"10000002"; --beq $0, $0, 2
@@ -101,7 +101,7 @@ BEGIN
       branch <= '0';
       alu_zero <= '0';
       write_enable <= '0';
-      check(addr_out = x"17", "PC should have branched to 0x16 + 1");
+      check(addr_out = x"16", "PC should have branched to 0x15 + 1");
 
       wait for clock_period;
       write_enable <= '1';
@@ -114,7 +114,7 @@ BEGIN
       branch <= '0';
       alu_zero <= '0';
       write_enable <= '0';
-      check(addr_out = x"16", "PC should have branched to 0x18 - 3 + 1");
+      check(addr_out = x"15", "PC should have branched to 0x17 - 3 + 1");
 
       report "ALL TESTS SUCCESSFUL";
       wait;

@@ -40,7 +40,7 @@ begin
                 if branch = '1' and alu_zero = '1' then
                     pc <= STD_LOGIC_VECTOR(to_signed(to_integer(unsigned(pc)), pc'length) + signed(immediate_value) + PC_INCREMENT);
                 elsif jump = '1' then
-                    pc <= STD_LOGIC_VECTOR(unsigned(jump_address) + PC_INCREMENT);
+                    pc <= jump_address;
                 else
                     pc <= STD_LOGIC_VECTOR(unsigned(pc) + PC_INCREMENT);
                 end if;
