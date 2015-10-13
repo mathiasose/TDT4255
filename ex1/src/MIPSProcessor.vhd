@@ -58,7 +58,7 @@ begin
     -- other wirings
     operand_b <= operand_t(resize(unsigned(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
     write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
-    write_register <= imem_data_in(20 downto 16) when reg_dst = '1' else imem_data_in(15 downto 11);
+    write_register <= imem_data_in(15 downto 11) when reg_dst = '1' else imem_data_in(20 downto 16);
 
     control : entity work.control
     port map(
