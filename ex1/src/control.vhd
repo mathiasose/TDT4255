@@ -68,13 +68,13 @@ begin
                         when jump_OPCODE =>
                             --
                         when BEQ_OPCODE =>
-                            alu_src <= '1';
+                            --
                         when LW_OPCODE =>
-                            alu_src <= '1';
+                            --
                         when SW_OPCODE =>
-                            alu_src <= '1';
+                            --
                         when LUI_OPCODE =>
-                            alu_src <= '1';
+                            --
                         when others =>
                             --
                     end case;
@@ -106,14 +106,23 @@ begin
                         when BEQ_OPCODE =>
                             next_state <= FETCH;
 
+                            alu_src <= '1';
                             branch <= '1';
                         when LW_OPCODE =>
                             next_state <= STALL;
+
+                            alu_src <= '1';
+                            alu_op <= ADD;
+                            mem_to_reg <= '1';
+                            reg_write <= '1';
                         when SW_OPCODE =>
                             next_state <= STALL;
 
+                            alu_src <= '1';
+                            alu_op <= ADD;
                             mem_write <= '1';
                         when LUI_OPCODE =>
+                            alu_src <= '1';
                             next_state <= FETCH;
                         when others =>
                             next_state <= FETCH;
@@ -128,8 +137,13 @@ begin
                         when BEQ_OPCODE =>
                             --
                         when LW_OPCODE =>
+                            alu_src <= '1';
+                            alu_op <= ADD;
                             mem_to_reg <= '1';
+                            reg_write <= '1';
                         when SW_OPCODE =>
+                            alu_src <= '1';
+                            alu_op <= ADD;
                             mem_write <= '1';
                         when LUI_OPCODE =>
                             --
