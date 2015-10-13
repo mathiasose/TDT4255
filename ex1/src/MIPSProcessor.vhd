@@ -88,7 +88,8 @@ begin
         operation => alu_op,
         operand_A => reg_out_a,
         operand_B => operand_b,
-        result => alu_result
+        result => alu_result,
+        zero => alu_zero
     );
 
     pc : entity work.pc
