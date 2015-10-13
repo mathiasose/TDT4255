@@ -22,7 +22,8 @@ entity control is
         mem_write : out std_logic;
         reg_dst : out std_logic;
         reg_write : out std_logic;
-        pc_write : out std_logic
+        pc_write : out std_logic;
+        immediate_value_transform: out immediate_value_transformation_t
     );
 end control;
 
@@ -36,10 +37,6 @@ architecture Behavioral of control is
 begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
-    --rs <= instruction(25 downto 21);
-    --rt <= instruction(20 downto 16);
-    --rd <= instruction(15 downto 11);
-    --immediate_value <= instruction(15 downto 0);
 
     DrivingOutputs : process(state, opcode, processor_enable) is
     begin
@@ -54,6 +51,7 @@ begin
         alu_src <= '0';
         reg_write <= '0';
         pc_write <= '0';
+        immediate_value_transform <= SIGN_EXTEND;
 
         if processor_enable = '1' then
             -- Non default outputs
@@ -123,6 +121,7 @@ begin
                             mem_write <= '1';
                         when LUI_OPCODE =>
                             alu_src <= '1';
+                            immediate_value_transform <= SHIFT_LEFT;
                             next_state <= FETCH;
                         when others =>
                             next_state <= FETCH;

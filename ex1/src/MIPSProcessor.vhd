@@ -47,6 +47,8 @@ architecture Behavioral of MIPSProcessor is
     signal pc_write_enable : std_logic;
     signal pc_addr : std_logic_vector(ADDR_WIDTH-1 downto 0);
     signal mem_write : std_logic;
+    signal immediate_value_transformed : operand_t;
+    signal control_immediate_value_transform : immediate_value_transformation_t;
 begin
 
     -- processor_enable dependent wirings
@@ -56,7 +58,7 @@ begin
     dmem_data_out <= reg_out_b when processor_enable = '1' else (others => '0');
 
     -- other wirings
-    operand_b <= operand_t(resize(unsigned(imem_data_in(15 downto 0)), operand_t'length)) when alu_src = '1' else reg_out_b;
+    operand_b <= immediate_value_transformed when alu_src = '1' else reg_out_b;
     write_data <= dmem_data_in when mem_to_reg = '1' else alu_result;
     write_register <= imem_data_in(15 downto 11) when reg_dst = '1' else imem_data_in(20 downto 16);
 
@@ -75,7 +77,8 @@ begin
         mem_write => mem_write,
         reg_dst => reg_dst,
         reg_write => reg_write,
-        pc_write => pc_write_enable
+        pc_write => pc_write_enable,
+        immediate_value_transform => control_immediate_value_transform
     );
 
     alu : entity work.alu
@@ -110,6 +113,13 @@ begin
         read_data_1 => reg_out_a,
         read_data_2 => reg_out_b,
         register_write => reg_write
+    );
+
+    immediate_value_transform : entity work.immediate_value_transform
+    port map (
+        transform => control_immediate_value_transform,
+        in_value => imem_data_in(15 downto 0),
+        out_value => immediate_value_transformed
     );
 
 end Behavioral;
