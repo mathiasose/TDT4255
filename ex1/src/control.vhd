@@ -38,7 +38,7 @@ begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
 
-    DrivingOutputs : process(state, opcode, processor_enable) is
+    DrivingOutputs : process(state, funct, opcode, processor_enable) is
     begin
         -- Setting defaults to avoid latches
         reg_dst <= '0';
