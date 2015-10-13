@@ -35,7 +35,7 @@ begin
     begin
         if reset = '1' then
             pc <= PC_INIT;
-        elsif rising_edge(clock) and write_enable = '1' then
+        elsif falling_edge(clock) and write_enable = '1' then
             if jump = '1' then
                 pc <= jump_address;
             else
