@@ -122,10 +122,12 @@ begin
                             alu_op <= ADD;
                             mem_write <= '1';
                         when LUI_OPCODE =>
+                            next_state <= FETCH;
+
                             alu_src <= '1';
                             pc_write <= '1';
+                            reg_write <= '1';
                             immediate_value_transform <= SHIFT_LEFT;
-                            next_state <= FETCH;
                         when others =>
                             next_state <= FETCH;
                     end case;

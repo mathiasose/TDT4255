@@ -96,41 +96,48 @@ BEGIN
       wait for clock_period; -- go to execute
       check(alu_op = ADD, "ADD instruction sets alu_op to ADD");
       check(reg_write = '1', "ADD instruction sets reg_write high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"00622022"; --sub $4, $3, $2
       wait for clock_period; -- go to execute
       check(alu_op = SUB, "SUB instruction sets alu_op to SUB");
       check(reg_write = '1', "SUB instruction sets reg_write high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"00432024"; --and $4, $2, $3
       wait for clock_period; -- go to execute
       check(alu_op = ALU_AND, "AND instruction sets alu_op to AND");
       check(reg_write = '1', "AND instruction sets reg_write high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"00432825"; --or $5, $2, $3
       wait for clock_period; -- go to execute
       check(alu_op = ALU_OR, "OR instruction sets alu_op to OR");
       check(reg_write = '1', "OR instruction sets reg_write high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"0001982A"; --slt $19, $0, $1
       wait for clock_period; -- go to execute
       check(alu_op = SLT, "SLT instruction sets alu_op to SLT");
       check(reg_write = '1', "SLT instruction sets reg_write high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"08000013"; --j 19
       wait for clock_period; -- go to execute
       check(jump = '1', "jump instructions sets jump flag high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"10000002"; --beq $0, $0, 2
       wait for clock_period; -- go to execute
       check(jump = '0', "jump flag goes back to low");
       check(branch = '1', "branch instructions sets branch flag high");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"00000000";
@@ -142,22 +149,21 @@ BEGIN
       wait for clock_period; -- go to execute
       wait for clock_period; -- go to stall
       check(mem_to_reg = '1', "LW instruction sets mem_to_reg high in STALL state");
+      check(pc_write = '1', "Program counter write signal should go high in stall state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"AC030005"; --sw $3, 5($0)
       wait for clock_period; -- go to execute
       check(mem_write = '1', "SW instruction sets mem_write high in EXECUTE state");
       wait for clock_period; -- go to stall
-
-      wait for clock_period; -- go to fetch
-      check(pc_write = '1', "Program counter write signal should go high in fetch state");
-      wait for clock_period; -- go to execute
-      wait for clock_period; -- go to stall
+      check(pc_write = '1', "Program counter write signal should go high in stall state");
 
       wait for clock_period; -- go to fetch
       instruction <= x"3C030006"; --lui $3, 6
       wait for clock_period; -- go to execute
+      check(reg_write = '1', "LUI sets reg_write");
       check(immediate_value_transform = SHIFT_LEFT, "LUI sets transform to SHIFT_LEFT");
+      check(pc_write = '1', "Program counter write signal should go high in execute state");
       wait for clock_period; -- go to stall
 
       report "ALL TESTS SUCCESSFUL";
