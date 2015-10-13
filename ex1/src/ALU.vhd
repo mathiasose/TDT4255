@@ -20,32 +20,31 @@ entity ALU is
 end ALU;
 
 architecture Behavioral of ALU is
-    signal alu_result : operand_t;
+    signal alu_result : operand_t := (others => '0');
 begin
 
-   process(clock, reset)
-	begin
-		if reset = '1' then
-
-		elsif rising_edge(clock) then
-			if operation = ADD then
+    process(clock, reset)
+    begin
+        if reset = '1' then
+            alu_result <= (others => '0');
+        else
+            if operation = ADD then
                 alu_result <= operand_t(signed(operand_A) + signed(operand_B));
-			elsif operation = SUB then
+            elsif operation = SUB then
                 alu_result <= operand_t(signed(operand_A) - signed(operand_B));
-			elsif operation = SLT then
-                --alu_result <= OPERAND_1 when (signed(operand_A) < signed(operand_B)) else OPERAND_0;
+            elsif operation = SLT then
                 if signed(operand_A) < signed(operand_B) then
                     alu_result <= OPERAND_1;
                 else
                     alu_result <= OPERAND_0;
                 end if;
-			elsif operation = ALU_AND then
+            elsif operation = ALU_AND then
                 alu_result <= operand_A AND operand_B;
-			elsif operation = ALU_OR then
+            elsif operation = ALU_OR then
                 alu_result <= operand_A OR operand_B;
             end if;
-		end if;
-	end process;
+        end if;
+    end process;
     
     result <= alu_result;
     zero <= '1' when alu_result = OPERAND_0 else '0';
