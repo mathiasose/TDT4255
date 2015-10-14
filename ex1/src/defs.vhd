@@ -21,4 +21,6 @@ package defs is
     constant LW_OPCODE : opcode_t := "100011";
     constant SW_OPCODE : opcode_t := "101011";
     constant LUI_OPCODE : opcode_t := "001111";
+
+    constant ADDI_OPCODE : opcode_t := "001000";
 end package defs;
