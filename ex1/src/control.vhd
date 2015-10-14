@@ -29,7 +29,7 @@ end control;
 
 architecture Behavioral of control is
     signal opcode : opcode_t;
-    signal funct : std_logic_vector(5 downto 0);
+    signal funct : funct_t;
 
     constant INIT_STATE : state_t := STALL;
     constant INIT_NEXT_STATE : state_t := FETCH;
@@ -69,16 +69,20 @@ begin
                             reg_write <= '1';
                             reg_dst <= '1';
                             case funct is
-                                when "100000" =>
+                                when ADD_FUNCT =>
                                     alu_op <= ADD;
-                                when "100010" =>
+                                when SUB_FUNCT =>
                                     alu_op <= SUB;
-                                when "100100" =>
+                                when AND_FUNCT =>
                                     alu_op <= ALU_AND;
-                                when "100101" =>
+                                when OR_FUNCT =>
                                     alu_op <= ALU_OR;
-                                when "101010" =>
+                                when SLT_FUNCT =>
                                     alu_op <= SLT;
+                                when NOR_FUNCT =>
+                                    alu_op <= ALU_NOR;
+                                when XOR_FUNCT =>
+                                    alu_op <= ALU_XOR;
                                 when others =>
                                     alu_op <= NO_OP;
                             end case;

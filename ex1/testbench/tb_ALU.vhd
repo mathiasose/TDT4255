@@ -104,6 +104,16 @@ BEGIN
       wait for clock_period;
       check(result = x"FFFFFFFF", "1 OR 0 = 1");
 
+      operation <= ALU_NOR;
+      wait for clock_period;
+      check(result = OPERAND_0, "1 NOR 0 = 0");
+
+      operand_A <= OPERAND_1;
+      operand_B <= x"FFFFFFFF";
+      operation <= ALU_XOR;
+      wait for clock_period;
+      check(result = x"FFFFFFFE", "Test XOR");
+
       report "ALL TESTS SUCCESSFUL";
 
       wait;
