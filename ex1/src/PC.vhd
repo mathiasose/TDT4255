@@ -31,19 +31,17 @@ begin
     jump_address <= pc(31 downto 26) & instruction(25 downto 0);
     addr_out <= pc(ADDR_WIDTH-1 downto 0);
 
-    process(clock, reset)
+    process(clock, reset, write_enable)
     begin
         if reset = '1' then
             pc <= PC_INIT;
-        elsif write_enable = '1' then
-            if rising_edge(clock) then
-                if branch = '1' and alu_zero = '1' then
-                    pc <= STD_LOGIC_VECTOR(to_signed(to_integer(unsigned(pc)), pc'length) + signed(immediate_value) + PC_INCREMENT);
-                elsif jump = '1' then
-                    pc <= jump_address;
-                else
-                    pc <= STD_LOGIC_VECTOR(unsigned(pc) + PC_INCREMENT);
-                end if;
+        elsif rising_edge(clock) and write_enable = '1' then
+            if branch = '1' and alu_zero = '1' then
+                pc <= STD_LOGIC_VECTOR(to_signed(to_integer(unsigned(pc)), pc'length) + signed(immediate_value) + PC_INCREMENT);
+            elsif jump = '1' then
+                pc <= jump_address;
+            else
+                pc <= STD_LOGIC_VECTOR(unsigned(pc) + PC_INCREMENT);
             end if;
         end if;
     end process;

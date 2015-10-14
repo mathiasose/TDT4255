@@ -32,8 +32,9 @@ architecture Behavioral of control is
     signal funct : std_logic_vector(5 downto 0);
 
     constant INIT_STATE : state_t := STALL;
+    constant INIT_NEXT_STATE : state_t := FETCH;
     signal state : state_t := INIT_STATE;
-    signal next_state: state_t;
+    signal next_state: state_t := INIT_NEXT_STATE;
 begin
     opcode <= instruction(31 downto 26);
     funct <= instruction(5 downto 0);
@@ -52,29 +53,13 @@ begin
         reg_write <= '0';
         pc_write <= '0';
         immediate_value_transform <= SIGN_EXTEND;
+        next_state <= INIT_NEXT_STATE;
 
         if processor_enable = '1' then
             -- Non default outputs
             case state is
                 when FETCH =>
                     next_state <= EXECUTE;
-
-                    case opcode is
-                        when ALU_OP_OPCODE =>
-                            --
-                        when jump_OPCODE =>
-                            --
-                        when BEQ_OPCODE =>
-                            --
-                        when LW_OPCODE =>
-                            --
-                        when SW_OPCODE =>
-                            --
-                        when LUI_OPCODE =>
-                            --
-                        when others =>
-                            --
-                    end case;
                 when EXECUTE =>
                     case opcode is
                         when ALU_OP_OPCODE =>
@@ -135,12 +120,6 @@ begin
                     next_state <= FETCH;
                     pc_write <= '1';
                     case opcode is
-                        when ALU_OP_OPCODE =>
-                            --
-                        when jump_OPCODE =>
-                            --
-                        when BEQ_OPCODE =>
-                            --
                         when LW_OPCODE =>
                             alu_src <= '1';
                             alu_op <= ADD;
@@ -150,8 +129,6 @@ begin
                             alu_src <= '1';
                             alu_op <= ADD;
                             mem_write <= '1';
-                        when LUI_OPCODE =>
-                            --
                         when others =>
                             --
                     end case;

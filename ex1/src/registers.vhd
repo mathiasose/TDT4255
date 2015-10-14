@@ -17,7 +17,7 @@ entity registers is
         read_data_1 : out  STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
         read_data_2 : out  STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
         register_write : in  STD_LOGIC
-        );
+    );
 end registers;
 
 architecture Behavioral of registers is

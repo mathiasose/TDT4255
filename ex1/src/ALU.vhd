@@ -22,8 +22,10 @@ end ALU;
 architecture Behavioral of ALU is
     signal alu_result : operand_t := (others => '0');
 begin
+    result <= alu_result;
+    zero <= '1' when alu_result = OPERAND_0 else '0';
 
-    process(clock, reset)
+    process(reset, operation, operand_A, operand_B)
     begin
         if reset = '1' then
             alu_result <= (others => '0');
@@ -47,9 +49,5 @@ begin
             end if;
         end if;
     end process;
-    
-    result <= alu_result;
-    zero <= '1' when alu_result = OPERAND_0 else '0';
-    
 end Behavioral;
 
