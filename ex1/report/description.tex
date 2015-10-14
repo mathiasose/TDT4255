@@ -1,16 +1,27 @@
-\chapter{Description \& Methodology}
+\chapter{Solution}
 
-\begin{figure}[p]
+A VHDL project was provided for the exercise, containing instruction and data memories,
+a MIPSProcessor VHDL file without a functioning behavioral,
+and a MIPSSystem VHDL file connecting the processor module to the memories.
+
+The scope of the exercise was to finish the MIPSProcessor implementation.
+An RTL sketch of a suggested architecture was provided.
+Our implementation is closely based on this suggested architecture.
+
+Most of the functionality of the processor was implemented in appropriate submodules.
+On the top level the processor only consists of signals connecting ports of different submodules,
+and a few multiplexers for directing signals based on other signals.
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{img/architecture.png}
     \caption{Top level architecture of processor}
     \label{fig:architecture}
 \end{figure}
 
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=\textwidth]{img/state_machine.png}
-    \caption{State machine of control submodule}
-    \label{fig:state_machine}
-\end{figure}
+\input{control}
+\input{registers}
+\input{immediate_value_transform}
+\input{ALU}
+\input{PC}
 

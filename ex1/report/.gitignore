@@ -2,9 +2,11 @@
 *.bbl
 *.blg
 *.dvi
+*.fdb_latexmk
+*.fls
+*.lof
 *.log
+*.lot
 *.out
 *.synctex.gz
 *.toc
-*.lof
-*.lot
