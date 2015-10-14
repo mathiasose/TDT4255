@@ -18,8 +18,8 @@ package defs is
 
     constant ADD_FUNCT : funct_t := "100000";
     constant SUB_FUNCT : funct_t := "100010";
-    constant ALU_AND_FUNCT : funct_t := "100100";
-    constant ALU_OR_FUNCT : funct_t := "100101";
+    constant AND_FUNCT : funct_t := "100100";
+    constant OR_FUNCT : funct_t := "100101";
     constant SLT_FUNCT : funct_t := "101010";
     constant NOR_FUNCT : funct_t := "100111";
     constant XOR_FUNCT : funct_t := "100110";
