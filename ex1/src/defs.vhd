@@ -32,4 +32,7 @@ package defs is
     constant LUI_OPCODE : opcode_t := "001111";
 
     constant ADDI_OPCODE : opcode_t := "001000";
+    constant ANDI_OPCODE : opcode_t := "001100";
+    constant ORI_OPCODE : opcode_t := "001101";
+    constant XORI_OPCODE : opcode_t := "001110";
 end package defs;

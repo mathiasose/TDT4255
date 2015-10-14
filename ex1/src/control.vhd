@@ -124,6 +124,27 @@ begin
                             alu_src <= '1';
                             pc_write <= '1';
                             reg_write <= '1';
+                        when ANDI_OPCODE =>
+                            next_state <= FETCH;
+
+                            alu_op <= ALU_AND;
+                            alu_src <= '1';
+                            pc_write <= '1';
+                            reg_write <= '1';
+                        when ORI_OPCODE =>
+                            next_state <= FETCH;
+
+                            alu_op <= ALU_OR;
+                            alu_src <= '1';
+                            pc_write <= '1';
+                            reg_write <= '1';
+                        when XORI_OPCODE =>
+                            next_state <= FETCH;
+
+                            alu_op <= ALU_XOR;
+                            alu_src <= '1';
+                            pc_write <= '1';
+                            reg_write <= '1';
                         when others =>
                             next_state <= FETCH;
                     end case;
