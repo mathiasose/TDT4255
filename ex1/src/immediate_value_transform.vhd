@@ -4,10 +4,6 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity immediate_value_transform is
-    generic (
-        ADDR_WIDTH : integer := 8;
-        DATA_WIDTH : integer := 32
-    );
     Port (
         transform : in immediate_value_transformation_t;
         in_value : in immediate_value_t;

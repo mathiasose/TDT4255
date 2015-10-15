@@ -4,10 +4,6 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity control is
-    generic (
-        ADDR_WIDTH : integer := 8;
-        DATA_WIDTH : integer := 32
-    );
     port(
         clock : in std_logic;
         reset : in std_logic;
@@ -17,7 +13,6 @@ entity control is
         alu_src : out std_logic;
         branch : out std_logic;
         jump : out std_logic;
-        --mem_read : out std_logic;
         mem_to_reg : out std_logic;
         mem_write : out std_logic;
         reg_dst : out std_logic;
@@ -45,7 +40,6 @@ begin
         reg_dst <= '0';
         branch <= '0';
         jump <= '0';
-        --mem_read <= '0';
         mem_to_reg <= '0';
         alu_op <= NO_OP;
         mem_write <= '0';

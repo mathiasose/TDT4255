@@ -4,10 +4,6 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity ALU is
-    generic (
-        ADDR_WIDTH : integer := 8;
-        DATA_WIDTH : integer := 32
-    );
     Port (
         clock : in  STD_LOGIC
         ; reset : in  STD_LOGIC
@@ -26,7 +22,7 @@ begin
     result <= alu_result;
     zero <= '1' when alu_result = OPERAND_0 else '0';
 
-    process(reset, operation, operand_A, operand_B)
+    process(reset, operation, operand_A, operand_B, shift_amount)
     begin
         if reset = '1' then
             alu_result <= (others => '0');

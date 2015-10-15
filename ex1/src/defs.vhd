@@ -14,13 +14,10 @@ package defs is
     type state_t is (STALL, FETCH, EXECUTE);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
 
-    constant OPERAND_0 : operand_t := x"00000000";
-    constant OPERAND_1 : operand_t := x"00000001";
-
     constant ADD_FUNCT : funct_t := "100000";
     constant SUB_FUNCT : funct_t := "100010";
     constant AND_FUNCT : funct_t := "100100";
-    constant OR_FUNCT : funct_t := "100101";
+    constant OR_FUNCT  : funct_t := "100101";
     constant SLT_FUNCT : funct_t := "101010";
     constant NOR_FUNCT : funct_t := "100111";
     constant XOR_FUNCT : funct_t := "100110";
@@ -28,16 +25,18 @@ package defs is
     constant SRL_FUNCT : funct_t := "000010";
     constant SRA_FUNCT : funct_t := "000011";
 
-    constant ALU_OP_OPCODE : opcode_t := "000000";
-    constant JUMP_OPCODE : opcode_t := "000010";
-    constant BEQ_OPCODE : opcode_t := "000100";
-    constant LW_OPCODE : opcode_t := "100011";
-    constant SW_OPCODE : opcode_t := "101011";
-    constant LUI_OPCODE : opcode_t := "001111";
+    constant ALU_OP_OPCODE  : opcode_t := "000000";
+    constant JUMP_OPCODE    : opcode_t := "000010";
+    constant BEQ_OPCODE     : opcode_t := "000100";
+    constant LW_OPCODE      : opcode_t := "100011";
+    constant SW_OPCODE      : opcode_t := "101011";
+    constant LUI_OPCODE     : opcode_t := "001111";
+    constant ADDI_OPCODE    : opcode_t := "001000";
+    constant ANDI_OPCODE    : opcode_t := "001100";
+    constant ORI_OPCODE     : opcode_t := "001101";
+    constant XORI_OPCODE    : opcode_t := "001110";
+    constant SLTI_OPCODE    : opcode_t := "001010";
 
-    constant ADDI_OPCODE : opcode_t := "001000";
-    constant ANDI_OPCODE : opcode_t := "001100";
-    constant ORI_OPCODE : opcode_t := "001101";
-    constant XORI_OPCODE : opcode_t := "001110";
-    constant SLTI_OPCODE : opcode_t := "001010";
+    constant OPERAND_0 : operand_t := x"00000000";
+    constant OPERAND_1 : operand_t := x"00000001";
 end package defs;
