@@ -1,0 +1,27 @@
+\section{Instruction Set Architecture}
+
+Our implemented instruction set only contains a subset of a full MIPS instruction set.
+MIPS instruction set contains 3 types of instructions: R-type, I-type and J-type.
+All the implemented instructions and their corresponding type may be seen in table \ref{table:instruction-types}.
+
+\begin{table}
+\centering
+\begin{tabular}{ |l|l|l| }
+  \hline
+  R-type  & I-type  & J-type  \\ \hline
+  ADD     & ADDI    & JUMP    \\
+  SUB     & LW      &         \\
+  SLT     & SW      &         \\
+  AND     & LUI     &         \\
+  OR      & BEQ     &         \\
+  NOR     & SLTI    &         \\
+  XOR     & ANDI    &         \\
+  SLL     & ORI     &         \\
+  SRL     & XORI    &         \\
+  SRA     &         &         \\
+
+  \hline
+\end{tabular}
+\caption{Instruction set types}
+\label{table:instruction-types}
+\end{table}
