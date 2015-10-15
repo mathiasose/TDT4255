@@ -1,11 +1,36 @@
-\section{Program counter submodule}
+\section{Program Counter Submodule}
+The implementation requires a special purpose register for the program counter.
+The \gls{pc} register has been placed in a submodule which is also called PC,
+together with the logic for changing the value of the register based on inputs.
 
-Our MIPS processor contains a special purpose register called \gls{pc}.
-This register contains the address of the current instruction to be fetched from instruction memory.
+When the conrol unit reaches the \texttt{FETCH} state,
+this register must contain the address of the next instruction to be executed.
+The \gls{pc} register can only change value when the control module enables the \texttt{pc\_write} signal,
+which it does in the \texttt{EXECUTE} or \texttt{STALL} states.
+This way the register will have a new value by the time the control module goes to the \texttt{FETCH} state,
+and the instruction memory can use that clock cycle to transfer the next instruction.
 
-In our implementation the \gls{pc} changes value in execute or stall state.
-\gls{pc} have to contain the correct value before the next instruction is fetched in fetch state.
-As a result the \gls{pc} changes value in stall state only when \textit{SW} or \textit{LW} is issued, and in execute state for all other instructions.
+By default the program counter increases by one every cycle it is write enabled.
+The processor implementation also supports \textit{jump} and \textit{branch} instructions.
+Both of these may overwrite the current \gls{pc} value with a new value.
+In the case of the \texttt{beq} instruction both the \texttt{branch} signal from the control module and the \texttt{alu\_zero} signal from the \gls{alu} must be high or else the default incrementing behavior is used.
+Figure \ref{fig:pc} shows the multiplexing for this.
 
-The \gls{pc} module supports \textit{jump} and \textit{branch} instructions.
-By default the \gls{pc} increases by one before fetch, but if the \textit{branch} or \textit{jump} control signal is set high \gls{pc} has to change based on a value calculated by the \gls{alu}.
+In this implementation the program counter is initialized to its maximum value,
+so that the first action of the processor when enabled is to increment it to the 0 address.
+
+When the submodule was first implemented,
+the register was set to be 32 bits wide and the operations related to the register were implemented accordingly.
+This was based on the suggested architecture sketch and the MIPS definition.
+When integrating the submodule with the rest of the systems we realized that the system expected a generic address width, and that for the testbench this value was set to 8.
+The solution to this was to add a "chopping" part before the output of the module that discards higher order bits so that only the desired number of bits is outputted.
+All internal arithmetic in the module still operates on 32 bit values,
+and only the output is chopped.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/pc}
+    \caption{Program counter submodule sketch}
+    \label{fig:pc}
+\end{figure}
+
