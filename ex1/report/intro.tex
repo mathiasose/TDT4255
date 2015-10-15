@@ -1,15 +1,19 @@
 \chapter{Introduction}
-In this exercise we were given the task to implement a simplified version of a multi cycle MIPS processor.
-The implementation is written in VHDL and simulated in XILINX ISE.
-After implementing the MIPS processor, the design is tested and verified on a XILINX Spartan-6 FPGA.
+This report presents a solution to exercise 1 of the TDT4255 course at NTNU.
+The objective of the exercise is to implement a multi cycle processor capable of executing a subset of the \gls{mips} instruction set, in \gls{vhdl}.
+After the design simulation is verified with testbenches in \textit{XILINX ISE} it is to be synthesized and tested on \textit{XILINX Spartan-6 FPGA}.
 
-\section{MIPS Processor}
-A MIPS processor uses a RISC instruction set and a load store architecture.
-All the instructions are 32 bit.
-There are three different instruction types: R-type, I-type and J-type.
+\section{MIPS}
+The instruction set for this exercise is \gls{mips} instruction set with 32 bit wide instructions.
+MIPS is a RISC instruction set,
+and there are three different instruction types: R(egister)-type, I(mmediate)-type and J(ump)-type.
+The MIPS processor has a limited amount of fast registers near the ALU,
+and uses load and store instructions to move data to and from a bigger but slower data memory.
+Instructions are fetched from a memory separate from the data memory.
 
 \section{Approach}
-The main components in our solution is \gls{pc}, \gls{alu}, transform and a registers module.
-An overview of the architecture can be seen in figer \ref{fig:architecture}.
-As this exercise is quite exstensive, the problem is divided into several compontens.
-Each compontents has a corresponding testbench to verify that the implementation works according to the specification.
+The top level architecture of the processor is divided into separate modules.
+These modules are created by following test-driven development methods and iterative changes as the system comes together as a whole.
+Once these submodules are finished they are connected and the system is tested as a whole.
+An overview of the architecture can be seen in figure \ref{fig:architecture}.
+
