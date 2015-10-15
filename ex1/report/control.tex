@@ -1,9 +1,21 @@
-\section{Control submodule}
+\section{Control Submodule}
+The control submodule combines internal state (fetch, execute, stall) and the input from the current instruction to decide various control signals which the other submodule use as inputs.
+
+During the fetch stage the control module does nothing except prepare to go to the next state at the next clock cycle.
+It is during the execute stage that most of the output happens.
+In this stage the state machine is a Mealy machine,
+with the opcode and funct bits from the input instruction decide the outputs.
+The outputs that are set non-default are shown in figure \ref{fig:state_machine}.
+
+The \texttt{LW} and \texttt{SW} instructions require I/O to the data memory module,
+which is a comparaively slow operation.
+Therefore the stall state is required as a continuation of the execute state for these instructions.
+The \texttt{pc\_write} signal controls the program counter submodule and ensures that the next instruction is not fetched before the current instruction has had enough time to execute.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{img/state_machine.png}
-    \caption{State machine of control submodule}
+    \caption{State machine of control submodule.\\Binary signals default to 0, \texttt{ALU\_OP} defaults to \texttt{NO\_OP} and \texttt{imm\_val\_tf} defaults to \texttt{SIGN\_EXTEND}.}
     \label{fig:state_machine}
 \end{figure}
 
