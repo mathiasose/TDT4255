@@ -1,0 +1,15 @@
+\section{Adding more instructions}
+After having sucessfully tested the minimum required instruction set on the FPGA,
+we took another look at the full MIPS instruction set.
+
+\subsection{Arithmetic and logical I-type instructions}
+With an already functioning implementation containing various ALU operations and I-type insructions,
+it was very simple to also implement the I-type versions of the existing arithmetic-logical operations, \texttt{ADDI}, \texttt{ANDI}, \texttt{ORI} and \texttt{SLTI} by setting the correct signals in the control module.
+With \texttt{NOR} and \texttt{XOR} existing as operators in VHDL, these could be implemented as ALU operations just as simply as the existing ones,
+which enabled the instructions \texttt{NOR}, \texttt{XOR}, \texttt{XORI}
+
+\subsection{Shift instructions}
+In order to implement the shift instructions \texttt{SLL}, \texttt{SRL},
+the ALU needed access to the part of the instruction that contains the number of positions to shift.
+This signal was added and can be seen in figure \ref{fig:architecture}.
+With that connection it was again a very simple task to add the shift functionality to the ALU, since VHDL provides functions for this.
