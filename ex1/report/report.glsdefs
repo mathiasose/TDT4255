@@ -1,0 +1,150 @@
+\ifglsentryexists{pc}{}%
+{%
+\gls@defglossaryentry{pc}%
+{%
+name={PC},%
+sort={PC},%
+type={acronym},%
+first={Program Counter\glsspace (PC)},%
+firstplural={Program Counters\glsspace (PCs)},%
+text={PC},%
+plural={PCs},%
+description={Program Counter},%
+descriptionplural={Program Counter\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Program Counter},%
+longplural={Program Counters},%
+short={PC},%
+shortplural={PCs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{fpga}{}%
+{%
+\gls@defglossaryentry{fpga}%
+{%
+name={FPGA},%
+sort={FPGA},%
+type={acronym},%
+first={otnehnaoheunaoehuntaoheu hoeunt hae\glsspace (FPGA)},%
+firstplural={otnehnaoheunaoehuntaoheu hoeunt haes\glsspace (FPGAs)},%
+text={FPGA},%
+plural={FPGAs},%
+description={otnehnaoheunaoehuntaoheu hoeunt hae},%
+descriptionplural={otnehnaoheunaoehuntaoheu hoeunt hae\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={otnehnaoheunaoehuntaoheu hoeunt hae},%
+longplural={otnehnaoheunaoehuntaoheu hoeunt haes},%
+short={FPGA},%
+shortplural={FPGAs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{vhdl}{}%
+{%
+\gls@defglossaryentry{vhdl}%
+{%
+name={VHDL},%
+sort={VHDL},%
+type={acronym},%
+first={Very-Large-Scale Integration (VLSI) Hardware Description Language\glsspace (VHDL)},%
+firstplural={Very-Large-Scale Integration (VLSI) Hardware Description Languages\glsspace (VHDLs)},%
+text={VHDL},%
+plural={VHDLs},%
+description={Very-Large-Scale Integration (VLSI) Hardware Description Language},%
+descriptionplural={Very-Large-Scale Integration (VLSI) Hardware Description Language\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Very-Large-Scale Integration (VLSI) Hardware Description Language},%
+longplural={Very-Large-Scale Integration (VLSI) Hardware Description Languages},%
+short={VHDL},%
+shortplural={VHDLs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{alu}{}%
+{%
+\gls@defglossaryentry{alu}%
+{%
+name={ALU},%
+sort={ALU},%
+type={acronym},%
+first={Arithmetic Logic Unit\glsspace (ALU)},%
+firstplural={Arithmetic Logic Units\glsspace (ALUs)},%
+text={ALU},%
+plural={ALUs},%
+description={Arithmetic Logic Unit},%
+descriptionplural={Arithmetic Logic Unit\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Arithmetic Logic Unit},%
+longplural={Arithmetic Logic Units},%
+short={ALU},%
+shortplural={ALUs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{mips}{}%
+{%
+\gls@defglossaryentry{mips}%
+{%
+name={MIPS},%
+sort={MIPS},%
+type={acronym},%
+first={Microprocessor without Interlocked Pipeline Stages\glsspace (MIPS)},%
+firstplural={Microprocessor without Interlocked Pipeline Stagess\glsspace (MIPSs)},%
+text={MIPS},%
+plural={MIPSs},%
+description={Microprocessor without Interlocked Pipeline Stages},%
+descriptionplural={Microprocessor without Interlocked Pipeline Stages\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Microprocessor without Interlocked Pipeline Stages},%
+longplural={Microprocessor without Interlocked Pipeline Stagess},%
+short={MIPS},%
+shortplural={MIPSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%

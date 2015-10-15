@@ -1,0 +1,22 @@
+\glossarysection[\glossarytoctitle]{\glossarytitle}\glossarypreamble
+\begin{theglossary}\glossaryheader
+\glsgroupheading{A}\relax \glsresetentrylist %
+\glossentry{alu}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{III}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{4\delimN 5}}}\glsgroupskip
+\glsgroupheading{F}\relax \glsresetentrylist %
+\glossentry{fpga}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{III}}}\glsgroupskip
+\glsgroupheading{M}\relax \glsresetentrylist %
+\glossentry{mips}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{III}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{1}}}\glsgroupskip
+\glsgroupheading{P}\relax \glsresetentrylist %
+\glossentry{pc}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{III}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{4\delimN 5}}}\glsgroupskip
+\glsgroupheading{V}\relax \glsresetentrylist %
+\glossentry{vhdl}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{III}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{1}}}%
+\end{theglossary}\glossarypostamble

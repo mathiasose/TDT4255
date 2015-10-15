@@ -1,8 +1,9 @@
 \section{Registers submodule}
-The register module contains an array of 32 general purpose register. Each register is 32 bit wide. Register 0 is reserved, and always contains the value 0.
+The register module contains an array of 32 general purpose register.
+Each register is 32 bit wide.
+Register 0 is reserved, and always contains the value 0.
 
-When register{\_}write is set high in the control module, data is written to a register with the address from write{\_}register.
+When \texttt{register\_write} is set high in the control module, data is written to a register with the address from \texttt{write\_register}.
 
-On each execute cycle data is fetched from two registers and sent to read{\_}data{\_}1 and read{\_}data{\_}2 outputs. read{\_}data{\_}1 and read{\_}data{\_}2 is addressed through read{\_}register{\_}1 and read{\_}register{\_}2.
-
-% Maybe add italic to every register name?
+On each execute cycle data is fetched from two registers and sent to \texttt{read\_data\_1} and \texttt{read\_data\_2} outputs.
+\texttt{read\_data\_1} and \texttt{read\_data\_2} is addressed through \texttt{read\_register\_1} and \texttt{read\_register\_2}.
