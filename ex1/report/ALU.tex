@@ -1,2 +1,29 @@
-\section{ALU}
+\section{Arithmetic Logic Unit}
+The \gls{alu} takes two 32 bit operands.
+Opcodes is recieved from the control module and the \gls{alu} performs operation based on the opcode.
 
+\gls{alu} has a status signal attached to the \gls{pc} module called \textit{alu\_zero}.
+\textit{alu\_zero} is used by the \textit{BEQ} instruction and is set high when the \textit{SUB} opration returns 0.
+
+After implementing the required \gls{alu} operations, it required litle effort to add additional functionality.
+The \gls{alu} were extended with a few extra operations: NOR, XOR, SLL, SRL, SRA.
+
+\begin{table}
+\centering
+\begin{tabular}{ |l|l| }
+  \hline
+  ALU operation & Description             \\ \hline
+  ADD           & Addition                \\
+  SUB           & Subtraction             \\
+  SLT           & Set if less than        \\
+  AND           & AND                     \\
+  NOR           & NOR                     \\
+  XOR           & Exclusive OR            \\
+  SLL           & Shift left logical      \\
+  SRL           & Shift right logical     \\
+  SRA           & Shift right arithmetic  \\
+  \hline
+\end{tabular}
+\caption{Implemented ALU operations}
+\label{table:instructions}
+\end{table}
