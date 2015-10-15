@@ -2,11 +2,12 @@
 The \gls{alu} takes two 32 bit operands.
 Opcodes is recieved from the control module and the \gls{alu} performs operation based on the opcode.
 
-\gls{alu} has a status signal attached to the \gls{pc} module called \textit{alu\_zero}.
-\textit{alu\_zero} is used by the \textit{BEQ} instruction and is set high when the \textit{SUB} opration returns 0.
+\gls{alu} has a status signal attached to the \gls{pc} module called \texttt{alu\_zero}.
+\texttt{alu\_zero} is used by the BEQ instruction and is set high when the SUB operation returns 0.
 
 After implementing the required \gls{alu} operations, it required litle effort to add additional functionality.
 The \gls{alu} were extended with a few extra operations: NOR, XOR, SLL, SRL, SRA.
+Table \ref{table:instructions} shows all the implemented \gls{alu} functions.
 
 \begin{table}
 \centering
