@@ -151,6 +151,13 @@ begin
                             alu_src <= '1';
                             pc_write <= '1';
                             reg_write <= '1';
+                        when SLTI_OPCODE =>
+                            next_state <= FETCH;
+
+                            alu_op <= SLT;
+                            alu_src <= '1';
+                            pc_write <= '1';
+                            reg_write <= '1';
                         when others =>
                             next_state <= FETCH;
                     end case;

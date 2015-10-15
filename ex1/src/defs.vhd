@@ -39,4 +39,5 @@ package defs is
     constant ANDI_OPCODE : opcode_t := "001100";
     constant ORI_OPCODE : opcode_t := "001101";
     constant XORI_OPCODE : opcode_t := "001110";
+    constant SLTI_OPCODE : opcode_t := "001010";
 end package defs;
