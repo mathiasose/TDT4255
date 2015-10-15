@@ -1,2 +1,18 @@
-\section{Immediate value transform submodule}
+\section{Immediate Value Transform Submodule}
+
+In the suggested architecture there was indicated that a module for sign extending a 16-bit vector to 32 bits.
+This 16-bit vector comes from the immediate value part of I-type instructions.
+At first we implemented this without a submodule,
+since it only required a one-line function call in VHDL to extend the number.
+
+As we made progress on the exercise, we realised that the \texttt{LUI} instruction required a module that could extend a 16-bit vector to 32 bits by left-shifting.
+The natural solution to this was to create a new submodule which could take a 16 bit input and a 1 bit control signal, then output the appropriate extended vector.
+Figure \ref{fig:imm_val_tf} shows this module.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/imm_val_tf}
+    \caption{Sketch of immediate value transform submodule}
+    \label{fig:imm_val_tf}
+\end{figure}
 
