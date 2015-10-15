@@ -1,1 +1,14 @@
 \chapter{Discussion}
+\section{Unit testing}
+New features were mostly developed by first writing failing tests,
+then implementing the features required to pass the tests.
+Sometimes the test were later found to be flawed and had to be adapted.
+Despite this it was very useful to have tests that could be run at any time to check that new functionality did not break old functionality.
+
+\section{"Load immediate"}
+The task description required the "LDI" instruction to be implemented.
+There is a pseudo-instruction called "li" in the MIPS reference card,
+but since it is a pseudo-instruction it is not within the scope of the processor implementation.
+After asking for a clarification we decided that implementing the LUI instruction would suffice as the minimum requirement,
+and by later adding other instructions like ADDI and SLL we made sure that a compiler could in fact translate the pseudo-instruction to some combination of supported instructions.
+
