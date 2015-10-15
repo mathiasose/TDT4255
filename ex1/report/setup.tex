@@ -23,6 +23,10 @@
 \usepackage{url}
 \usepackage{amsmath}
 
+%% Add acronym package
+\usepackage[acronym,nomain]{glossaries}
+\makeglossaries
+
 \definecolor{gray75}{gray}{0.75}
 \definecolor{gray1}{gray}{0.97}
 \definecolor{gray2}{gray}{0.90}
@@ -39,7 +43,7 @@
     extendedchars=true,         %
     breaklines=true,            % Zeilen werden Umgebrochen
     keywordstyle=\color{red},
-    frame=b,         
+    frame=b,
  %  keywordstyle=[1]\textbf,    % Stil der Keywords
  %  keywordstyle=[2]\textbf,    %
  %  keywordstyle=[3]\textbf,    %
@@ -52,10 +56,10 @@
     framexrightmargin=5pt,
     framexbottommargin=4pt,
     %backgroundcolor=\color{lightgray},
-    showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+    showstringspaces=false      % Leerzeichen in Strings anzeigen ?
 }
 
-%\DeclareCaptionFont{blue}{\color{blue}} 
+%\DeclareCaptionFont{blue}{\color{blue}}
 
 %\captionsetup[lstlisting]{singlelinecheck=false, labelfont={blue}, textfont={blue}}
 \usepackage{caption}
@@ -112,5 +116,3 @@
 }
 
 \titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{|}\hsp}{0pt}{\Huge\bfseries}
-
-
