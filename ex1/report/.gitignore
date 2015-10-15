@@ -11,3 +11,8 @@
 *.synctex.gz
 *.toc
 *.pdf
+*.acn
+*.acr
+*.alg
+*.glsdefs
+*.ist
