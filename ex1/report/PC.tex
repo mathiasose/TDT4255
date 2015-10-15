@@ -1,2 +1,11 @@
 \section{Program counter submodule}
 
+Our MIPS processor contains a special purpose register called \gls{pc}.
+This register contains the address of the current instruction to be fetched from instruction memory.
+
+In our implementation the \gls{pc} changes value in execute or stall state.
+\gls{pc} have to contain the correct value before the next instruction is fetched in fetch state.
+As a result the \gls{pc} changes value in stall state only when \textit{SW} or \textit{LW} is issued, and in execute state for all other instructions.
+
+The \gls{pc} module supports \textit{jump} and \textit{branch} instructions.
+By default the \gls{pc} increases by one before fetch, but if the \textit{branch} or \textit{jump} control signal is set high \gls{pc} has to change based on a value calculated by the \gls{alu}.
