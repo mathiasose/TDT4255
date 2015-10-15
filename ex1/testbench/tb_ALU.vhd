@@ -18,6 +18,7 @@ ARCHITECTURE behavior OF tb_ALU IS
         ; operand_A : in operand_t
         ; operand_B : in operand_t
         ; operation : in alu_operation_t
+        ; shift_amount : in shift_amount_t
         ; result : out operand_t
         ; zero : out STD_LOGIC
     );
@@ -30,6 +31,7 @@ ARCHITECTURE behavior OF tb_ALU IS
    signal operand_A : operand_t := (others => '0');
    signal operand_B : operand_t := (others => '0');
    signal operation :  alu_operation_t := NO_OP;
+   signal shift_amount : shift_amount_t := (others => '0');
 
      --Outputs
    signal result : operand_t;
@@ -47,6 +49,7 @@ BEGIN
           operand_A => operand_A,
           operand_B => operand_B,
           operation => operation,
+          shift_amount => shift_amount,
           result => result,
           zero => zero
         );
@@ -113,6 +116,22 @@ BEGIN
       operation <= ALU_XOR;
       wait for clock_period;
       check(result = x"FFFFFFFE", "Test XOR");
+
+      operation <= ALU_SLL;
+      shift_amount <= "000100";
+      wait for clock_period;
+      check(result = x"00000010", "Test SLL");
+
+      operation <= ALU_SRL;
+      operand_A <= x"00000010";
+      wait for clock_period;
+      check(result = x"00000001", "Test SRL");
+
+      operation <= ALU_SRA;
+      operand_A <= x"F0000000";
+      shift_amount <= "000100";
+      wait for clock_period;
+      check(result = x"FF000000", "Test SRA");
 
       report "ALL TESTS SUCCESSFUL";
 

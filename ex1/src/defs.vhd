@@ -8,8 +8,9 @@ package defs is
     subtype register_address_t is std_logic_vector(4 downto 0);
     subtype opcode_t is std_logic_vector(5 downto 0);
     subtype funct_t is std_logic_vector(5 downto 0);
+    subtype shift_amount_t is std_logic_vector(5 downto 0);
 
-    type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, NO_OP);
+    type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type state_t is (STALL, FETCH, EXECUTE);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
 
@@ -23,6 +24,9 @@ package defs is
     constant SLT_FUNCT : funct_t := "101010";
     constant NOR_FUNCT : funct_t := "100111";
     constant XOR_FUNCT : funct_t := "100110";
+    constant SLL_FUNCT : funct_t := "000000";
+    constant SRL_FUNCT : funct_t := "000010";
+    constant SRA_FUNCT : funct_t := "000011";
 
     constant ALU_OP_OPCODE : opcode_t := "000000";
     constant JUMP_OPCODE : opcode_t := "000010";

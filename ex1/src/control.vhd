@@ -83,6 +83,12 @@ begin
                                     alu_op <= ALU_NOR;
                                 when XOR_FUNCT =>
                                     alu_op <= ALU_XOR;
+                                when SLL_FUNCT =>
+                                    alu_op <= ALU_SLL;
+                                when SRL_FUNCT =>
+                                    alu_op <= ALU_SRL;
+                                when SRA_FUNCT =>
+                                    alu_op <= ALU_SRA;
                                 when others =>
                                     alu_op <= NO_OP;
                             end case;

@@ -88,6 +88,7 @@ begin
         operation => alu_op,
         operand_A => reg_out_a,
         operand_B => operand_b,
+        shift_amount => imem_data_in(11 downto 6),
         result => alu_result,
         zero => alu_zero
     );

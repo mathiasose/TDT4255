@@ -13,6 +13,7 @@ entity ALU is
         ; reset : in  STD_LOGIC
         ; operand_A : in operand_t := OPERAND_0
         ; operand_B : in operand_t := OPERAND_0
+        ; shift_amount : in shift_amount_t := (others => '0')
         ; operation : in alu_operation_t := NO_OP
         ; result : out operand_t
         ; zero : out STD_LOGIC
@@ -48,6 +49,12 @@ begin
                 alu_result <= operand_A NOR operand_B;
             elsif operation = ALU_XOR then
                 alu_result <= operand_A XOR operand_B;
+            elsif operation = ALU_SLL then
+                alu_result <= operand_t(shift_left(unsigned(operand_A), to_integer(unsigned(shift_amount))));
+            elsif operation = ALU_SRL then
+                alu_result <= operand_t(shift_right(unsigned(operand_A), to_integer(unsigned(shift_amount))));
+            elsif operation = ALU_SRA then
+                alu_result <= operand_t(shift_right(signed(operand_A), to_integer(unsigned(shift_amount))));
             else -- NO_OP
                 alu_result <= operand_B;    -- useful when doing LUI
             end if;
