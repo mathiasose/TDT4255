@@ -1,4 +1,8 @@
 \section{Performance}
 The final implementation may achieve a maximum clock frequency of 46.430 MHz.
-Our processor exectues one instruction each second or third cycle, depending if the instruction accesses the data memory.
-This means me at most do 23.215 M
+The processor only handles one instruction at any given time.
+As a result it exectues one instruction each second or third cycle, depending if the instruction accesses the data memory.
+The implemented processor may execute at most 23.215 M and in worst case 15.477 M instructions each second.
+
+Implementing piplineing on the processor would increase number of instructions executed each second.
+Pipelineing would make it possible to execute one instruction each clock cycle.
