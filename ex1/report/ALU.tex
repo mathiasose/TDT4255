@@ -1,30 +1,37 @@
 \section{Arithmetic Logic Unit}
-The \gls{alu} takes two 32 bit operands.
-Opcodes is recieved from the control module and the \gls{alu} performs operation based on the opcode.
+The implemented \gls{alu} can perform arithmetic, logical and shifting operations.
+In each execute cycle the control module decodes the instruction to an appropriate opcode and the ALU receives this opcode as an input.
+Table \ref{table:alu_ops} shows the operations implemented in the ALU.
 
-\gls{alu} has a status signal attached to the \gls{pc} module called \texttt{alu\_zero}.
-\texttt{alu\_zero} is used by the BEQ instruction and is set high when the SUB operation returns 0.
+The arithmetic and logical operations take two 32 bit operand inputs.
+The first is always a register value,
+the second may be either from a register or an immediate value from the instruction that has been transformed to 32-bit format.
+These operations are implemented by delegating to VHDL built in operations.
 
-After implementing the required \gls{alu} operations, it required litle effort to add additional functionality.
-The \gls{alu} were extended with a few extra operations: NOR, XOR, SLL, SRL, SRA.
-Table \ref{table:instructions} shows all the implemented \gls{alu} functions.
+Shift operations use the \texttt{shift\_amount} part of the instruction as another input.
+Shifting is implemented by delegating to the standard shift functions in VHDL.
+These instrutions were added later than the others,
+and this is described in section \ref{sec:more_instructions}.
 
-\begin{table}
-\centering
-\begin{tabular}{ |l|l| }
-  \hline
-  ALU operation & Description             \\ \hline
-  ADD           & Addition                \\
-  SUB           & Subtraction             \\
-  SLT           & Set if less than        \\
-  AND           & AND                     \\
-  NOR           & NOR                     \\
-  XOR           & Exclusive OR            \\
-  SLL           & Shift left logical      \\
-  SRL           & Shift right logical     \\
-  SRA           & Shift right arithmetic  \\
-  \hline
-\end{tabular}
-\caption{Implemented ALU operations}
-\label{table:instructions}
+The \gls{alu} module outputs a signal to the \gls{pc} module called \texttt{alu\_zero} whenever the current operation yields a 0 result.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ |l|l| }
+        \hline
+        ALU operation & Description             \\ \hline
+        ADD           & Addition                \\
+        SUB           & Subtraction             \\
+        SLT           & Set if less than        \\
+        AND           & AND                     \\
+        NOR           & NOR                     \\
+        XOR           & Exclusive OR            \\
+        SLL           & Shift left logical      \\
+        SRL           & Shift right logical     \\
+        SRA           & Shift right arithmetic  \\
+        \hline
+    \end{tabular}
+    \caption{Implemented ALU operations}
+    \label{table:alu_ops}
 \end{table}
+
