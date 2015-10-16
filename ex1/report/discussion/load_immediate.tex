@@ -1,7 +1,6 @@
-\section{"Load immediate"}
+\section{"Load Immediate"}
 The task description required the "LDI" instruction to be implemented.
-There is a pseudo-instruction called "li" in the MIPS reference card,
+There is a pseudo-instruction called "li" in the MIPS reference card \cite{bib:compendium},
 but since it is a pseudo-instruction it is not within the scope of the processor implementation.
-After asking for a clarification we decided that implementing the LUI instruction would suffice as the minimum requirement,
-and by later adding other instructions like ADDI and SLL we made sure that a compiler could in fact translate the pseudo-instruction to some combination of supported instructions.
-
+After asking for a clarification we decided that implementing the \texttt{LUI} instruction would suffice as the minimum requirement,
+and by later adding other instructions like \texttt{ADDI} and \texttt{SLL} we made sure that a compiler could in fact translate the pseudo-instruction to some combination of supported instructions.
