@@ -13,8 +13,7 @@ ARCHITECTURE behavior OF tb_ALU IS
  
     COMPONENT ALU
     Port (
-        clock : in  STD_LOGIC
-        ; reset : in  STD_LOGIC
+        reset : in  STD_LOGIC
         ; operand_A : in operand_t
         ; operand_B : in operand_t
         ; operation : in alu_operation_t
@@ -26,7 +25,6 @@ ARCHITECTURE behavior OF tb_ALU IS
     
 
    --Inputs
-   signal clock : std_logic := '0';
    signal reset : std_logic := '0';
    signal operand_A : operand_t := (others => '0');
    signal operand_B : operand_t := (others => '0');
@@ -44,7 +42,6 @@ BEGIN
  
     -- Instantiate the Unit Under Test (UUT)
    uut: ALU PORT MAP (
-          clock => clock,
           reset => reset,
           operand_A => operand_A,
           operand_B => operand_B,
@@ -53,23 +50,11 @@ BEGIN
           result => result,
           zero => zero
         );
-
-   -- Clock process definitions
-   clock_process :process
-   begin
-        clock <= '0';
-        wait for clock_period/2;
-        clock <= '1';
-        wait for clock_period/2;
-   end process;
  
 
    -- Stimulus process
    stim_proc: process
-   begin
-
-      -- ADD, SUB, SLT, ALU_AND, ALU_OR, NO_OP
-      
+   begin      
       wait for clock_period;
 
       operand_A <= (others => '1');

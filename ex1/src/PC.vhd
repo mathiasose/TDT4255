@@ -21,11 +21,10 @@ entity PC is
 end PC;
 
 architecture Behavioral of PC is
-    -- Increment PC by 1
-    constant PC_INCREMENT   : integer := 1; -- 4?
+    constant PC_INCREMENT   : integer := 1; -- Increment PC by 1
     constant PC_INIT        : STD_LOGIC_VECTOR(31 downto 0) := (others => '1');
 
-    signal pc               : STD_LOGIC_VECTOR(31 downto 0) :=  PC_INIT; -- start at max so that the first FETCH sets it to 0
+    signal pc               : STD_LOGIC_VECTOR(31 downto 0) :=  PC_INIT; -- start at max so that the first inceremnt overflows to 0
     signal jump_address     : STD_LOGIC_VECTOR(31 downto 0);
     signal immediate_value  : STD_LOGIC_VECTOR(15 downto 0);
 begin

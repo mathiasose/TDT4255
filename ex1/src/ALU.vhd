@@ -5,7 +5,6 @@ use work.defs.all;
 
 entity ALU is
     Port (
-        clock         : in STD_LOGIC;
         reset         : in STD_LOGIC;
         operand_A     : in operand_t := OPERAND_0;
         operand_B     : in operand_t := OPERAND_0;
@@ -22,6 +21,7 @@ begin
     result <= alu_result;
     zero <= '1' when alu_result = OPERAND_0 else '0';
 
+    -- ALU is not clocked directly, but the inputs are clock-dependent
     process(reset, operation, operand_A, operand_B, shift_amount)
     begin
         if reset = '1' then
@@ -45,23 +45,14 @@ begin
                 alu_result <= operand_A NOR operand_B;
             elsif operation = ALU_XOR then
                 alu_result <= operand_A XOR operand_B;
-
-            -- Shift left logical
-            elsif operation = ALU_SLL then
+            elsif operation = ALU_SLL then  -- Shift left logical
                 alu_result <= operand_t(shift_left(unsigned(operand_A), to_integer(unsigned(shift_amount))));
-
-            -- Shift right logical
-            elsif operation = ALU_SRL then
+            elsif operation = ALU_SRL then  -- Shift right logical
                 alu_result <= operand_t(shift_right(unsigned(operand_A), to_integer(unsigned(shift_amount))));
-
-            -- Shift right arithmetic
-            elsif operation = ALU_SRA then
+            elsif operation = ALU_SRA then  -- Shift right arithmetic
                 alu_result <= operand_t(shift_right(signed(operand_A), to_integer(unsigned(shift_amount))));
-
-            -- NO_OP
-            else
-                -- Useful when doing LUI
-                alu_result <= operand_B;
+            else    -- NO_OP
+                alu_result <= operand_B;    -- Useful when doing LUI
             end if;
         end if;
     end process;

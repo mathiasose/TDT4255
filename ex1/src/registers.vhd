@@ -13,7 +13,7 @@ entity registers is
         read_register_1 : in  register_address_t;
         read_register_2 : in  register_address_t;
         write_register  : in  register_address_t;
-        register_write  : in  STD_LOGIC
+        register_write  : in  STD_LOGIC;
         write_data      : in  STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
         read_data_1     : out STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
         read_data_2     : out STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0)
