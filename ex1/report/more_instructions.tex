@@ -3,14 +3,29 @@
 After having sucessfully tested the minimum required instruction set on the FPGA,
 we took another look at the full MIPS instruction set.
 
+We looked up the binary values of instructions and functions online\cite{bib:opencores},
+then implemented some of them.
+
 \subsection{Arithmetic and logical I-type instructions}
 With an already functioning implementation containing various ALU operations and I-type insructions,
 it was very simple to also implement the I-type versions of the existing arithmetic-logical operations, \texttt{ADDI}, \texttt{ANDI}, \texttt{ORI} and \texttt{SLTI} by setting the correct signals in the control module.
 With \texttt{NOR} and \texttt{XOR} existing as operators in VHDL, these could be implemented as ALU operations just as simply as the existing ones,
-which enabled the instructions \texttt{NOR}, \texttt{XOR}, \texttt{XORI}
+which enabled the instructions \texttt{NOR}, \texttt{XOR} and \texttt{XORI}
 
 \subsection{Shift instructions}
 In order to implement the shift instructions \texttt{SLL}, \texttt{SRL},
 the ALU needed access to the part of the instruction that contains the number of positions to shift.
 This signal was added and can be seen in figure \ref{fig:architecture}.
 With that connection it was again a very simple task to add the shift functionality to the ALU, since VHDL provides functions for this.
+Listing \ref{lst:shift} shows the syntax for this.
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:shift, caption=Shifting a vector in VHDL]
+r <= operand_t(shift_left(unsigned(vec), to_integer(unsigned(shamt))));
+r <= operand_t(shift_right(unsigned(vec), to_integer(unsigned(shamt))));
+r <= operand_t(shift_right(signed(vec), to_integer(unsigned(shamt))));
+        \end{lstlisting}
+    \end{minipage}
+}
+

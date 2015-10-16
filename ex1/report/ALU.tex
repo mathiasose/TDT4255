@@ -5,13 +5,13 @@ Table \ref{table:alu_ops} shows the operations implemented in the ALU.
 
 The arithmetic and logical operations take two 32 bit operand inputs.
 The first is always a register value,
-the second may be either from a register or an immediate value from the instruction that has been transformed to 32-bit format.
+the second may be either from a register or an immediate value from the instruction that has been extended to 32 bits.
 These operations are implemented by delegating to VHDL built in operations.
 
 Shift operations use the \texttt{shift\_amount} part of the instruction as another input.
 Shifting is implemented by delegating to the standard shift functions in VHDL.
 These instrutions were added later than the others,
-and this is described in section \ref{sec:more_instructions}.
+as described in section \ref{sec:more_instructions}.
 
 The \gls{alu} module outputs a signal to the \gls{pc} module called \texttt{alu\_zero} whenever the current operation yields a 0 result.
 
@@ -23,9 +23,9 @@ The \gls{alu} module outputs a signal to the \gls{pc} module called \texttt{alu\
         ADD           & Addition                \\
         SUB           & Subtraction             \\
         SLT           & Set if less than        \\
-        AND           & AND                     \\
-        NOR           & NOR                     \\
-        XOR           & Exclusive OR            \\
+        AND           & And                     \\
+        NOR           & Not or                  \\
+        XOR           & Exclusive or            \\
         SLL           & Shift left logical      \\
         SRL           & Shift right logical     \\
         SRA           & Shift right arithmetic  \\

@@ -1,6 +1,7 @@
 \section{Registers submodule}
-Both R-type and I-type instructions read and write these registers.
-Each register is 32 bit wide.
+The register module contains an array of 32 general purpose registers.
+Each register is 32 bits.
+Both the R-type and I-type instructions read and write these registers.
 Register 0 is reserved, and should always contain the value 0.
 
 Data can be written to a register by enabling \texttt{register\_write}.
@@ -9,5 +10,5 @@ The input value of \texttt{write\_data} will then be written to the register add
 The two outputs of the module do not require enabling,
 and will constantly output the value addressed by the corresponding address input.
 
-The inputs and outputs of the module can be seen in figure \ref{fig:architecture}.
+The labeled inputs and outputs of the module can be seen in figure \ref{fig:architecture}.
 

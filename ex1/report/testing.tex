@@ -1,12 +1,11 @@
 \section{Testing}
-
-Testing were conducted in three different steps.
-First step was to test each submodule.
-Second step was to test the complete MIPSProcessor implementation.
-And last step, testing on the \gls{fpga}.
+The implementation was tested at different levels.
+Each submodule was written with its own unit test.
+When put together they were verified as a system.
+And finally the implementation was alos tested on the \gls{fpga}.
 
 \subsection{Unit Testing}
-Each VHDL submodule we implemented has its own testbench created by us.
+Each \gls{vhdl} submodule implemented has its own testbench.
 We tried following test-driven development practices by writing failing tests first, then implementing the feature(s) to make the tests pass.
 Tests were written based on our assumptions and since we lack experience,
 sometimes needed to be changed as we learned more and corrected our implementation.
@@ -14,19 +13,20 @@ sometimes needed to be changed as we learned more and corrected our implementati
 \subsection{System Testing}
 \subsubsection{tb\_MIPSProcessor}
 A testbench for the processor was provided.
-This loads data and instruction to the memories,
+It loads data and instruction to memory,
 lets the processor run for a while,
 then checks that the data memory contains what it expects.
 Our processor implementation passes all the tests of this testbench.
 
 \subsubsection{On the FPGA}
 After passing all the tests of \texttt{tb\_MIPSProcessor},
-we adapted the same program to make it compatible with the HostComm tool,
-then synthesized and created a bitfile of the whole MIPSSystem.
+the same program was adapted to make it compatible with the \textit{hostcomm} tool,
+then synthesized and created a bitfile of the whole \textit{MIPSSystem}.
 
-\begin{figure}[h]
+\begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{img/Hostcomm}
-    \caption{HostComm after running the processor on the FPGA. The values in the data memory has been read from CPU.}
+    \caption{\textit{hostcomm} after running the processor on the FPGA. The values in the data memory has been read from CPU.}
     \label{fig:hostcomm}
 \end{figure}
+

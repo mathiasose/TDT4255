@@ -8,7 +8,7 @@ this register must contain the address of the next instruction to be executed.
 The \gls{pc} register can only change value when the control module enables the \texttt{pc\_write} signal,
 which it does in the \texttt{EXECUTE} or \texttt{STALL} states.
 This way the register will have a new value by the time the control module goes to the \texttt{FETCH} state,
-and the instruction memory can use that clock cycle to transfer the next instruction.
+and the instruction memory can use the cycle to transfer the next instruction.
 
 By default the program counter increases by one every cycle it is write enabled.
 The processor implementation also supports \textit{jump} and \textit{branch} instructions.
@@ -16,16 +16,17 @@ Both of these may overwrite the current \gls{pc} value with a new value.
 In the case of the \texttt{beq} instruction both the \texttt{branch} signal from the control module and the \texttt{alu\_zero} signal from the \gls{alu} must be high or else the default incrementing behavior is used.
 Figure \ref{fig:pc} shows the multiplexing for this.
 
-In this implementation the program counter is initialized to its maximum value,
-so that the first action of the processor when enabled is to increment it to the 0 address.
+In this implementation the program counter is initialized to its maximum value on reset,
+so that when the first action of the processor when enabled is to increment it,
+it overflows to the 0 address.
 
 \subsection{Limiting Output}
 When the submodule was first implemented,
 the register was set to be 32 bits wide and the operations related to the register were implemented accordingly.
-This was based on the suggested architecture sketch and the MIPS reference.
+This was based on the suggested architecture sketch and the MIPS reference\cite[Appendix D]{bib:compendium}.
 When integrating the submodule with the rest of the systems we realized that the system expected a generic address width,
 and that for the testbench this value was set to 8.
-The solution to this was to add a "chopping" part before the output of the module that discards higher order bits so that only the desired number of bits is outputted.
+The solution to this was to add a "chopping" feature before the output of the module that discards higher order bits so that only the desired number of bits is outputted.
 All internal arithmetic in the module still operates on 32 bit values,
 and only the output is chopped.
 
