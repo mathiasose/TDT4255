@@ -2,7 +2,8 @@
 In the suggested architecture there was indicated a module for sign extending a 16-bit vector to 32 bits.
 This 16-bit vector comes from the immediate value part of I-type instructions.
 At first we implemented this without a submodule,
-since it only required a one-line function call in VHDL to extend the number.
+since it only required a one-line function call in VHDL to extend the number,
+as shown in listing \ref{lst:extend}.
 
 \noindent{
     \begin{minipage}{\linewidth}

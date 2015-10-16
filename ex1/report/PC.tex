@@ -16,9 +16,12 @@ Both of these may overwrite the current \gls{pc} value with a new value.
 In the case of the \texttt{beq} instruction both the \texttt{branch} signal from the control module and the \texttt{alu\_zero} signal from the \gls{alu} must be high or else the default incrementing behavior is used.
 Figure \ref{fig:pc} shows the multiplexing for this.
 
-In this implementation the program counter is initialized to its maximum value on reset,
-so that when the first action of the processor when enabled is to increment it,
-it overflows to the 0 address.
+In this implementation the program counter is initialized to its maximum value on reset.
+When the processor is enabled,
+the first thing to happen is that the program counter increments,
+overflowing to the 0 address.
+The control module goes to \texttt{FETCH},
+and program execution may begin.
 
 \subsection{Limiting Output}
 When the submodule was first implemented,
