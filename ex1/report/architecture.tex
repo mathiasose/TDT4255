@@ -1,0 +1,23 @@
+\section{Top Level Architecture}
+A VHDL project was provided for the exercise,
+containing instruction and data memory implementations,
+a MIPSProcessor VHDL module without a functioning behavioral,
+and a MIPSSystem VHDL module connecting the processor module to the memories.
+
+The scope of the exercise was to finish the MIPSProcessor implementation.
+An RTL sketch of a suggested architecture was provided (see appendix \ref{app:suggested_architecture}).
+The implementation described in this report is closely based on this suggested architecture.
+
+Most of the functionality of the processor was implemented in appropriate submodules.
+On the top level the processor only consists of signals connecting ports of different submodules,
+and a few multiplexers for directing signals based on other signals.
+
+An overview of the processor architecture can be seen in figure \ref{fig:architecture}.
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{img/architecture.png}
+    \caption{Top level architecture of processor}
+    \label{fig:architecture}
+\end{figure}
+
