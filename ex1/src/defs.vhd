@@ -2,18 +2,19 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
 package defs is
-    subtype instruction_t is std_logic_vector(31 downto 0);
-    subtype operand_t is std_logic_vector(31 downto 0);
-    subtype immediate_value_t is std_logic_vector(15 downto 0);
-    subtype register_address_t is std_logic_vector(4 downto 0);
-    subtype opcode_t is std_logic_vector(5 downto 0);
-    subtype funct_t is std_logic_vector(5 downto 0);
-    subtype shift_amount_t is std_logic_vector(5 downto 0);
+    subtype instruction_t       is std_logic_vector(31 downto 0);
+    subtype operand_t           is std_logic_vector(31 downto 0);
+    subtype immediate_value_t   is std_logic_vector(15 downto 0);
+    subtype register_address_t  is std_logic_vector(4 downto 0);
+    subtype opcode_t            is std_logic_vector(5 downto 0);
+    subtype funct_t             is std_logic_vector(5 downto 0);
+    subtype shift_amount_t      is std_logic_vector(5 downto 0);
 
     type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type state_t is (STALL, FETCH, EXECUTE);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
 
+    -- ALU function values
     constant ADD_FUNCT : funct_t := "100000";
     constant SUB_FUNCT : funct_t := "100010";
     constant AND_FUNCT : funct_t := "100100";
@@ -25,6 +26,7 @@ package defs is
     constant SRL_FUNCT : funct_t := "000010";
     constant SRA_FUNCT : funct_t := "000011";
 
+    -- Opcode values
     constant ALU_OP_OPCODE  : opcode_t := "000000";
     constant JUMP_OPCODE    : opcode_t := "000010";
     constant BEQ_OPCODE     : opcode_t := "000100";
@@ -37,6 +39,8 @@ package defs is
     constant XORI_OPCODE    : opcode_t := "001110";
     constant SLTI_OPCODE    : opcode_t := "001010";
 
+    -- Operands
     constant OPERAND_0 : operand_t := x"00000000";
     constant OPERAND_1 : operand_t := x"00000001";
+
 end package defs;

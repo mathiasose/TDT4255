@@ -5,20 +5,20 @@ use work.defs.all;
 
 entity control is
     port(
-        clock : in std_logic;
-        reset : in std_logic;
-        processor_enable : in std_logic := '0';
-        instruction : in instruction_t;
-        alu_op : out alu_operation_t;
-        alu_src : out std_logic;
-        branch : out std_logic;
-        jump : out std_logic;
-        mem_to_reg : out std_logic;
-        mem_write : out std_logic;
-        reg_dst : out std_logic;
-        reg_write : out std_logic;
-        pc_write : out std_logic;
-        immediate_value_transform: out immediate_value_transformation_t
+        clock                     : in std_logic;
+        reset                     : in std_logic;
+        processor_enable          : in std_logic := '0';
+        instruction               : in instruction_t;
+        alu_op                    : out alu_operation_t;
+        alu_src                   : out std_logic;
+        branch                    : out std_logic;
+        jump                      : out std_logic;
+        mem_to_reg                : out std_logic;
+        mem_write                 : out std_logic;
+        reg_dst                   : out std_logic;
+        reg_write                 : out std_logic;
+        pc_write                  : out std_logic;
+        immediate_value_transform : out immediate_value_transformation_t
     );
 end control;
 
@@ -26,8 +26,11 @@ architecture Behavioral of control is
     signal opcode : opcode_t;
     signal funct : funct_t;
 
+    -- Initial states
     constant INIT_STATE : state_t := STALL;
     constant INIT_NEXT_STATE : state_t := FETCH;
+
+    -- Current states
     signal state : state_t := INIT_STATE;
     signal next_state: state_t := INIT_NEXT_STATE;
 begin
@@ -50,7 +53,8 @@ begin
         next_state <= INIT_NEXT_STATE;
 
         if processor_enable = '1' then
-            -- Non default outputs
+
+            -- Change state and set status signals
             case state is
                 when FETCH =>
                     next_state <= EXECUTE;
@@ -181,9 +185,10 @@ begin
     begin
         if reset = '1' then
             state <= INIT_STATE;
+
+        -- Change state each clock cycle
         elsif rising_edge(clock) and processor_enable = '1' then
             state <= next_state;
         end if;
     end process;
 end Behavioral;
-

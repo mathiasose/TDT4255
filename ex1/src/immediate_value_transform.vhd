@@ -6,7 +6,7 @@ use work.defs.all;
 entity immediate_value_transform is
     Port (
         transform : in immediate_value_transformation_t;
-        in_value : in immediate_value_t;
+        in_value  : in immediate_value_t;
         out_value : out operand_t
     );
 end immediate_value_transform;
@@ -19,4 +19,3 @@ begin
     extended_value <= operand_t(resize(unsigned(in_value), operand_t'length));
     out_value <= shifted_value when transform = SHIFT_LEFT else extended_value;
 end Behavioral;
-

@@ -5,14 +5,14 @@ use work.defs.all;
 
 entity ALU is
     Port (
-        clock : in  STD_LOGIC
-        ; reset : in  STD_LOGIC
-        ; operand_A : in operand_t := OPERAND_0
-        ; operand_B : in operand_t := OPERAND_0
-        ; shift_amount : in shift_amount_t := (others => '0')
-        ; operation : in alu_operation_t := NO_OP
-        ; result : out operand_t
-        ; zero : out STD_LOGIC
+        clock         : in STD_LOGIC;
+        reset         : in STD_LOGIC;
+        operand_A     : in operand_t := OPERAND_0;
+        operand_B     : in operand_t := OPERAND_0;
+        shift_amount  : in shift_amount_t := (others => '0');
+        operation     : in alu_operation_t := NO_OP;
+        result        : out operand_t;
+        zero          : out STD_LOGIC
     );
 end ALU;
 
@@ -45,16 +45,24 @@ begin
                 alu_result <= operand_A NOR operand_B;
             elsif operation = ALU_XOR then
                 alu_result <= operand_A XOR operand_B;
+
+            -- Shift left logical
             elsif operation = ALU_SLL then
                 alu_result <= operand_t(shift_left(unsigned(operand_A), to_integer(unsigned(shift_amount))));
+
+            -- Shift right logical
             elsif operation = ALU_SRL then
                 alu_result <= operand_t(shift_right(unsigned(operand_A), to_integer(unsigned(shift_amount))));
+
+            -- Shift right arithmetic
             elsif operation = ALU_SRA then
                 alu_result <= operand_t(shift_right(signed(operand_A), to_integer(unsigned(shift_amount))));
-            else -- NO_OP
-                alu_result <= operand_B;    -- useful when doing LUI
+
+            -- NO_OP
+            else
+                -- Useful when doing LUI
+                alu_result <= operand_B;
             end if;
         end if;
     end process;
 end Behavioral;
-
