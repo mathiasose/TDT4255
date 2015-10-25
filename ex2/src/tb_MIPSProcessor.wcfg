@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/shomec/m/mathiabo/TDT4255/ex1/src/tb_MIPSProcessor_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="defs" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_textio" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="tb_mipsprocessor" />
+            <top_module name="textio" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="9" />
+   <wvobject fp_name="/tb_mipsprocessor/clock" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clock</obj_property>
+      <obj_property name="ObjectShortName">clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/control/state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/imem_address" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">imem_address[7:0]</obj_property>
+      <obj_property name="ObjectShortName">imem_address[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+      <obj_property name="label">pc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/imem_data_in" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">imem_data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">imem_data_in[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+      <obj_property name="label">instruction</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/control/alu_op" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">alu_op</obj_property>
+      <obj_property name="ObjectShortName">alu_op</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/alu/operation" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">operation</obj_property>
+      <obj_property name="ObjectShortName">operation</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/alu/operand_a" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">operand_a[31:0]</obj_property>
+      <obj_property name="ObjectShortName">operand_a[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/alu/operand_b" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">operand_b[31:0]</obj_property>
+      <obj_property name="ObjectShortName">operand_b[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_mipsprocessor/Processor/alu/result" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+</wave_config>
