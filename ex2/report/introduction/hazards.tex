@@ -1,6 +1,8 @@
 \section{Pipeline Hazards}
 When implementing pipelining in a processor,
 there are complications that might arise that must be handled to ensure correct results.
+Instructions often depend on preceeding instructions,
+and if two instructions with some dependency between one another are in the pipeline at the same time, there is a hazard which must be handled.
 \textit{Patterson \& Hennessy} lists the following hazards
 \cite[Chapter 4.5]{bib:patt-henn}:
 
@@ -18,3 +20,4 @@ there are complications that might arise that must be handled to ensure correct 
     the next instruction to be executed may be one of two possibilities.
     The pipeline must be able to react to a branch and flush instructions that are not to be executed from the pipeline.
 \end{description}
+
