@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use work.defs.all;
 
 entity PC is
     generic (
@@ -24,7 +25,7 @@ architecture Behavioral of PC is
     constant PC_INCREMENT   : integer := 1; -- Increment PC by 1
     constant PC_INIT        : STD_LOGIC_VECTOR(31 downto 0) := (others => '1');
 
-    signal pc               : STD_LOGIC_VECTOR(31 downto 0) :=  PC_INIT; -- start at max so that the first inceremnt overflows to 0
+    signal pc               : pc_t :=  PC_INIT; -- start at max so that the first inceremnt overflows to 0
     signal jump_address     : STD_LOGIC_VECTOR(31 downto 0);
     signal immediate_value  : STD_LOGIC_VECTOR(15 downto 0);
 begin
