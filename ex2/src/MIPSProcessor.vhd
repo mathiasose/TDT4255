@@ -85,7 +85,6 @@ begin
     -- ALU module
     alu : entity work.alu
     port map (
-        reset => reset,
         operation => alu_op,
         operand_A => reg_out_a,
         operand_B => operand_b,

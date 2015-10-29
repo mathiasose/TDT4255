@@ -13,8 +13,7 @@ ARCHITECTURE behavior OF tb_ALU IS
  
     COMPONENT ALU
     Port (
-        reset : in  STD_LOGIC
-        ; operand_A : in operand_t
+        operand_A : in operand_t
         ; operand_B : in operand_t
         ; operation : in alu_operation_t
         ; shift_amount : in shift_amount_t
@@ -25,7 +24,6 @@ ARCHITECTURE behavior OF tb_ALU IS
     
 
    --Inputs
-   signal reset : std_logic := '0';
    signal operand_A : operand_t := (others => '0');
    signal operand_B : operand_t := (others => '0');
    signal operation :  alu_operation_t := NO_OP;
@@ -42,7 +40,6 @@ BEGIN
  
     -- Instantiate the Unit Under Test (UUT)
    uut: ALU PORT MAP (
-          reset => reset,
           operand_A => operand_A,
           operand_B => operand_B,
           operation => operation,
