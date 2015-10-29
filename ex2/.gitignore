@@ -6,3 +6,6 @@ stack.spl
 uart/
 xlnx_auto_0_xdb/
 xst/
+
+DualPortMem.vhd
+blk_mem_gen_ds512.pdf
