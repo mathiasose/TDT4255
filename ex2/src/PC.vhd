@@ -5,7 +5,7 @@ use work.defs.all;
 
 entity PC is
     generic (
-        ADDR_WIDTH : integer := 8;
+        ADDR_WIDTH : integer := 8;  -- in here we maintain a 32 bit register, it may be shortened outside
         DATA_WIDTH : integer := 32
     );
     Port (
@@ -25,15 +25,12 @@ architecture Behavioral of PC is
     constant PC_INCREMENT   : integer := 1;
     constant PC_INIT        : pc_t := (others => '0');
 
-    signal pc_read_data : pc_t := PC_INIT;
-    signal pc_write_data : pc_t := PC_INIT;
-    signal pc_write_enable : std_logic := '0';
+    signal pc_write_data    : pc_t := PC_INIT;
+    signal pc_write_enable  : std_logic := '0';
 begin
     pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset, write_enable => pc_write_enable, in_value => pc_write_data, out_value => pc_read_data);
-
-    pc_out <= pc_read_data;
+    port map(reset => reset, write_enable => pc_write_enable, in_value => pc_write_data, out_value => pc_out);
 
     pc_update : process(processor_enable, clock, reset)
     begin

@@ -101,7 +101,7 @@ BEGIN
 
       alu_zero <= '1';
       wait for clock_period;
-      check(pc_out = x"F0F0F0F1", "PC should have been overwritten");
+      check(pc_out = x"F0F0F0F0", "PC should have been overwritten");
 
       report "ALL TESTS SUCCESSFUL";
       wait;

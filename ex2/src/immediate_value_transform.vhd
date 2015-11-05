@@ -3,6 +3,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
+-- extends a 16-bit immediate value into a 32-bit operand
+-- using one of two methods:
+-- sign-extending or left-shifting
+
 entity immediate_value_transform is
     Port (
         transform : in immediate_value_transformation_t;
