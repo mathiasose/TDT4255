@@ -1,0 +1,42 @@
+\section{Modifying the Multi-Cycle Design}
+A pipelined processor requires clean separation between the different stages.
+When a clock cycle begins, each stage must get some input, process it, then output the result.
+The next stage gets its next cycle input from the previous stage output.
+
+This is implemented by adding registers in between components in hardware.
+Each stage reads its input register at the beginning of the cycle and writes its result to an output register which is the input register for the next stage.
+Thus the clock frequency of the entire processor is dependent upon the time it takes for the slowest stage to read input, process it, then write output.
+
+\subsection{Information-passing Between Stages}
+Instruction Fetch => Instruction Decode
+32 bit instruction
+Program counter value
+
+Instruction Decode => Execute
+Program counter value
+Control signals: WB, M, EX
+Register read values A and B
+Extended immediate value
+Rt and Rd values
+
+Execute => Memory Access
+Control signals: WB, M
+Modified PC value
+ALU result and zero flag
+Register read value B
+Rt or Rd value after muxing by RegDst
+
+Memory Access => Write to Registers
+WB control signals
+Data memory read value
+Data memory address
+Rt or Rd value after muxing by RegDst
+
+\subsection{Resources Shared by Stages}
+\begin{table}[h]
+    \begin{tabular}{l|lllll}
+    ~         & IF & ID & EX & MEM & WB \\ \hline
+    PC        & RW & ~  & ~  & W   & ~  \\
+    Registers & R  & ~  & ~  & ~   & W  \\
+    \end{tabular}
+\end{table}
