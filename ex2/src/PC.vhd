@@ -37,7 +37,6 @@ begin
 
     pc_update : process(processor_enable, clock, reset)
     begin
-        pc_write_enable <= '0';
         if reset = '1' then
             pc_write_enable <= '1';
             pc_write_data <= PC_INIT;
@@ -50,6 +49,8 @@ begin
             else
                 pc_write_data <= pc_incremented;
             end if;
+        else
+            pc_write_enable <= '0';
         end if;
     end process;
 end Behavioral;

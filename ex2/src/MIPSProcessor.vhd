@@ -28,7 +28,8 @@ entity MIPSProcessor is
 end entity MIPSProcessor;
 
 architecture Behavioral of MIPSProcessor is
-    signal write_enable : std_logic := '0';
+    signal write_enable     : std_logic := '0';
+    signal flush_pipeline    : std_logic := '0';
 
     -- Fetch stage signals
     signal if_pc_address        : pc_t;
@@ -97,6 +98,25 @@ begin
     ex_write_register <= ex_rd when ex_control_signals.reg_dst = '1' else ex_rt;
     wb_write_data <= wb_read_data when wb_control_signals.mem_to_reg = '1' else wb_alu_result;
 
+
+    propagate : process(clock, processor_enable) is
+    begin
+        if rising_edge(clock) and processor_enable = '1' then
+            write_enable <= '1';
+        else
+            write_enable <= '0';
+        end if;
+    end process propagate;
+    
+    flush : process(mem_control_signals, mem_alu_zero) is
+    begin
+        if (mem_control_signals.jump = '1' or (mem_control_signals.branch = '1' and mem_alu_zero = '1')) then
+            flush_pipeline <= '1';
+        else
+            flush_pipeline <= '0';
+        end if;
+    end process flush;
+
     -- Control module
     control : entity work.control
     port map(
@@ -104,9 +124,7 @@ begin
         reset => reset,
         processor_enable => processor_enable,
         instruction => id_instruction,
-        
         immediate_value_transform => id_immediate_value_transform,
-        
         wb_signals => id_forward_wb_signals,
         mem_signals => id_forward_mem_signals,
         ex_signals => id_forward_ex_signals
@@ -270,14 +288,5 @@ begin
 
     mem_to_wb_forward_wb_signals : entity work.wb_register 
     port map(reset => reset, write_enable => write_enable, in_value => mem_forward_wb_signals, out_value => wb_control_signals);
-
-    propagate : process(clock, processor_enable) is
-    begin
-        if rising_edge(clock) and processor_enable = '1' then
-            write_enable <= '1';
-        else
-            write_enable <= '0';
-        end if;
-    end process propagate;
 
 end Behavioral;
