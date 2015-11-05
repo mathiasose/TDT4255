@@ -14,6 +14,7 @@ package defs is
 
     type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
+    type alu_input_src_t is (REG, MEM, WB);
 
     type wb_signals_t is
     record
@@ -27,12 +28,12 @@ package defs is
         branch      : std_logic;
         jump        : std_logic;
     end record;
-    
+
     type ex_signals_t is
     record
-        reg_dst     : std_logic;
-        alu_op      : alu_operation_t;
-        alu_src     : std_logic;
+        reg_dst         : std_logic;
+        alu_op          : alu_operation_t;
+        alu_immediate   : std_logic;
     end record;
 
     -- ALU function values

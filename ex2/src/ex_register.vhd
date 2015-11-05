@@ -22,7 +22,7 @@ begin
             if reset = '1' then
                 out_value.reg_dst <= '0';
                 out_value.alu_op <= NO_OP;
-                out_value.alu_src <= '0';
+                out_value.alu_immediate <= '0';
             elsif write_enable = '1' then
                 out_value <= in_value;
             end if;

@@ -9,9 +9,7 @@ entity control is
         reset                       : in std_logic;
         processor_enable            : in std_logic := '0';
         instruction                 : in instruction_t;
-        
         immediate_value_transform   : out immediate_value_transformation_t;
-
         wb_signals                  : out wb_signals_t;
         mem_signals                 : out mem_signals_t;
         ex_signals                  : out ex_signals_t
@@ -30,7 +28,7 @@ begin
         -- Setting defaults to avoid latches
         ex_signals.reg_dst <= '0';
         ex_signals.alu_op <= NO_OP;
-        ex_signals.alu_src <= '0';
+        ex_signals.alu_immediate <= '0';
         mem_signals.branch <= '0';
         mem_signals.jump <= '0';
         mem_signals.mem_write <= '0';
@@ -74,37 +72,37 @@ begin
                 ex_signals.alu_op <= SUB;
                 mem_signals.branch <= '1';
             when LW_OPCODE =>
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 ex_signals.alu_op <= ADD;
                 wb_signals.mem_to_reg <= '1';
                 wb_signals.reg_write <= '1';
             when SW_OPCODE =>
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 ex_signals.alu_op <= ADD;
                 mem_signals.mem_write <= '1';
             when LUI_OPCODE =>
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
                 immediate_value_transform <= SHIFT_LEFT;
             when ADDI_OPCODE =>
                 ex_signals.alu_op <= ADD;
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
             when ANDI_OPCODE =>
                 ex_signals.alu_op <= ALU_AND;
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
             when ORI_OPCODE =>
                 ex_signals.alu_op <= ALU_OR;
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
             when XORI_OPCODE =>
                 ex_signals.alu_op <= ALU_XOR;
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
             when SLTI_OPCODE =>
                 ex_signals.alu_op <= SLT;
-                ex_signals.alu_src <= '1';
+                ex_signals.alu_immediate <= '1';
                 wb_signals.reg_write <= '1';
             when others =>
                 --
