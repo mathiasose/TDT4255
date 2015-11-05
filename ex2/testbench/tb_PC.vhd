@@ -16,19 +16,28 @@ ARCHITECTURE behavior OF tb_PC IS
     -- Component Declaration for the Unit Under Test (UUT)
     COMPONENT PC
     Port (
-        clock           : in std_logic;
-        reset           : in std_logic := '0';
-        write_pc     : in pc_t;
-        write_enable    : in std_logic;
-        pc_out          : out pc_t
+        clock, reset        : in std_logic := '0';
+        processor_enable    : in std_logic := '0';
+        jump                : in std_logic := '0';
+        branch              : in std_logic := '0';
+        alu_zero            : in std_logic := '0';
+        pc_incremented      : in pc_t;
+        jump_address        : in pc_t;
+        branch_address      : in pc_t;
+        pc_out              : out pc_t
     );
     END COMPONENT;
 
-   --Inputs
-   signal clock : std_logic := '0';
-   signal reset : std_logic := '0';
-   signal write_pc : pc_t;
-   signal write_enable : STD_LOGIC := '0';
+    --Inputs
+    signal clock            : std_logic := '0';
+    signal reset            : std_logic := '0';
+    signal processor_enable : std_logic := '0';
+    signal jump             : std_logic := '0';
+    signal branch           : std_logic := '0';
+    signal alu_zero         : std_logic := '0';
+    signal pc_incremented   : pc_t;
+    signal jump_address     : pc_t;
+    signal branch_address   : pc_t;
 
      --Outputs
    signal pc_out : pc_t;
@@ -42,9 +51,14 @@ BEGIN
    uut: PC PORT MAP (
           clock => clock,
           reset => reset,
-          pc_out => pc_out,
-          write_pc => write_pc,
-          write_enable => write_enable
+          processor_enable => processor_enable,
+          jump => jump,
+          branch => branch,
+          alu_zero => alu_zero,
+          pc_incremented => pc_incremented,
+          jump_address => jump_address,
+          branch_address => branch_address,
+          pc_out => pc_out
         );
 
    -- Clock process definitions
@@ -62,18 +76,32 @@ BEGIN
    begin
       wait for clock_period;
       reset <= '1';
-      wait for clock_period;
+      wait for 10*clock_period;
       reset <= '0';
-      check(pc_out = x"00000000", "PC should reset to 0 address");
+      check(pc_out = x"00000000", "PC should reset to 0 address and not change before processor is enabled");
 
+      processor_enable <= '1';
+      pc_incremented <= pc_t(unsigned(pc_out) + 1);
       wait for clock_period; -- pc += 1
+      pc_incremented <= pc_t(unsigned(pc_out) + 1);
       wait for clock_period; -- pc += 1
       check(pc_out = x"00000002", "PC should increment by 1 each clock period");
 
-      write_enable <= '1';
-      write_pc <= x"AAAAAAAA";
+      jump <= '1';
+      jump_address <= x"AAAAAAAA";
       wait for clock_period;
       check(pc_out = x"AAAAAAAA", "PC should have been overwritten");
+
+      jump <= '0';
+      branch <= '1';
+      branch_address <= x"F0F0F0F0";
+      pc_incremented <= pc_t(unsigned(pc_out) + 1);
+      wait for clock_period;
+      check(pc_out = x"AAAAAAAB", "PC should not have been overwritten but incremented because alu_zero is not enabled");
+
+      alu_zero <= '1';
+      wait for clock_period;
+      check(pc_out = x"F0F0F0F1", "PC should have been overwritten");
 
       report "ALL TESTS SUCCESSFUL";
       wait;

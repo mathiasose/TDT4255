@@ -9,31 +9,46 @@ entity PC is
         DATA_WIDTH : integer := 32
     );
     Port (
-        clock           : in std_logic;
-        reset           : in std_logic := '0';
-        write_pc        : in pc_t;
-        write_enable    : in std_logic;
-        pc_out          : out pc_t
+        clock, reset        : in std_logic := '0';
+        processor_enable    : in std_logic := '0';
+        jump                : in std_logic := '0';
+        branch              : in std_logic := '0';
+        alu_zero            : in std_logic := '0';
+        pc_incremented      : in pc_t;
+        jump_address        : in pc_t;
+        branch_address      : in pc_t;
+        pc_out              : out pc_t
     );
 end PC;
 
 architecture Behavioral of PC is
     constant PC_INCREMENT   : integer := 1;
-    constant PC_INIT        :  pc_t := (others => '0');
+    constant PC_INIT        : pc_t := (others => '0');
 
-    signal pc               : pc_t :=  PC_INIT;
+    signal pc_read_data : pc_t := PC_INIT;
+    signal pc_write_data : pc_t := PC_INIT;
+    signal pc_write_enable : std_logic := '0';
 begin
-    pc_out <= pc;
+    pc : entity work.generic_register
+    generic map(WIDTH => pc_t'length)
+    port map(reset => reset, write_enable => pc_write_enable, in_value => pc_write_data, out_value => pc_read_data);
 
-    process(clock, reset, write_enable)
+    pc_out <= pc_read_data;
+
+    pc_update : process(processor_enable, clock, reset)
     begin
+        pc_write_enable <= '0';
         if reset = '1' then
-            pc <= PC_INIT;
-        elsif rising_edge(clock) then
-            if write_enable = '1' then
-                pc <= write_pc;
+            pc_write_enable <= '1';
+            pc_write_data <= PC_INIT;
+        elsif processor_enable = '1' and rising_edge(clock) then
+            pc_write_enable <= '1';
+            if jump = '1' then
+                pc_write_data <= jump_address;
+            elsif branch = '1' and alu_zero = '1' then
+                pc_write_data <= branch_address;
             else
-                pc <= STD_LOGIC_VECTOR(unsigned(pc) + PC_INCREMENT);
+                pc_write_data <= pc_incremented;
             end if;
         end if;
     end process;

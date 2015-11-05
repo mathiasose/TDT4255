@@ -15,6 +15,26 @@ package defs is
     type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
 
+    type wb_signals_t is
+    record
+        reg_write   : std_logic;
+        mem_to_reg  : std_logic;
+    end record;
+
+    type mem_signals_t is
+    record
+        mem_write   : std_logic;
+        branch      : std_logic;
+        jump        : std_logic;
+    end record;
+    
+    type ex_signals_t is
+    record
+        reg_dst     : std_logic;
+        alu_op      : alu_operation_t;
+        alu_src     : std_logic;
+    end record;
+
     -- ALU function values
     constant ADD_FUNCT : funct_t := "100000";
     constant SUB_FUNCT : funct_t := "100010";

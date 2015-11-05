@@ -9,13 +9,13 @@ ARCHITECTURE behavior OF tb_generic_register IS
 
     COMPONENT generic_register
     generic(
-        REG_WIDTH : integer := 1
+        WIDTH : integer := 1
     );
     port(
         reset           : in  STD_LOGIC
     ;   write_enable    : in  STD_LOGIC
-    ;   in_value        : in  STD_LOGIC_VECTOR (REG_WIDTH-1 downto 0)
-    ;   out_value       : out STD_LOGIC_VECTOR (REG_WIDTH-1 downto 0)
+    ;   in_value        : in  STD_LOGIC_VECTOR (WIDTH-1 downto 0)
+    ;   out_value       : out STD_LOGIC_VECTOR (WIDTH-1 downto 0)
     );
     END COMPONENT;
 
@@ -41,7 +41,7 @@ BEGIN
 
     uut2: generic_register
     generic map(
-        REG_WIDTH => 32
+        WIDTH => 32
     )
     PORT MAP (
         reset => reset,

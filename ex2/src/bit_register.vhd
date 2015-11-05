@@ -1,24 +1,21 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity generic_register is
-    generic(
-        WIDTH : integer := 1
-    );
+entity bit_register is
     port(
         reset           : in  STD_LOGIC
     ;   write_enable    : in  STD_LOGIC
-    ;   in_value        : in  STD_LOGIC_VECTOR (WIDTH-1 downto 0)
-    ;   out_value       : out STD_LOGIC_VECTOR (WIDTH-1 downto 0) := (others => '0')
+    ;   in_value        : in  STD_LOGIC
+    ;   out_value       : out STD_LOGIC := '0'
     );
-end generic_register;
+end bit_register;
 
-architecture Behavioral of generic_register is
+architecture Behavioral of bit_register is
 begin
     process(reset, write_enable)
     begin
         if reset = '1' then
-            out_value <= (others => '0');
+            out_value <= '0';
         elsif write_enable = '1' then
             out_value <= in_value;
         end if;

@@ -15,8 +15,8 @@ entity registers is
         write_register  : in  register_address_t;
         register_write  : in  STD_LOGIC;
         write_data      : in  STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
-        read_data_1     : out STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
-        read_data_2     : out STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0)
+        read_data_1     : out operand_t;
+        read_data_2     : out operand_t
     );
 end registers;
 
