@@ -36,15 +36,15 @@ architecture Behavioral of MIPSProcessor is
     signal if_pc_incremented    : pc_t;
 
     -- Decode stage signals
-    signal id_pc_address            : pc_t;
-    signal id_reg_out_1             : operand_t;
-    signal id_reg_out_2             : operand_t;
-    signal id_forward_wb_signals    : wb_signals_t;
-    signal id_forward_mem_signals   : mem_signals_t;
-    signal id_forward_ex_signals    : ex_signals_t;
-    signal id_instruction           : instruction_t;
-    signal id_immediate_value_transformed: operand_t;
-    signal id_immediate_value_transform  : immediate_value_transformation_t;
+    signal id_pc_address                    : pc_t;
+    signal id_reg_out_1                     : operand_t;
+    signal id_reg_out_2                     : operand_t;
+    signal id_forward_wb_signals            : wb_signals_t;
+    signal id_forward_mem_signals           : mem_signals_t;
+    signal id_forward_ex_signals            : ex_signals_t;
+    signal id_instruction                   : instruction_t;
+    signal id_immediate_value_transformed   : operand_t;
+    signal id_immediate_value_transform     : immediate_value_transformation_t;
 
     -- Execute stage signals
     signal ex_alu_zero              : std_logic;
@@ -110,7 +110,7 @@ begin
     
     flush : process(mem_control_signals, mem_alu_zero) is
     begin
-        if (mem_control_signals.jump = '1' or (mem_control_signals.branch = '1' and mem_alu_zero = '1')) then
+        if mem_control_signals.jump = '1' or (mem_control_signals.branch = '1' and mem_alu_zero = '1') then
             flush_pipeline <= '1';
         else
             flush_pipeline <= '0';
@@ -193,51 +193,51 @@ begin
     -----------------------------------------------------------------
     if_to_id_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => if_pc_address, out_value => id_pc_address);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => if_pc_address, out_value => id_pc_address);
 
     if_to_id_instruction : entity work.generic_register
     generic map(WIDTH => instruction_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => imem_data_in, out_value => id_instruction);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => imem_data_in, out_value => id_instruction);
 
     -----------------------------------------------------------------
     -- ID --> EX
     -----------------------------------------------------------------
     id_to_ex_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_pc_address, out_value => ex_pc_address);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_pc_address, out_value => ex_pc_address);
 
     id_to_ex_read_data_1 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_reg_out_1, out_value => ex_reg_out_1);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_reg_out_1, out_value => ex_reg_out_1);
 
     id_to_ex_read_data_2 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_reg_out_2, out_value => ex_reg_out_2);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_reg_out_2, out_value => ex_reg_out_2);
 
     id_to_ex_read_imm_value : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_immediate_value_transformed, out_value => ex_immediate_value);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_immediate_value_transformed, out_value => ex_immediate_value);
 
     id_to_ex_jump_value : entity work.generic_register
     generic map(WIDTH => jump_value_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_instruction(25 downto 0), out_value => ex_jump_value);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_instruction(25 downto 0), out_value => ex_jump_value);
 
     id_to_ex_read_rt : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_instruction(20 downto 16), out_value => ex_rt);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_instruction(20 downto 16), out_value => ex_rt);
 
     id_to_ex_read_rd : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset, write_enable => write_enable, in_value => id_instruction(15 downto 11), out_value => ex_rd);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_instruction(15 downto 11), out_value => ex_rd);
 
     id_to_ex_forward_wb_signals : entity work.wb_register 
-    port map(reset => reset, write_enable => write_enable, in_value => id_forward_wb_signals, out_value => ex_forward_wb_signals);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_forward_wb_signals, out_value => ex_forward_wb_signals);
 
     id_to_ex_forward_mem_signals : entity work.mem_register 
-    port map(reset => reset, write_enable => write_enable, in_value => id_forward_mem_signals, out_value => ex_forward_mem_signals);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_forward_mem_signals, out_value => ex_forward_mem_signals);
 
     id_to_ex_forward_ex_signals : entity work.ex_register 
-    port map(reset => reset, write_enable => write_enable, in_value => id_forward_ex_signals, out_value => ex_control_signals);
+    port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => id_forward_ex_signals, out_value => ex_control_signals);
 
     -----------------------------------------------------------------
     -- EX --> MEM
