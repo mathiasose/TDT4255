@@ -23,7 +23,7 @@ end PC;
 
 architecture Behavioral of PC is
     constant PC_INCREMENT   : integer := 1;
-    constant PC_INIT        : pc_t := (others => '0');
+    constant PC_INIT        : pc_t := (others => '1');
 
     signal pc_write_data    : pc_t := PC_INIT;
     signal pc_write_enable  : std_logic := '0';

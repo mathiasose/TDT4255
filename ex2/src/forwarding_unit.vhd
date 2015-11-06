@@ -5,7 +5,6 @@ use work.defs.all;
 
 entity forwarding_unit is
     port(
-        clock                       : in std_logic;
         mem_reg_write               : in std_logic;
         wb_reg_write                : in std_logic;
         instruction_rs              : in register_address_t;
@@ -19,9 +18,8 @@ end forwarding_unit;
 
 architecture Behavioral of forwarding_unit is
 begin
-    forward_data : process(clock)
+    forward_data : process(mem_reg_write, mem_reg_dest, wb_reg_write, wb_reg_dest, instruction_rs, instruction_rt)
     begin
-        if rising_edge(clock) then
             -- Select source for ALU operand 1
             if mem_reg_write = '1' and instruction_rs = mem_reg_dest then
                 forward_control_signal_1 <= MEM;
@@ -39,6 +37,5 @@ begin
             else
                 forward_control_signal_2 <= REG;
             end if;
-        end if;
     end process;
 end Behavioral;

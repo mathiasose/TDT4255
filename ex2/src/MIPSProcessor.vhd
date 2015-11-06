@@ -151,7 +151,7 @@ begin
     alu : entity work.alu
     port map (
         operation => EX_control_signals.alu_op,
-        operand_A => EX_reg_out_1,
+        operand_A => EX_operand_1,
         operand_B => EX_operand_2,
         shift_amount => "000000",  --TODO
         result => EX_alu_result,
@@ -202,7 +202,6 @@ begin
 
     forwarding_unit : entity work.forwarding_unit
     port map (
-        clock => clock,
         MEM_reg_write => MEM_control_signals.MEM_write,
         WB_reg_write => WB_control_signals.reg_write,
         instruction_rs => EX_rs,
@@ -218,11 +217,11 @@ begin
     -----------------------------------------------------------------
     -- IF --> ID
     -----------------------------------------------------------------
-    IF_to_ID_pc : entity work.generic_register
+    IFID_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
     port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => IF_pc_address, out_value => ID_pc_address);
 
-    IF_to_ID_instruction : entity work.generic_register
+    IFID_instruction : entity work.generic_register
     generic map(WIDTH => instruction_t'length)
     port map(reset => reset or flush_pipeline, write_enable => write_enable, in_value => imem_data_in, out_value => ID_instruction);
 
