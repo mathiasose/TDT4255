@@ -30,7 +30,7 @@ architecture Behavioral of PC is
 begin
     pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset, write_enable => pc_write_enable, in_value => pc_write_data, out_value => pc_out);
+    port map(reset => reset, clock => clock, write_enable => pc_write_enable, in_value => pc_write_data, out_value => pc_out);
 
     pc_update : process(processor_enable, clock, reset)
     begin
