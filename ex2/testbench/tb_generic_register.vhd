@@ -13,6 +13,7 @@ ARCHITECTURE behavior OF tb_generic_register IS
     );
     port(
         reset           : in  STD_LOGIC
+    ;   clock           : in  STD_LOGIC
     ;   write_enable    : in  STD_LOGIC
     ;   in_value        : in  STD_LOGIC_VECTOR (WIDTH-1 downto 0)
     ;   out_value       : out STD_LOGIC_VECTOR (WIDTH-1 downto 0)
@@ -34,6 +35,7 @@ BEGIN
     uut1: generic_register
     PORT MAP (
         reset => reset,
+        clock => clock,
         write_enable => write_enable,
         in_value => in_value_1,
         out_value => out_value_1
@@ -45,6 +47,7 @@ BEGIN
     )
     PORT MAP (
         reset => reset,
+        clock => clock,
         write_enable => write_enable,
         in_value => in_value_2,
         out_value => out_value_2
