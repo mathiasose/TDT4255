@@ -66,4 +66,50 @@ package defs is
     constant OPERAND_0 : operand_t := x"00000000";
     constant OPERAND_1 : operand_t := x"00000001";
 
+    -- Convenience functions for extractng parts of instructions
+    function opcode(I : instruction_t) return opcode_t;
+    function rs(I : instruction_t) return register_address_t;
+    function rt(I : instruction_t) return register_address_t;
+    function rd(I : instruction_t) return register_address_t;
+    function shift_amount(I : instruction_t) return shift_amount_t;
+    function i_value(I : instruction_t) return immediate_value_t;
+    function j_value(I : instruction_t) return jump_value_t;
+
 end package defs;
+
+package body defs is
+    function opcode(I : instruction_t) return opcode_t is
+    begin
+        return opcode_t(I(31 downto 26));
+    end function opcode;
+
+    function rs(I : instruction_t) return register_address_t is
+    begin
+        return register_address_t(I(25 downto 21));
+    end function rs;
+
+    function rt(I : instruction_t) return register_address_t is
+    begin
+        return register_address_t(I(20 downto 16));
+    end function rt;
+
+    function rd(I : instruction_t) return register_address_t is
+    begin
+        return register_address_t(I(15 downto 11));
+    end function rd;
+
+    function shift_amount(I : instruction_t) return shift_amount_t is
+    begin
+        return shift_amount_t(I(11 downto 6));
+    end function shift_amount;
+
+    function i_value(I : instruction_t) return immediate_value_t is
+    begin
+        return immediate_value_t(I(15 downto 0));
+    end function i_value;
+
+    function j_value(I : instruction_t) return jump_value_t is
+    begin
+        return jump_value_t(I(25 downto 0));
+    end function j_value;
+end package body defs;

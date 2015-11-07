@@ -191,8 +191,8 @@ begin
     registers : entity work.registers
     port map (
         clock => clock,
-        read_register_1 => ID_instruction(25 downto 21),
-        read_register_2 => ID_instruction(20 downto 16),
+        read_register_1 => rs(ID_instruction),
+        read_register_2 => rt(ID_instruction),
         write_register => WB_write_register,
         write_data => WB_write_data,
         read_data_1 => ID_reg_out_1,
@@ -203,7 +203,7 @@ begin
     immediate_value_transform : entity work.immediate_value_transform
     port map (
         transform => ID_immediate_value_transform,
-        in_value => ID_instruction(15 downto 0),
+        in_value => i_value(ID_instruction),
         out_value => ID_immediate_value_transformed
     );
 
@@ -213,8 +213,8 @@ begin
         WB_reg_write => WB_control_signals.reg_write,
         EX_rs => EX_rs,
         EX_rt => EX_rt,
-        ID_rs => ID_instruction(25 downto 21),
-        ID_rt => ID_instruction(20 downto 16),
+        ID_rs => rs(ID_instruction),
+        ID_rt => rt(ID_instruction),
         MEM_reg_dest => MEM_write_register,
         WB_reg_dest => WB_write_register,
         alu_input_1 => EX_alu_select_1,
@@ -257,19 +257,19 @@ begin
 
     IDEX_jump_value : entity work.generic_register
     generic map(WIDTH => jump_value_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_instruction(25 downto 0), out_value => EX_jump_value);
+    port map(reset => reset or flush_pipeline, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
 
     IDEX_rs : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_instruction(25 downto 21), out_value => EX_rs);
+    port map(reset => reset or flush_pipeline, clock => clock, in_value => rs(ID_instruction), out_value => EX_rs);
 
     IDEX_rt : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_instruction(20 downto 16), out_value => EX_rt);
+    port map(reset => reset or flush_pipeline, clock => clock, in_value => rt(ID_instruction), out_value => EX_rt);
 
     IDEX_rd : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_instruction(15 downto 11), out_value => EX_rd);
+    port map(reset => reset or flush_pipeline, clock => clock, in_value => rd(ID_instruction), out_value => EX_rd);
 
     IDEX_forward_WB_signals : entity work.WB_register 
     port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_forward_WB_signals, out_value => EX_forward_WB_signals);
