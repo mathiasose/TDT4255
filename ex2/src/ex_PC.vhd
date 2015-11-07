@@ -9,9 +9,9 @@ entity ex_PC is
         DATA_WIDTH : integer := 32
     );
     Port (
-        pc_in           : in pc_t
-    ;   immediate_value : in operand_t
-    ;   j_value         : in jump_value_t
+        pc_in           : in pc_t           := (others => '0')
+    ;   immediate_value : in operand_t      := (others => '0')
+    ;   j_value         : in jump_value_t   := (others => '0')
     ;   branch_address  : out pc_t
     ;   jump_address    : out pc_t
     );

@@ -25,9 +25,9 @@ ARCHITECTURE behavior OF tb_ex_PC IS
     END COMPONENT;
 
     --Inputs
-    signal pc_in : pc_t;
-    signal immediate_value : operand_t;
-    signal j_value : jump_value_t;
+    signal pc_in            : pc_t;
+    signal immediate_value  : operand_t;
+    signal j_value          : jump_value_t;
 
     --Outputs
     signal branch_address : pc_t;
@@ -52,12 +52,12 @@ BEGIN
     begin
         wait for clock_period;
 
-        pc_in <= (others =>  '0');
-        immediate_value <= (others =>  '1');
-        j_value <= (others =>  '1');
+        pc_in <= (others => '0');
+        immediate_value <= (others => '1');
+        j_value <= (others => '1');
         wait for clock_period;
-        check(branch_address=(others =>  '1'), "Check calculated branch address");
-        check(jump_address=(31 downto 26 => '0', others => '1'), "Check calculated branch address");
+        check(branch_address=x"FFFFFFFF", "Check calculated branch address");
+        check(jump_address=(31 downto 26 => '0', others => '1'), "Check calculated jump address");
 
         report "ALL TESTS SUCCESSFUL";
         wait;
