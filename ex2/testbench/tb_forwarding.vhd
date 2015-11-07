@@ -2,10 +2,10 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-ENTITY tb_data_dependency IS
-END tb_data_dependency;
+ENTITY tb_forwarding IS
+END tb_forwarding;
 
-ARCHITECTURE behavior OF tb_data_dependency IS
+ARCHITECTURE behavior OF tb_forwarding IS
     constant ADDR_WIDTH : integer := 8;
     constant DATA_WIDTH : integer := 32;
 

@@ -32,6 +32,7 @@ begin
         MEM_signals.branch <= '0';
         MEM_signals.jump <= '0';
         MEM_signals.mem_write <= '0';
+        MEM_signals.mem_read <= '0';
         WB_signals.mem_to_reg <= '0';
         WB_signals.reg_write <= '0';
 
@@ -76,6 +77,7 @@ begin
                 EX_signals.alu_op <= ADD;
                 WB_signals.mem_to_reg <= '1';
                 WB_signals.reg_write <= '1';
+                MEM_signals.mem_read <= '1';
             when SW_OPCODE =>
                 EX_signals.alu_immediate <= '1';
                 EX_signals.alu_op <= ADD;
