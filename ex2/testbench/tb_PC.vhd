@@ -69,22 +69,24 @@ BEGIN
         clock <= '1';
         wait for clock_period/2;
    end process;
+
+   plus1: process(pc_out)
+   begin
+    pc_incremented <= pc_t(unsigned(pc_out) + 1);
+   end process;
  
 
    -- Stimulus process
    stim_proc: process
    begin
-      wait for clock_period;
-      reset <= '1';
-      wait for 10*clock_period;
-      reset <= '0';
+      wait for 2*clock_period;
       check(pc_out = x"00000000", "PC should reset to 0 address and not change before processor is enabled");
 
+      wait for clock_period/2;
       processor_enable <= '1';
-      pc_incremented <= pc_t(unsigned(pc_out) + 1);
+
       wait for clock_period; -- pc += 1
-      pc_incremented <= pc_t(unsigned(pc_out) + 1);
-      wait for clock_period; -- pc += 1
+      wait for clock_period + 1 ns; -- pc += 1
       check(pc_out = x"00000002", "PC should increment by 1 each clock period");
 
       jump <= '1';
@@ -95,7 +97,6 @@ BEGIN
       jump <= '0';
       branch <= '1';
       branch_address <= x"F0F0F0F0";
-      pc_incremented <= pc_t(unsigned(pc_out) + 1);
       wait for clock_period;
       check(pc_out = x"AAAAAAAB", "PC should not have been overwritten but incremented because alu_zero is not enabled");
 

@@ -8,7 +8,8 @@ entity generic_register is
     port(
         reset           : in  std_logic
     ;   clock           : in  std_logic
-    ;   write_enable    : in  std_logic
+    ;   write_enable    : in  std_logic := '1'
+    ;   pass_through    : in  std_logic := '0'
     ;   in_value        : in  std_logic_vector(WIDTH-1 downto 0)
     ;   out_value       : out std_logic_vector(WIDTH-1 downto 0) := (others => '0')
     );
@@ -16,11 +17,11 @@ end generic_register;
 
 architecture Behavioral of generic_register is
 begin
-    process(reset, clock, write_enable)
+    process(reset, clock, write_enable, in_value)
     begin
         if reset = '1' then
             out_value <= (others => '0');
-        elsif rising_edge(clock) then
+        elsif (rising_edge(clock) or pass_through = '1') and write_enable = '1' then
             out_value <= in_value;
         end if;
     end process;
