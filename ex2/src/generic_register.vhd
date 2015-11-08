@@ -21,8 +21,12 @@ begin
     begin
         if reset = '1' then
             out_value <= (others => '0');
-        elsif (rising_edge(clock) or pass_through = '1') and write_enable = '1' then
-            out_value <= in_value;
+        elsif write_enable = '1' then
+            if pass_through = '1' then
+                out_value <= in_value;
+            elsif rising_edge(clock) then
+                out_value <= in_value;
+            end if;
         end if;
     end process;
 end Behavioral;

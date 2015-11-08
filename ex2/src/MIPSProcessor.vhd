@@ -142,23 +142,17 @@ begin
         end if;
     end process flush;
 
-    stalling : process(clock, stall) is
+    stalling : process(clock, stall, was_stalling) is
     begin
-        if rising_edge(clock) and stall = '1' then
-            flush_IDEX <= '1';
-        else
-            flush_IDEX <= '0';
-        end if;
-
-        -- this is ugly :(
-        if falling_edge(clock) then
+        if rising_edge(clock) then
             if stall = '1' then
                 was_stalling <= '1';
+                flush_IDEX <= '1';
+            elsif was_stalling = '1' then
+                was_stalling <= '0';
             end if;
-        end if;
-
-        if rising_edge(clock) and stall = '0' and was_stalling = '1' then
-            was_stalling <= '0';
+        else
+            flush_IDEX <= '0';
         end if;
     end process stalling;
 
