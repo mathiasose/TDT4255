@@ -31,6 +31,9 @@ architecture Behavioral of MIPSProcessor is
     -- global signals
     signal write_enable     : std_logic := '0';
     signal flush_pipeline   : std_logic := '0';
+    signal flush_IDEX       : std_logic := '0';
+    signal stall            : std_logic := '0';
+    signal was_stalling     : std_logic := '0';
 
     -- Fetch stage signals
     signal IF_pc_address        : pc_t;
@@ -139,6 +142,26 @@ begin
         end if;
     end process flush;
 
+    stalling : process(clock, stall) is
+    begin
+        if rising_edge(clock) and stall = '1' then
+            flush_IDEX <= '1';
+        else
+            flush_IDEX <= '0';
+        end if;
+
+        -- this is ugly :(
+        if falling_edge(clock) then
+            if stall = '1' then
+                was_stalling <= '1';
+            end if;
+        end if;
+
+        if rising_edge(clock) and stall = '0' and was_stalling = '1' then
+            was_stalling <= '0';
+        end if;
+    end process stalling;
+
     -- only entity instantiations after this point
     -- registers after the functional units
 
@@ -168,7 +191,7 @@ begin
     port map (
         clock => clock,
         reset => reset,
-        stall => '0',
+        stall => stall,
         processor_enable => processor_enable,
         jump => MEM_control_signals.jump,
         branch => MEM_control_signals.branch,
@@ -223,6 +246,15 @@ begin
         read_register_2 => ID_read_register_select_2
     );
 
+    hazard_detection_unit : entity work.hazard_detection_unit
+    port map (
+        mem_read => EX_forward_MEM_signals.mem_read,
+        ex_rt => EX_rt,
+        id_rt => rt(ID_instruction),
+        id_rs => rs(ID_instruction),
+        stall => stall
+    );
+
     -- information flow between states
 
     -----------------------------------------------------------------
@@ -230,55 +262,55 @@ begin
     -----------------------------------------------------------------
     IFID_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => IF_pc_address, out_value => ID_pc_address);
+    port map(reset => reset or flush_pipeline, clock => clock, write_enable => not stall, in_value => IF_pc_address, out_value => ID_pc_address);
 
     IFID_instruction : entity work.generic_register
     generic map(WIDTH => instruction_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => imem_data_in, out_value => ID_instruction);
+    port map(reset => reset or flush_pipeline, clock => clock, write_enable => not was_stalling, pass_through => '1', in_value => imem_data_in, out_value => ID_instruction);
 
     -----------------------------------------------------------------
     -- ID --> EX
     -----------------------------------------------------------------
     IDEX_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_pc_address, out_value => EX_pc_address);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_pc_address, out_value => EX_pc_address);
 
     IDEX_read_data_1 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_read_data_1, out_value => EX_read_data_1);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_read_data_1, out_value => EX_read_data_1);
 
     IDEX_read_data_2 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_read_data_2, out_value => EX_read_data_2);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_read_data_2, out_value => EX_read_data_2);
 
     IDEX_read_imm_value : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_immediate_value_transformed, out_value => EX_immediate_value);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_immediate_value_transformed, out_value => EX_immediate_value);
 
     IDEX_jump_value : entity work.generic_register
     generic map(WIDTH => jump_value_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
 
     IDEX_rs : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => rs(ID_instruction), out_value => EX_rs);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rs(ID_instruction), out_value => EX_rs);
 
     IDEX_rt : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => rt(ID_instruction), out_value => EX_rt);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rt(ID_instruction), out_value => EX_rt);
 
     IDEX_rd : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => rd(ID_instruction), out_value => EX_rd);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rd(ID_instruction), out_value => EX_rd);
 
     IDEX_forward_WB_signals : entity work.WB_register 
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_forward_WB_signals, out_value => EX_forward_WB_signals);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_WB_signals, out_value => EX_forward_WB_signals);
 
     IDEX_forward_MEM_signals : entity work.MEM_register 
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_forward_MEM_signals, out_value => EX_forward_MEM_signals);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_MEM_signals, out_value => EX_forward_MEM_signals);
 
     IDEX_forward_EX_signals : entity work.EX_register 
-    port map(reset => reset or flush_pipeline, clock => clock, in_value => ID_forward_EX_signals, out_value => EX_control_signals);
+    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_EX_signals, out_value => EX_control_signals);
 
     -----------------------------------------------------------------
     -- EX --> MEM
@@ -300,7 +332,7 @@ begin
 
     EXMEM_read_data_2 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset, clock => clock, in_value => EX_read_data_2, out_value => MEM_write_data);
+    port map(reset => reset, clock => clock, in_value => EX_operand_2_source, out_value => MEM_write_data);
 
     EXMEM_write_register : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
