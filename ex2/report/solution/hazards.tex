@@ -1,4 +1,55 @@
 \section{Handling Hazards}
+A pipelined MIPS processor introduces new hazards.
+The following sections descriptibes how the processor detects and corrects various hazards.
+
 \subsection{Structural Hazards}
+If there is a \texttt{lw} with a proceeding instruction which depends on the result,
+a structural hazard appears.
+As solution an hazard detection unit was implemented in the processor.
+If the \texttt{mem\_read} signal is set high there is a potensial hazard.
+If the \texttt{lw} instruction currently in EX stage contains a destination register,
+which is read from an instruction in the ID stage, the pipline has to be stalled.
+
+Listing \ref{lst:hazard-detection-unit} illustrates how the hazard is detected.
+\texttt{ex\_rt} is the destination register from the EX stage.
+\texttt{id\_rs} and \texttt{id\_rt} is the addresses to be read from and is in the ID stage.
+If the expression in listing \ref{lst:hazard-detection-unit} holds true, a \texttt{stall} signal i set high.
+
+The \texttt{stall} signal is used to stall the PC module for one cycle and reset the control signals in ID/EX.
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:hazard-detection-unit, caption=Expression used to set stall control signal]
+stall <= '1' when
+  mem_read = '1' and (ex_rt = id_rs or ex_rt = id_rt) else '0';
+        \end{lstlisting}
+    \end{minipage}
+}
+
 \subsection{Data Hazards}
+With a pipelined processor data dependency with possible hazard, is introduced.
+The implemented processor has 5 pipeline stages.
+As a result the calculation from the execute stage, will be available for a new calculation after 3 cycles.
+One solution is to stall the pipeline until the result is ready, but it makes the processor inefficient.
+A bettter approach is to implement a forwarding unit,
+which makes results currently in memory or write back stages available for a new calculation in the execute stage.
+
+The forwarding unit forwards data from MEM or WB stage, to tEX and ID stage when needed.
+
+Listing \ref{lst:data-hazard} demonstrates data dependency.
+The second instruction needs the result from the first instruction.
+When the first instruction reaches the memory stage, the result is needed in the execute stage.
+With a forwarding unit the result from the first instruction is made available by forwarding the result from memory stage to execute stage.
+
+Data fra WB stages må også enkelte ganger forwardes til ID stage. Se forwarding test i results.
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[label=lst:data-hazard, caption=Data dependency between two consecutive instructions]
+add $2 $1 $1
+add $3 $2 $2
+        \end{lstlisting}
+    \end{minipage}
+}
+
 \subsection{Control Hazards}
