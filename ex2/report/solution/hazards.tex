@@ -34,7 +34,7 @@ One solution is to stall the pipeline until the result is ready, but it makes th
 A bettter approach is to implement a forwarding unit,
 which makes results currently in memory or write back stages available for a new calculation in the execute stage.
 
-The forwarding unit forwards data from MEM or WB stage, to tEX and ID stage when needed.
+The forwarding unit forwards data from MEM or WB stage, to the EX and the ID stage when needed.
 
 Listing \ref{lst:data-hazard} demonstrates data dependency.
 The second instruction needs the result from the first instruction.
@@ -53,3 +53,23 @@ add $3 $2 $2
 }
 
 \subsection{Control Hazards}
+Control instructions as branching and jumping may suddenly change instruction execution order,
+which again leads to hazards.
+When a branch is taken and suddenly changes execution order the pipeline before the EX stage.
+
+In the implementation there is a \texttt{flush} signal which is indicates when the pipline has to be flushed.
+The code from listing \ref{lst:control-hazard-detection} how the control hazard is detected.
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:control-hazard-detection, caption=Control hazard detection]
+if MEM_control_signals.jump = '1' or (MEM_control_signals.branch = '1' and MEM_alu_zero = '1') then
+    flush_pipeline <= '1';
+        \end{lstlisting}
+    \end{minipage}
+}
+
+
+
+
+-
