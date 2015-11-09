@@ -144,15 +144,6 @@ begin
     ID_forward_MEM_signals <= NO_OP_MEM_SIGNALS when stall = '1' else ID_control_MEM_signals;
     ID_forward_WB_signals <= NO_OP_WB_SIGNALS when stall = '1' else ID_control_WB_signals;
 
-    flush : process(MEM_control_signals, MEM_alu_zero) is
-    begin
-        if MEM_control_signals.jump = '1' or (MEM_control_signals.branch = '1' and MEM_alu_zero = '1') then
-            flush_pipeline <= '1';
-        else
-            flush_pipeline <= '0';
-        end if;
-    end process flush;
-
     stalling : process(clock, stall, was_stalling) is
     begin
         if rising_edge(clock) then
@@ -253,6 +244,14 @@ begin
         id_rt => rt(ID_instruction),
         id_rs => rs(ID_instruction),
         stall => stall
+    );
+
+    flusher: entity work.flusher
+    port map(
+        jump     => MEM_control_signals.jump,
+        branch   => MEM_control_signals.branch,
+        alu_zero => MEM_alu_zero,
+        flush    => flush_pipeline
     );
 
     -- information flow between states
