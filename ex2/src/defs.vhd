@@ -4,13 +4,13 @@ use IEEE.STD_LOGIC_1164.all;
 package defs is
     subtype instruction_t       is std_logic_vector(31 downto 0);
     subtype operand_t           is std_logic_vector(31 downto 0);
-    subtype immediate_value_t   is std_logic_vector(15 downto 0);
-    subtype register_address_t  is std_logic_vector(4 downto 0);
-    subtype opcode_t            is std_logic_vector(5 downto 0);
-    subtype funct_t             is std_logic_vector(5 downto 0);
-    subtype shift_amount_t      is std_logic_vector(5 downto 0);
     subtype pc_t                is std_logic_vector(31 downto 0);
     subtype jump_value_t        is std_logic_vector(25 downto 0);
+    subtype immediate_value_t   is std_logic_vector(15 downto 0);
+    subtype opcode_t            is std_logic_vector(5 downto 0);
+    subtype funct_t             is std_logic_vector(5 downto 0);
+    subtype register_address_t  is std_logic_vector(4 downto 0);
+    subtype shift_amount_t      is std_logic_vector(4 downto 0);
 
     type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
@@ -106,7 +106,7 @@ package body defs is
 
     function shift_amount(I : instruction_t) return shift_amount_t is
     begin
-        return shift_amount_t(I(11 downto 6));
+        return shift_amount_t(I(10 downto 6));
     end function shift_amount;
 
     function i_value(I : instruction_t) return immediate_value_t is
