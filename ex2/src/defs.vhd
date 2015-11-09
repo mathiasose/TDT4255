@@ -37,6 +37,10 @@ package defs is
         alu_immediate   : std_logic;
     end record;
 
+    constant NO_OP_EX_SIGNALS  : ex_signals_t := ('0', NO_OP, '0');
+    constant NO_OP_MEM_SIGNALS : mem_signals_t := ('0', '0', '0', '0');
+    constant NO_OP_WB_SIGNALS  : wb_signals_t := ('0', '0');
+
     -- ALU function values
     constant ADD_FUNCT : funct_t := "100000";
     constant SUB_FUNCT : funct_t := "100010";
@@ -65,6 +69,8 @@ package defs is
     -- Operands
     constant OPERAND_0 : operand_t := x"00000000";
     constant OPERAND_1 : operand_t := x"00000001";
+
+    constant INSTRUCTION_NO_OP : instruction_t := (others => '0');
 
     -- Convenience functions for extractng parts of instructions
     function opcode(I : instruction_t) return opcode_t;

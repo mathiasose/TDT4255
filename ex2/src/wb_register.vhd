@@ -4,9 +4,6 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity wb_register is
-    generic(
-        WIDTH : integer := 1
-    );
     port(
         reset           : in  std_logic
     ;   clock           : in  std_logic
@@ -21,8 +18,7 @@ begin
     process(reset, clock, write_enable, in_value)
     begin
         if reset = '1' then
-            out_value.reg_write <= '0';
-            out_value.mem_to_reg <= '0';
+            out_value <= NO_OP_WB_SIGNALS;
         elsif rising_edge(clock) and write_enable = '1' then
             out_value <= in_value;
         end if;

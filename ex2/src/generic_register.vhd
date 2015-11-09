@@ -9,9 +9,8 @@ entity generic_register is
         reset           : in  std_logic
     ;   clock           : in  std_logic
     ;   write_enable    : in  std_logic := '1'
-    ;   pass_through    : in  std_logic := '0'
     ;   in_value        : in  std_logic_vector(WIDTH-1 downto 0)
-    ;   out_value       : out std_logic_vector(WIDTH-1 downto 0) := (others => '0')
+    ;   out_value       : out std_logic_vector(WIDTH-1 downto 0)
     );
 end generic_register;
 
@@ -21,12 +20,8 @@ begin
     begin
         if reset = '1' then
             out_value <= (others => '0');
-        elsif write_enable = '1' then
-            if pass_through = '1' then
-                out_value <= in_value;
-            elsif rising_edge(clock) then
-                out_value <= in_value;
-            end if;
+        elsif rising_edge(clock) and write_enable = '1' then
+            out_value <= in_value;
         end if;
     end process;
 end Behavioral;

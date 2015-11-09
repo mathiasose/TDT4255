@@ -31,9 +31,10 @@ architecture Behavioral of MIPSProcessor is
     -- global signals
     signal write_enable     : std_logic := '0';
     signal flush_pipeline   : std_logic := '0';
-    signal flush_IDEX       : std_logic := '0';
     signal stall            : std_logic := '0';
     signal was_stalling     : std_logic := '0';
+
+    signal reset_or_flush : std_logic := '0';
 
     -- Fetch stage signals
     signal IF_pc_address        : pc_t;
@@ -46,6 +47,9 @@ architecture Behavioral of MIPSProcessor is
     signal ID_instruction                   : instruction_t;
     signal ID_immediate_value_transformed   : operand_t;
     signal ID_immediate_value_transform     : immediate_value_transformation_t;
+    signal ID_control_EX_signals            : EX_signals_t;
+    signal ID_control_MEM_signals           : MEM_signals_t;
+    signal ID_control_WB_signals            : WB_signals_t;
     signal ID_forward_EX_signals            : EX_signals_t;
     signal ID_forward_MEM_signals           : MEM_signals_t;
     signal ID_forward_WB_signals            : WB_signals_t;
@@ -133,6 +137,12 @@ begin
 
     EX_operand_2 <= EX_immediate_value when EX_control_signals.alu_immediate = '1' else EX_operand_2_source;
 
+    -- Stalling
+    reset_or_flush <= reset or flush_pipeline;
+    ID_forward_EX_signals <= NO_OP_EX_SIGNALS when stall = '1' else ID_control_EX_signals;
+    ID_forward_MEM_signals <= NO_OP_MEM_SIGNALS when stall = '1' else ID_control_MEM_signals;
+    ID_forward_WB_signals <= NO_OP_WB_SIGNALS when stall = '1' else ID_control_WB_signals;
+
     flush : process(MEM_control_signals, MEM_alu_zero) is
     begin
         if MEM_control_signals.jump = '1' or (MEM_control_signals.branch = '1' and MEM_alu_zero = '1') then
@@ -147,12 +157,9 @@ begin
         if rising_edge(clock) then
             if stall = '1' then
                 was_stalling <= '1';
-                flush_IDEX <= '1';
             elsif was_stalling = '1' then
                 was_stalling <= '0';
             end if;
-        else
-            flush_IDEX <= '0';
         end if;
     end process stalling;
 
@@ -161,14 +168,12 @@ begin
 
     control : entity work.control
     port map(
-        clock => clock,
-        reset => reset,
         processor_enable => processor_enable,
         instruction => ID_instruction,
         immediate_value_transform => ID_immediate_value_transform,
-        WB_signals => ID_forward_WB_signals,
-        MEM_signals => ID_forward_MEM_signals,
-        EX_signals => ID_forward_EX_signals
+        WB_signals => ID_control_WB_signals,
+        MEM_signals => ID_control_MEM_signals,
+        EX_signals => ID_control_EX_signals
     );
 
     alu : entity work.alu
@@ -256,55 +261,54 @@ begin
     -----------------------------------------------------------------
     IFID_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, write_enable => not stall, in_value => IF_pc_address, out_value => ID_pc_address);
+    port map(reset => reset_or_flush, clock => clock, write_enable => not stall, in_value => IF_pc_address, out_value => ID_pc_address);
 
-    IFID_instruction : entity work.generic_register
-    generic map(WIDTH => instruction_t'length)
-    port map(reset => reset or flush_pipeline, clock => clock, write_enable => not was_stalling, pass_through => '1', in_value => imem_data_in, out_value => ID_instruction);
+    -- slow memory module, bypass the synchronous registers
+    ID_instruction <= imem_data_in when was_stalling = '0' else ID_instruction;
 
     -----------------------------------------------------------------
     -- ID --> EX
     -----------------------------------------------------------------
     IDEX_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_pc_address, out_value => EX_pc_address);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_pc_address, out_value => EX_pc_address);
 
     IDEX_read_data_1 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_read_data_1, out_value => EX_read_data_1);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_read_data_1, out_value => EX_read_data_1);
 
     IDEX_read_data_2 : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_read_data_2, out_value => EX_read_data_2);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_read_data_2, out_value => EX_read_data_2);
 
     IDEX_read_imm_value : entity work.generic_register
     generic map(WIDTH => operand_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_immediate_value_transformed, out_value => EX_immediate_value);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_immediate_value_transformed, out_value => EX_immediate_value);
 
     IDEX_jump_value : entity work.generic_register
     generic map(WIDTH => jump_value_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
+    port map(reset => reset_or_flush, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
 
     IDEX_rs : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rs(ID_instruction), out_value => EX_rs);
+    port map(reset => reset_or_flush, clock => clock, in_value => rs(ID_instruction), out_value => EX_rs);
 
     IDEX_rt : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rt(ID_instruction), out_value => EX_rt);
+    port map(reset => reset_or_flush, clock => clock, in_value => rt(ID_instruction), out_value => EX_rt);
 
     IDEX_rd : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => rd(ID_instruction), out_value => EX_rd);
+    port map(reset => reset_or_flush, clock => clock, in_value => rd(ID_instruction), out_value => EX_rd);
 
     IDEX_forward_WB_signals : entity work.WB_register 
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_WB_signals, out_value => EX_forward_WB_signals);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_forward_WB_signals, out_value => EX_forward_WB_signals);
 
     IDEX_forward_MEM_signals : entity work.MEM_register 
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_MEM_signals, out_value => EX_forward_MEM_signals);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_forward_MEM_signals, out_value => EX_forward_MEM_signals);
 
     IDEX_forward_EX_signals : entity work.EX_register 
-    port map(reset => reset or flush_pipeline or flush_IDEX, clock => clock, in_value => ID_forward_EX_signals, out_value => EX_control_signals);
+    port map(reset => reset_or_flush, clock => clock, in_value => ID_forward_EX_signals, out_value => EX_control_signals);
 
     -----------------------------------------------------------------
     -- EX --> MEM
@@ -341,9 +345,8 @@ begin
     -----------------------------------------------------------------
     -- MEM --> WB
     -----------------------------------------------------------------
-    MEMWB_read_data : entity work.generic_register
-    generic map(WIDTH => operand_t'length)
-    port map(reset => reset, clock => clock, pass_through => '1', in_value => dmem_data_in, out_value => WB_read_data);
+    -- slow memory module, bypass the synchronous registers
+    WB_read_data <= dmem_data_in;
 
     MEMWB_alu_result : entity work.generic_register
     generic map(WIDTH => operand_t'length)

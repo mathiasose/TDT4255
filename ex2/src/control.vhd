@@ -5,8 +5,6 @@ use work.defs.all;
 
 entity control is
     port(
-        clock                       : in std_logic;
-        reset                       : in std_logic;
         processor_enable            : in std_logic := '0';
         instruction                 : in instruction_t;
         immediate_value_transform   : out immediate_value_transformation_t;

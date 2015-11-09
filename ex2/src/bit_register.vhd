@@ -7,7 +7,7 @@ entity bit_register is
     ;   clock           : in std_logic
     ;   write_enable    : in std_logic := '1'
     ;   in_value        : in std_logic
-    ;   out_value       : out std_logic := '0'
+    ;   out_value       : out std_logic
     );
 end bit_register;
 
