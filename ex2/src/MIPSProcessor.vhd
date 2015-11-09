@@ -68,6 +68,7 @@ architecture Behavioral of MIPSProcessor is
     signal EX_read_data_1           : operand_t;
     signal EX_read_data_2           : operand_t;
     signal EX_immediate_value       : operand_t;
+    signal EX_shift_amount          : shift_amount_t;
     signal EX_operand_1             : operand_t;
     signal EX_operand_2             : operand_t;
     signal EX_operand_2_source      : operand_t;
@@ -181,7 +182,7 @@ begin
         operation => EX_control_signals.alu_op,
         operand_A => EX_operand_1,
         operand_B => EX_operand_2,
-        shift_amount => "000000",  --TODO
+        shift_amount => EX_shift_amount,
         result => EX_alu_result,
         zero => EX_alu_zero
     );
@@ -288,6 +289,10 @@ begin
     IDEX_jump_value : entity work.generic_register
     generic map(WIDTH => jump_value_t'length)
     port map(reset => reset_or_flush, clock => clock, in_value => j_value(ID_instruction), out_value => EX_jump_value);
+
+    IDEX_shift_amount : entity work.generic_register
+    generic map(WIDTH => shift_amount_t'length)
+    port map(reset => reset_or_flush, clock => clock, in_value => shift_amount(ID_instruction), out_value => EX_shift_amount);
 
     IDEX_rs : entity work.generic_register
     generic map(WIDTH => register_address_t'length)
