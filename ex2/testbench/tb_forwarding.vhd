@@ -1,6 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
+use work.defs.all;
 
 ENTITY tb_forwarding IS
 END tb_forwarding;
@@ -104,9 +105,9 @@ DataMem:            entity work.DualPortMem port map (
             variable TestInstrData : InstrData := (
                 X"8C010001", --0    lw $1, 1($0)        /$1 =  2
                 X"8C020002", --1    lw $2, 2($0)        /$2 = 10
-                "00000000001000010001100000100000", --2    add $3, $1, $1      /$3 = 4
-                "00000000011000110010000000100000", --3    add $4, $3, $3      /$4 = 8
-                "00000000100000110010100000100010", --4    sub $5, $4, $3      /$5 = 4
+                ALU_OP_OPCODE & "00001" & "00001" & "00011" & "00000" & ADD_FUNCT, --2    add $3, $1, $1      /$3 = 4
+                ALU_OP_OPCODE & "00011" & "00011" & "00100" & "00000" & ADD_FUNCT, --3    add $4, $3, $3      /$4 = 8
+                ALU_OP_OPCODE & "00100" & "00011" & "00101" & "00000" & SUB_FUNCT, --4    sub $5, $4, $3      /$5 = 4
                 X"AC030003", --5    sw $3, 3($0)       /Saving value 4 on address 3
                 X"AC040004", --6    sw $4, 4($0)       /Saving value 8 on address 4
                 X"AC050005" --7    sw $5, 5($0)       /Saving value 4 on address 5
@@ -159,8 +160,6 @@ DataMem:            entity work.DualPortMem port map (
         begin
             wait until processor_enable = '0';
             -- expected data memory contents, derived from program behavior
-            CheckDataWord(x"00000002", 1);
-            CheckDataWord(x"0000000a", 2);
             CheckDataWord(x"00000004", 3);
             CheckDataWord(x"00000008", 4);
             CheckDataWord(x"00000004", 5);

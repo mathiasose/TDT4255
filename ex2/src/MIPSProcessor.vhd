@@ -56,10 +56,6 @@ architecture Behavioral of MIPSProcessor is
     signal ID_read_data_1                   : operand_t;
     signal ID_read_data_2                   : operand_t;
 
-    -- Forwarding unit signals
-    signal ID_read_register_select_1        : forwarded_reg_src_t;
-    signal ID_read_register_select_2        : forwarded_reg_src_t;
-
     -- Execute stage signals
     signal EX_alu_zero              : std_logic;
     signal EX_branch_address        : pc_t;
@@ -81,10 +77,6 @@ architecture Behavioral of MIPSProcessor is
     signal EX_control_signals       : EX_signals_t;
     signal EX_forward_MEM_signals   : MEM_signals_t;
     signal EX_forward_WB_signals    : WB_signals_t;
-
-    -- Forwarding unit signals
-    signal EX_alu_select_1  : forwarded_reg_src_t;
-    signal EX_alu_select_2  : forwarded_reg_src_t;
 
     -- Mem stage signals
     signal MEM_alu_zero             : std_logic;
@@ -116,25 +108,54 @@ begin
     WB_write_data <= WB_read_data when WB_control_signals.MEM_to_reg = '1' else WB_alu_result;
 
     -- Data forwarding muxes
-    with ID_read_register_select_1 select
-        ID_read_data_1 <= MEM_alu_result when MEM,
-                        WB_write_data when WB,
-                        ID_reg_out_1 when others;
-
-    with ID_read_register_select_2 select
-        ID_read_data_2 <= MEM_alu_result when MEM,
-                        WB_write_data when WB,
-                        ID_reg_out_2 when others;
-
-    with EX_alu_select_1 select
-        EX_operand_1 <= MEM_alu_result when MEM,
-                        WB_write_data when WB,
-                        EX_read_data_1 when others;
-
-    with EX_alu_select_2 select
-        EX_operand_2_source <=  MEM_alu_result when MEM,
-                                WB_write_data when WB,
-                                EX_read_data_2 when others;
+    ID_fwd_read_data_1 : entity work.forwarder_mux
+    port map(
+        MEM_reg_write       => MEM_forward_WB_signals.reg_write,
+        WB_reg_write        => WB_control_signals.reg_write,
+        MEM_reg_dst         => MEM_write_register,
+        WB_reg_dst          => WB_write_register,
+        selected_register   => rs(ID_instruction),
+        default_value       => ID_reg_out_1,
+        MEM_value           => MEM_alu_result,
+        WB_value            => WB_write_data,
+        out_value           => ID_read_data_1
+    );
+    ID_fwd_read_data_2 : entity work.forwarder_mux
+    port map(
+        MEM_reg_write       => MEM_forward_WB_signals.reg_write,
+        WB_reg_write        => WB_control_signals.reg_write,
+        MEM_reg_dst         => MEM_write_register,
+        WB_reg_dst          => WB_write_register,
+        selected_register   => rt(ID_instruction),
+        default_value       => ID_reg_out_2,
+        MEM_value           => MEM_alu_result,
+        WB_value            => WB_write_data,
+        out_value           => ID_read_data_2
+    );
+    EX_fwd_alu_input_1 : entity work.forwarder_mux
+    port map(
+        MEM_reg_write       => MEM_forward_WB_signals.reg_write,
+        WB_reg_write        => WB_control_signals.reg_write,
+        MEM_reg_dst         => MEM_write_register,
+        WB_reg_dst          => WB_write_register,
+        selected_register   => EX_rs,
+        default_value       => EX_read_data_1,
+        MEM_value           => MEM_alu_result,
+        WB_value            => WB_write_data,
+        out_value           => EX_operand_1
+    );
+    EX_fwd_alu_input_2 : entity work.forwarder_mux
+    port map(
+        MEM_reg_write       => MEM_forward_WB_signals.reg_write,
+        WB_reg_write        => WB_control_signals.reg_write,
+        MEM_reg_dst         => MEM_write_register,
+        WB_reg_dst          => WB_write_register,
+        selected_register   => EX_rt,
+        default_value       => EX_read_data_2,
+        MEM_value           => MEM_alu_result,
+        WB_value            => WB_write_data,
+        out_value           => EX_operand_2_source
+    );
 
     EX_operand_2 <= EX_immediate_value when EX_control_signals.alu_immediate = '1' else EX_operand_2_source;
 
@@ -219,22 +240,6 @@ begin
         transform => ID_immediate_value_transform,
         in_value => i_value(ID_instruction),
         out_value => ID_immediate_value_transformed
-    );
-
-    forwarding_unit : entity work.forwarding_unit
-    port map (
-        MEM_reg_write => MEM_forward_WB_signals.reg_write,
-        WB_reg_write => WB_control_signals.reg_write,
-        EX_rs => EX_rs,
-        EX_rt => EX_rt,
-        ID_rs => rs(ID_instruction),
-        ID_rt => rt(ID_instruction),
-        MEM_reg_dest => MEM_write_register,
-        WB_reg_dest => WB_write_register,
-        alu_input_1 => EX_alu_select_1,
-        alu_input_2 => EX_alu_select_2,
-        read_register_1 => ID_read_register_select_1,
-        read_register_2 => ID_read_register_select_2
     );
 
     hazard_detection_unit : entity work.hazard_detection_unit

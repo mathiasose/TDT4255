@@ -14,7 +14,6 @@ package defs is
 
     type alu_operation_t is (ADD, SUB, SLT, ALU_AND, ALU_OR, ALU_NOR, ALU_XOR, ALU_SLL, ALU_SRL, ALU_SRA, NO_OP);
     type immediate_value_transformation_t is (SHIFT_LEFT, SIGN_EXTEND);
-    type forwarded_reg_src_t is (REG, MEM, WB);
 
     type wb_signals_t is
     record
