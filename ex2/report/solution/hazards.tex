@@ -1,4 +1,4 @@
-\section{Handling Hazards}
+\section{Hazard Dection}
 A pipelined MIPS processor introduces new hazards.
 The following sections descriptibes how the processor detects and corrects various hazards.
 
@@ -55,10 +55,14 @@ add $3 $2 $2
 \subsection{Control Hazards}
 Control instructions as branching and jumping may suddenly change instruction execution order,
 which again leads to hazards.
-When a branch is taken and suddenly changes execution order the pipeline before the EX stage.
+When a branch is taken and suddenly changes execution order the pipeline before the EX stage has to be flushed.
+The pipline then has to be filled with the new instruction.
+As a result a few cycles then executes \texttt{no\_op} instructions.
 
 In the implementation there is a \texttt{flush} signal which is indicates when the pipline has to be flushed.
-The code from listing \ref{lst:control-hazard-detection} how the control hazard is detected.
+The code from listing \ref{lst:control-hazard-detection} illustrates when the \texttt{flush} is set high and how the control hazard is detected.
+When the \texttt{jump} signal is high, there is an inevitably jump.
+A \texttt{beq} high signal only causes a jump if \texttt{alu\_zero} also is set high.
 
 \noindent{
     \begin{minipage}{\linewidth}
@@ -68,8 +72,3 @@ if MEM_control_signals.jump = '1' or (MEM_control_signals.branch = '1' and MEM_a
         \end{lstlisting}
     \end{minipage}
 }
-
-
-
-
--
