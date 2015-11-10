@@ -52,12 +52,12 @@ BEGIN
     begin
         wait for clock_period;
 
-        pc_in <= (others => '0');
-        immediate_value <= (others => '1');
+        pc_in <= x"80000000";
+        immediate_value <= x"00000001";
         j_value <= (others => '1');
         wait for clock_period;
-        check(branch_address=x"FFFFFFFF", "Check calculated branch address");
-        check(jump_address=(31 downto 26 => '0', others => '1'), "Check calculated jump address");
+        check(branch_address=x"80000001", "Check calculated branch address");
+        check(jump_address="100000" & "11" & x"FFFFFF", "Check calculated jump address");
 
         report "ALL TESTS SUCCESSFUL";
         wait;
