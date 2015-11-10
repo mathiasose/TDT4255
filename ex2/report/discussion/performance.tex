@@ -1,0 +1,18 @@
+\section{Performance}
+The piplined MIPS processor achives a higher max frequency compared to the processor implemented in the first exercise.
+The processor executes one instruction each clock cycle, with a few exceptions:
+
+\begin{itemize}
+\item A \texttt{lw} instruction with a data dependent instruction afterwards, will cause the system to stall for one cycle.
+\item If the \texttt{beq} expression holds true and the PC jumps, the pipline has to be flushed and a total of 3 cycles is lost.
+\end{itemize}
+
+\subsection{Futher Performance Improvements}
+Most of the execution time is spent inside loops.
+As a result loop optimizations often results in the best performance gains.
+Branch prediction to reduce pipline flushes, may have an huge impact on performance.
+
+
+It it also possible to have more than 1 instruction executed each cycle.
+With multiple functional units it is possible to execute multiple instructions.
+This requires extra hardware and increases complexity.
