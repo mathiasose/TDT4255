@@ -5,6 +5,7 @@ The processor executes one instruction each clock cycle, with a few exceptions:
 \begin{itemize}
 \item A \texttt{lw} instruction with a data dependent instruction afterwards, will cause the system to stall for one cycle.
 \item If the \texttt{beq} expression holds true and the PC jumps, the pipline has to be flushed and a total of 3 cycles is lost.
+\item A \texttt{jump} instruction has the same effect as a \texttt{beq} instruction, and the pipline loses 3 cycles.
 \end{itemize}
 
 \subsection{Futher Performance Improvements}
@@ -14,5 +15,5 @@ Branch prediction to reduce pipline flushes, may have an huge impact on performa
 
 
 It it also possible to have more than 1 instruction executed each cycle.
-With multiple functional units it is possible to execute multiple instructions.
-This requires extra hardware and increases complexity.
+With multiple functional units it is possible to execute multiple instructions on each cycle.
+This does however requires extra hardware and increases complexity.
