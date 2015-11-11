@@ -1,0 +1,38 @@
+\section{Forwarding}
+Figure \ref{fig:fwd_mux} and listing \ref{lst:select_source} illustrate the forwarding unit.
+This generic component is instantiated twice in the ID stage and twice in the EX stage.
+A register value and its associated register address comes from a previous stage.
+If the selecter unit detects that the selected register has an updated value in the MEM or WB stage,
+it will reroute this value to replace the value from the earlier stage.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.6\textwidth]{img/fwd_mux}
+    \caption{Forwarder multiplexer unit. Inputs on the right come from a later stage.}
+    \label{fig:fwd_mux}
+\end{figure}
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:select_source, caption=Source select logic]
+if MEM_reg_write = '1' and selected_register = MEM_reg_dst then
+    selected_source <= MEM;
+elsif WB_reg_write = '1' and selected_register = WB_reg_dst then
+    selected_source <= WB;
+else
+    selected_source <= DEFAULT;
+end if;
+        \end{lstlisting}
+    \end{minipage}
+}
+
+Figure \ref{fig:forwarders} shows the placement of the forwarders in the pipeline.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/forwarders}
+    \caption{Simplified overview of the parts of the pipeline involving forwarding. The green arrows represent inputs from later stages, and are the same for all forwarders.}
+    \label{fig:forwarders}
+\end{figure}
+
+
