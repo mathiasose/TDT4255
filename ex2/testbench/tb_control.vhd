@@ -13,8 +13,6 @@ ARCHITECTURE behavior OF tb_control IS
  
     COMPONENT control
     port(
-        clock                       : in std_logic;
-        reset                       : in std_logic;
         processor_enable            : in std_logic := '0';
         instruction                 : in instruction_t;
 
@@ -27,8 +25,6 @@ ARCHITECTURE behavior OF tb_control IS
     END COMPONENT;
 
    --Inputs
-   signal clock : std_logic := '0';
-   signal reset : std_logic := '0';
    signal processor_enable : std_logic := '0';
    signal instruction : std_logic_vector(31 downto 0) := (others => '0');
 
@@ -46,8 +42,6 @@ BEGIN
 
     -- Instantiate the Unit Under Test (UUT)
    uut: control PORT MAP (
-          clock => clock,
-          reset => reset,
           processor_enable => processor_enable,
           instruction => instruction,
           immediate_value_transform => immediate_value_transform,
@@ -55,15 +49,6 @@ BEGIN
           mem_signals => mem_signals,
           ex_signals => ex_signals
         );
-
-   -- Clock process definitions
-   clock_process :process
-   begin
-        clock <= '0';
-        wait for clock_period/2;
-        clock <= '1';
-        wait for clock_period/2;
-   end process;
 
    stim_proc: process
    begin
