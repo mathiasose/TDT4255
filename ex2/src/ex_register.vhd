@@ -9,7 +9,7 @@ entity ex_register is
     ;   clock           : in  std_logic
     ;   write_enable    : in  std_logic := '1'
     ;   in_value        : in  ex_signals_t
-    ;   out_value       : out ex_signals_t
+    ;   out_value       : out ex_signals_t := NO_OP_EX_SIGNALS
     );
 end ex_register;
 
