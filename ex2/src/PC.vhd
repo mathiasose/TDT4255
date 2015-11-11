@@ -4,10 +4,6 @@ use IEEE.NUMERIC_STD.ALL;
 use work.defs.all;
 
 entity PC is
-    generic (
-        ADDR_WIDTH : integer := 8;  -- in here we maintain a 32 bit register, it may be shortened outside
-        DATA_WIDTH : integer := 32
-    );
     Port (
         clock, reset        : in std_logic := '0';
         processor_enable    : in std_logic := '0';

@@ -10,7 +10,7 @@ entity generic_register is
     ;   clock           : in  std_logic
     ;   write_enable    : in  std_logic := '1'
     ;   in_value        : in  std_logic_vector(WIDTH-1 downto 0)
-    ;   out_value       : out std_logic_vector(WIDTH-1 downto 0)
+    ;   out_value       : out std_logic_vector(WIDTH-1 downto 0) := (others => '0')
     );
 end generic_register;
 
