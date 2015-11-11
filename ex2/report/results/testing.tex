@@ -1,4 +1,5 @@
 \section{Testing}
+\subsection{Simulated Testbenches}
 For the modules that were reused from exercise 1,
 the associated testbenches were also reused.
 When modules were modified,
@@ -6,9 +7,21 @@ so were the tests.
 
 In addition to the provided processor testbench,
 there are three separate testbenches created that each test the pipeline's ability to handle a specific hazard.
-By making each of these tests pass, the provided testbench also starts passing.
+By making each of these tests pass, the provided testbench also started passing.
 
-\subsection{Forwarding Test}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/isim}
+    \caption{Showing some assorted signals while \textit{ISim} simulates the provided testbench.\\
+        The instruction \texttt{lw \$2, 2(\$0)} is fetched at PC=2 and is followed by \texttt{add \$3, \$1, \$2},
+        requiring a stall.\\
+        The add instruction can be seen executed at PC=4,
+         and the resulting value 12 is written to register 3 by PC=7.
+    }
+    \label{fig:isim}
+\end{figure}
+
+\subsubsection{Forwarding Test}
 Table \ref{tbl:forwarding} illustrates the pipeline executing the test program for the forwarding testbench.
 RAW hazard are highlighted,
 both where the EX stage needs forwarding to the ALU,
@@ -34,7 +47,7 @@ and where the ID stage needs register values before they are written.
 \label{tbl:forwarding}
 \end{table}
 
-\subsection{Stalling Test}
+\subsubsection{Stalling Test}
 Table \ref{tbl:stalling} shows the pipeline from the stalling testbench.
 A value is being read to register 1, and is needed for the next instruction (addition).
 Since the value won't be available until after the load instruction has passed the MEM stage,
@@ -56,7 +69,7 @@ Because forwarding has also been implemented, only one cycle of stalling is requ
 \label{tbl:stalling}
 \end{table}
 
-\subsection{Branching Test}
+\subsubsection{Branching Test}
 Table \ref{tbl:branching} shows the pipeline from the branching testbench.
 In the test program a branch is taken which means the add instruction is not to be committed.
 When the branch instruction reaches the MEM stage and updates the program counter,
@@ -75,4 +88,14 @@ the instructions from the wrong branch are flushed.
 \caption{Pipeline containing a branch that is taken}
 \label{tbl:branching}
 \end{table}
+
+\subsection{Testing on an FPGA}
+The test program from exercise 1 was reused when implementing the new processor design on an FPGA.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/hostcomm}
+    \caption{Resulting date memory loaded from FPGA after running the pipelined processor implementation with the test program.}
+    \label{fig:hostcomm}
+\end{figure}
 
