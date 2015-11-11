@@ -28,7 +28,6 @@ stall <= '1' when
 
 \subsection{Data Hazards}
 With a pipelined processor data dependency with possible hazard, is introduced.
-The implemented processor has 5 pipeline stages.
 As a result the calculation from the execute stage, will be available for a new calculation after 3 cycles.
 One solution is to stall the pipeline until the result is ready, but it makes the processor inefficient.
 A bettter approach is to implement a forwarding unit,
@@ -40,8 +39,6 @@ Listing \ref{lst:data-hazard} demonstrates data dependency.
 The second instruction needs the result from the first instruction.
 When the first instruction reaches the memory stage, the result is needed in the execute stage.
 With a forwarding unit the result from the first instruction is made available by forwarding the result from memory stage to execute stage.
-
-Data fra WB stages må også enkelte ganger forwardes til ID stage. Se forwarding test i results.
 
 \noindent{
     \begin{minipage}{\linewidth}

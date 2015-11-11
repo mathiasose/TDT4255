@@ -7,41 +7,28 @@ This is implemented by adding registers in between components in hardware.
 Each stage reads its input register at the beginning of the cycle and writes its result to an output register which is the input register for the next stage.
 Thus the clock frequency of the entire processor is dependent upon the time it takes for the slowest stage to read input, process it, then write output.
 
+\subsection{Pipeline Stages}
+Figure~\ref{fig:architecture} illustrates the main components in each pipeline stage.
+The forwarding unit and the hazard detection unit is left out to simplify the figure,
+and they are described in greater detail in seperate sections.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/architecture}
+    \caption{
+      Simplified overview of the architecture.
+    }
+    \label{fig:architecture}
+\end{figure}
+
 \subsection{Information-passing Between Stages}
-With pipelining it is important to have registers to temporarily store the next value,
-between each stage.
-To achive this behaviour, four registers were added between stages:
+With pipelining it is important to have registers to temporarily store the next value between each stage.
+To achive this behaviour, registers were added between the stages:
 IF/ID, ID/EX, EX/MEM and MEM/WB.
+Each of the stage seperators contains registers which is used for control signals and busses.
 
-However signals from memory needs to pass through the stage seperators without using a registers.
+However signals from memory needs to pass through the stage seperators without any delay.
 The instruction memory and the data memory outputs are pass throug signals.
-
-
-
-
-Instruction Fetch => Instruction Decode
-32 bit instruction
-Program counter value
-
-Instruction Decode => Execute
-Program counter value
-Control signals: WB, M, EX
-Register read values A and B
-Extended immediate value
-Rt and Rd values
-
-Execute => Memory Access
-Control signals: WB, M
-Modified PC value
-ALU result and zero flag
-Register read value B
-Rt or Rd value after muxing by RegDst
-
-Memory Access => Write to Registers
-WB control signals
-Data memory read value
-Data memory address
-Rt or Rd value after muxing by RegDst
 
 \subsection{Resources Shared by Stages}
 \begin{table}[h]
