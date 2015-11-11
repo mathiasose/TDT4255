@@ -266,7 +266,7 @@ begin
     -----------------------------------------------------------------
     IFID_pc : entity work.generic_register
     generic map(WIDTH => pc_t'length)
-    port map(reset => reset_or_flush, clock => clock, write_enable => not stall, in_value => IF_pc_address, out_value => ID_pc_address);
+    port map(reset => reset_or_flush, clock => clock, write_enable => not stall, in_value => IF_pc_incremented, out_value => ID_pc_address);
 
     -- slow memory module, bypass the synchronous registers
     ID_instruction <= imem_data_in when was_stalling = '0' else ID_instruction;

@@ -105,13 +105,13 @@ DataMem:            entity work.DualPortMem port map (
             variable TestInstrData : InstrData := (
                 X"8C010001",                                                        --0    lw   $1, 1($0)       $1 = 2
                 BEQ_OPCODE & "00000" & "00000" & x"0001",                           --1    beq  $0, $0, 1       $0 = $0, skip next instruction
-                ALU_OP_OPCODE & "00001" & "00001" & "00010" & "00000" & ADD_FUNCT,  --2    add  $2, $1, $1      Shouldn't happen
-                BEQ_OPCODE & "00001" & "00000" & x"0001",                           --3    beq  $1, $0, 1       $1 != $0, don't branch
-                X"08000006",                                                        --4    jump 6               Skip next instruction
-                ALU_OP_OPCODE & "00001" & "00001" & "00011" & "00000" & ADD_FUNCT,  --5    add  $3, $1, $1      Shouldn't happen
-                X"AC010002",                                                        --6    sw $1, 2($0)         Saving value 2 on address 2
-                X"AC020003",                                                        --7    sw $2, 3($0)         Saving value 0 on address 3
-                X"AC030004"                                                         --8    sw $3, 4($0)         Saving value 0 on address 4
+                ALU_OP_OPCODE & "00001" & "00001" & "00010" & "00000" & ADD_FUNCT,  --2    add  $2, $1, $1      Shouldn't be committed
+                INSTRUCTION_NO_OP,                                                  --3
+                INSTRUCTION_NO_OP,                                                  --4
+                INSTRUCTION_NO_OP,                                                  --5
+                INSTRUCTION_NO_OP,                                                  --6
+                INSTRUCTION_NO_OP,                                                  --7
+                X"AC020003"                                                         --8    sw $2, 3($0)         Saving value 0 on address 3
             );
         begin
             for i in 0 to TEST_INSTRS-1 loop
@@ -160,9 +160,7 @@ DataMem:            entity work.DualPortMem port map (
         begin
             wait until processor_enable = '0';
             -- expected data memory contents, derived from program behavior
-            CheckDataWord(x"00000002", 2);
             CheckDataWord(x"00000000", 3);
-            CheckDataWord(x"00000000", 4);
         end CheckDataMemory;
 
    begin
