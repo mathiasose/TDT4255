@@ -57,5 +57,22 @@ Because forwarding has also been implemented, only one cycle of stalling is requ
 \end{table}
 
 \subsection{Branching Test}
+Table \ref{tbl:branching} shows the pipeline from the branching testbench.
+In the test program a branch is taken which means the add instruction is not to be committed.
+When the branch instruction reaches the MEM stage and updates the program counter,
+the instructions from the wrong branch are flushed.
 
+\begin{table}[h]
+    \begin{tabular}{l|lllll}
+    PC & IF                 & ID                 & EX                 & MEM              & WB               \\ \hline
+    0  & lw   \$1, 1(\$0)   & ~                  & ~                  & ~                & ~                \\
+    1  & beq  \$0, \$0, 1   & lw   \$1, 1(\$0)   & ~                  & ~                & ~                \\
+    2  & add  \$2, \$1, \$1 & beq  \$0, \$0, 1   & lw   \$1, 1(\$0)   & ~                & ~                \\
+    3  & no op (1)          & add  \$2, \$1, \$1 & beq  \$0, \$0, 1   & lw   \$1, 1(\$0) & ~                \\
+    4  & no op (2)          & no op (1)          & add  \$2, \$1, \$1 & beq  \$0, \$0, 1 & lw   \$1, 1(\$0) \\
+    3  & no op (1)          & (flushed)          & (flushed)          & (flushed)        & beq  \$0, \$0, 1 \\
+    \end{tabular}
+\caption{Pipeline containing a branch that is taken}
+\label{tbl:branching}
+\end{table}
 
