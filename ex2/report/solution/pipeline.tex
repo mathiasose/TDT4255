@@ -8,6 +8,17 @@ Each stage reads its input register at the beginning of the cycle and writes its
 Thus the clock frequency of the entire processor is dependent upon the time it takes for the slowest stage to read input, process it, then write output.
 
 \subsection{Information-passing Between Stages}
+With pipelining it is important to have registers to temporarily store the next value,
+between each stage.
+To achive this behaviour, four registers were added between stages:
+IF/ID, ID/EX, EX/MEM and MEM/WB.
+
+However signals from memory needs to pass through the stage seperators without using a registers.
+The instruction memory and the data memory outputs are pass throug signals.
+
+
+
+
 Instruction Fetch => Instruction Decode
 32 bit instruction
 Program counter value
@@ -37,6 +48,6 @@ Rt or Rd value after muxing by RegDst
     \begin{tabular}{l|lllll}
     ~         & IF & ID & EX & MEM & WB \\ \hline
     PC        & RW & ~  & ~  & W   & ~  \\
-    Registers & R  & ~  & ~  & ~   & W  \\
+    Registers & ~  & R  & ~  & ~   & W  \\
     \end{tabular}
 \end{table}
