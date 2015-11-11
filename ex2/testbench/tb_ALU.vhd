@@ -99,19 +99,20 @@ BEGIN
       wait for clock_period;
       check(result = x"FFFFFFFE", "Test XOR");
 
+      operand_B <= OPERAND_1;
       operation <= ALU_SLL;
-      shift_amount <= "000100";
+      shift_amount <= "00100";
       wait for clock_period;
       check(result = x"00000010", "Test SLL");
 
       operation <= ALU_SRL;
-      operand_A <= x"00000010";
+      operand_B <= x"00000010";
       wait for clock_period;
       check(result = x"00000001", "Test SRL");
 
       operation <= ALU_SRA;
-      operand_A <= x"F0000000";
-      shift_amount <= "000100";
+      operand_B <= x"F0000000";
+      shift_amount <= "00100";
       wait for clock_period;
       check(result = x"FF000000", "Test SRA");
 
