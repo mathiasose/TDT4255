@@ -1,0 +1,109 @@
+\section{Pipeline Hazards}
+The following sections descriptibes how the processor detects and corrects various hazards.
+
+\subsection{Structural Hazards}
+Structural hazards are avoided entirely with this design.
+The separation of instruction memory from data memory means that the IF stage may read the instruction memory concurrently with the WB stage reading or writing the data memory.
+
+\subsection{Data Hazards}
+\subsubsection{Forwarding}
+\label{sec:forwarding}
+When a result is calculated in the execute stage,
+it will be several cycles until it is ready to be read from a register by a dependent instruction.
+One solution to this problem is to stall the pipeline until the result is ready in the register,
+but this is not the most efficient solution.
+
+A better approach is to implement a forwarding scheme,
+making results in the MEM or WB stages available in earlier stages.
+
+A forwarding unit forwards data from MEM or WB stage, to the EX and the ID stage when needed.
+Figure \ref{fig:fwd_mux} and listing \ref{lst:select_source} illustrate the forwarding unit.
+This generic component is instantiated twice in the ID stage and twice in the EX stage.
+A register value and its associated register address comes from a previous stage.
+If the selecter unit detects that the selected register has an updated value in the MEM or WB stage,
+it will reroute this value to replace the value from the earlier stage.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.6\textwidth]{img/fwd_mux}
+    \caption{Forwarder multiplexer unit. Inputs on the right come from a later stage.}
+    \label{fig:fwd_mux}
+\end{figure}
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:select_source, caption=Source select logic]
+if MEM_reg_write = '1' and selected_register = MEM_reg_dst then
+    selected_source <= MEM;
+elsif WB_reg_write = '1' and selected_register = WB_reg_dst then
+    selected_source <= WB;
+else
+    selected_source <= DEFAULT;
+end if;
+        \end{lstlisting}
+    \end{minipage}
+}
+
+Figure \ref{fig:forwarders} shows the placement of the forwarders in the pipeline.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/forwarders}
+    \caption{Simplified overview of the parts of the pipeline involving forwarding. The green arrows represent inputs from later stages, and are the same for all forwarders.}
+    \label{fig:forwarders}
+\end{figure}
+
+\subsubsection{Stalling}
+\label{sec:hazard-detection}
+If there is a \textit{load word} instruction with an immediately following dependent instruction,
+forwarding can not solve the hazard, and a stall is required.
+
+To enable this a hazard detection unit is implemented in the processor.
+The unit detects data dependency bwereen a \texttt{lw} instruction in the EX stage and a dependent instruction is in the ID stage.
+The expression for this is shown in listing \ref{lst:hazard-detection-unit}.
+If this is the case is will hold the program counter value and the instruction in the IF to ID registers for one more cycle.
+The instruction passing from ID to EX will continue execution,
+but is replaced in the register afterwards with a no-op to avoid executing it twice.
+Once the \texttt{lw} instruction has passed the EX stage the stall condition is no longer valid,
+and the pipeline continues as normal.
+
+Figure \ref{fig:hazard-detection} shows the hazard detection unit inputs and what its output signal controls.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/hazard-detection}
+    \caption{
+      Overview of the hazard detection unit.
+    }
+    \label{fig:hazard-detection}
+\end{figure}
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:hazard-detection-unit, caption=Expression used to set stall control signal]
+stall <= '1' when
+  mem_read = '1' and (ex_rt = id_rs or ex_rt = id_rt) else '0';
+        \end{lstlisting}
+    \end{minipage}
+}
+
+\subsection{Control Hazards}
+When a branch is taken and changes the execution order the pipeline before the EX stage has to be flushed,
+replacing instructions with \texttt{no\_op} instructions.
+
+In the implementation there is a \texttt{flush} signal which is indicates when the pipline has to be flushed.
+The code from listing \ref{lst:control-hazard-detection} shows the case where the \texttt{flush} is asserted.
+When the \texttt{jump} signal is high, there is an inevitably jump.
+
+\noindent{
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=VHDL, label=lst:control-hazard-detection, caption=Control hazard detection]
+if MEM_control_signals.jump = '1' or (MEM_control_signals.branch = '1' and MEM_alu_zero = '1') then
+    flush_pipeline <= '1';
+        \end{lstlisting}
+    \end{minipage}
+}
+
+The \texttt{flush} signal is connected to the reset on the registers that are to be flushed,
+and the result of resetting these registers is a \texttt{no\_op}.
+

@@ -1,9 +1,10 @@
 \section{Pipeline Hazards}
 When implementing pipelining in a processor,
 there are complications that might arise that must be handled to ensure correct results.
-Instructions often depend on preceeding instructions,
-and if two instructions with some dependency between one another are in the pipeline at the same time, there is a hazard which must be handled.
-\textit{Patterson \& Hennessy} lists the following hazards
+Instructions often depend on preceding instructions,
+and if two instructions with some dependency between each other are in the pipeline at the same time,
+there is a \textit{hazard} which must be handled in a some way.
+\textit{Patterson \& Hennessy} lists the following pipeline hazards
 \cite[Chapter 4.5]{bib:patt-henn}:
 
 \begin{description}
@@ -12,12 +13,12 @@ and if two instructions with some dependency between one another are in the pipe
     E.g. with a shared instruction and data memory,
     instructions cannot be fetched at the same time as data is being written.
 \item[Data Hazards] \hfill \\
-    Instructions that modify some stateful object (e.g. registers) depend on the preceding instructions that also modify the same state object.
-    Executing an instruction before a dependency has finished will yield erroneuous results.
+    Instructions that use some value (i.e. registers) depend on the preceding instructions that modify the same state value.
+    Executing an instruction before without first receiving the new value for the dependency will yield erroneuous results.
 \item[Control Hazards] \hfill \\
     Also called \textbf{branch hazards}.
     When a branch instruction is executed,
     the next instruction to be executed may be one of two possibilities.
-    The pipeline must be able to react to a branch and flush instructions that are not to be executed from the pipeline.
+    The pipeline must be able to react to a branch and flush instructions that are not to be executed from the pipeline before the results of those instructions are committed.
 \end{description}
 
