@@ -1,6 +1,8 @@
 \section{Five-stage MIPS Pipeline}
 The \gls{mips} instruction set is designed to enable pipelining.
-A typical \gls{mips} pipeline has the following five stages:
+The pipeline that is described in this report is a typical \gls{mips} pipeline,
+with the following five stages:
+
 \begin{description}
     \item[Instruction Fetch (IF)]
         \hfill\\
@@ -20,8 +22,9 @@ A typical \gls{mips} pipeline has the following five stages:
         In this stage a value can be either read from or written to data memory.
 
         If the instruction is a jump or a branch that is taken,
-        this is the stage where the new program counter is calculated.
+        this is the stage where the new program counter will be set.
     \item[Write to Registers (WB)]
         \hfill\\
         In the final stage of the pipeline, a new value may be written to its destination register.
 \end{description}
+
