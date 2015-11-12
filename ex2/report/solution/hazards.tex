@@ -88,6 +88,7 @@ stall <= '1' when
 }
 
 \subsection{Control Hazards}
+The implementation doesn't do any branch prediction, it just assumes the branch is not taken.
 When a branch is taken and changes the execution order the pipeline before the EX stage has to be flushed,
 replacing instructions with \texttt{no\_op} instructions.
 
