@@ -33,8 +33,7 @@ architecture Behavioral of MIPSProcessor is
     signal flush_pipeline   : std_logic := '0';
     signal stall            : std_logic := '0';
     signal was_stalling     : std_logic := '0';
-
-    signal reset_or_flush : std_logic := '0';
+    signal reset_or_flush   : std_logic := '0';
 
     -- Fetch stage signals
     signal IF_pc_address        : pc_t;
@@ -176,8 +175,7 @@ begin
         end if;
     end process stalling;
 
-    -- only entity instantiations after this point
-    -- registers after the functional units
+    -- functional unit instantiations
 
     control : entity work.control
     port map(
@@ -191,27 +189,27 @@ begin
 
     alu : entity work.alu
     port map (
-        operation => EX_control_signals.alu_op,
-        operand_A => EX_operand_1,
-        operand_B => EX_operand_2,
-        shift_amount => EX_shift_amount,
-        result => EX_alu_result,
-        zero => EX_alu_zero
+        operation       => EX_control_signals.alu_op,
+        operand_A       => EX_operand_1,
+        operand_B       => EX_operand_2,
+        shift_amount    => EX_shift_amount,
+        result          => EX_alu_result,
+        zero            => EX_alu_zero
     );
 
     pc : entity work.pc
     port map (
-        clock => clock,
-        reset => reset,
-        stall => stall,
-        processor_enable => processor_enable,
-        jump => MEM_control_signals.jump,
-        branch => MEM_control_signals.branch,
-        alu_zero => MEM_alu_zero,
-        pc_incremented => IF_pc_incremented,
-        jump_address => MEM_jump_address,
-        branch_address => MEM_branch_address,
-        pc_out => IF_pc_address
+        clock               => clock,
+        reset               => reset,
+        stall               => stall,
+        processor_enable    => processor_enable,
+        jump                => MEM_control_signals.jump,
+        branch              => MEM_control_signals.branch,
+        alu_zero            => MEM_alu_zero,
+        pc_incremented      => IF_pc_incremented,
+        jump_address        => MEM_jump_address,
+        branch_address      => MEM_branch_address,
+        pc_out              => IF_pc_address
     );
 
     EX_pc : entity work.EX_pc
@@ -225,30 +223,30 @@ begin
 
     registers : entity work.registers
     port map (
-        clock => clock,
+        clock           => clock,
         read_register_1 => rs(ID_instruction),
         read_register_2 => rt(ID_instruction),
-        write_register => WB_write_register,
-        write_data => WB_write_data,
-        read_data_1 => ID_reg_out_1,
-        read_data_2 => ID_reg_out_2,
-        register_write => WB_control_signals.reg_write
+        write_register  => WB_write_register,
+        write_data      => WB_write_data,
+        read_data_1     => ID_reg_out_1,
+        read_data_2     => ID_reg_out_2,
+        register_write  => WB_control_signals.reg_write
     );
 
     immediate_value_transform : entity work.immediate_value_transform
     port map (
-        transform => ID_immediate_value_transform,
-        in_value => i_value(ID_instruction),
-        out_value => ID_immediate_value_transformed
+        transform   => ID_immediate_value_transform,
+        in_value    => i_value(ID_instruction),
+        out_value   => ID_immediate_value_transformed
     );
 
     hazard_detection_unit : entity work.hazard_detection_unit
     port map (
-        mem_read => EX_forward_MEM_signals.mem_read,
-        ex_rt => EX_rt,
-        id_rt => rt(ID_instruction),
-        id_rs => rs(ID_instruction),
-        stall => stall
+        mem_read    => EX_forward_MEM_signals.mem_read,
+        ex_rt       => EX_rt,
+        id_rt       => rt(ID_instruction),
+        id_rs       => rs(ID_instruction),
+        stall       => stall
     );
 
     flusher: entity work.flusher
@@ -269,6 +267,7 @@ begin
     port map(reset => reset_or_flush, clock => clock, write_enable => not stall, in_value => IF_pc_incremented, out_value => ID_pc_address);
 
     -- slow memory module, bypass the synchronous registers
+    -- also an intentional latch when stalling
     ID_instruction <= imem_data_in when was_stalling = '0' else ID_instruction;
 
     -----------------------------------------------------------------
