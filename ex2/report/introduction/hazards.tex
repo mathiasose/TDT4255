@@ -14,11 +14,10 @@ there is a \textit{hazard} which must be handled in a some way.
     instructions cannot be fetched at the same time as data is being written.
 \item[Data Hazards] \hfill \\
     Instructions that use some value (i.e. registers) depend on the preceding instructions that modify the same value.
-    Executing an instruction without first receiving the new value for the dependency will yield erroneuous results.
+    Executing an instruction without first receiving the new value for the dependency will yield incorrect results.
 \item[Control Hazards] \hfill \\
     Also called \textbf{branch hazards}.
     When a branch instruction is executed,
     the next instruction to be executed may be one of two possibilities.
     The pipeline must be able to react to a branch and flush instructions that are not to be executed from the pipeline before the results of those instructions are committed.
 \end{description}
-

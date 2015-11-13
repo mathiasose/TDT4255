@@ -1,9 +1,14 @@
 \section{Performance}
 With a pipelined design,
-the processor achieves a higher max frequency compared to the multi-cycle design.
-The processor is also able to execute one instruction per clock cycle most of the time.
-These improvements together means a major performance improvement over the multi-cycle processor design.
+the processor achieves a slightly higher max frequency compared to the multi-cycle design.
+Even though the max frequency has not increased considerably,
+the number of instructions per cycle has increased greatly with the new design.
+These improvements together means a noticeable performance improvement over the multi-cycle processor design.
 
+The group does not have enough experience with the synthesis report from \textit{Xilinx ISE} to determine were the design could have been optimized.
+Given more time, increasing clock frequency would have been prioritized.
+
+The processor is able to execute one instruction per clock cycle most of the time.
 The exceptions to the one instruction per clock cycle rule are:
 \begin{itemize}
     \item \textit{Load word} instructions with an immediately following data dependent instruction,
@@ -11,4 +16,3 @@ The exceptions to the one instruction per clock cycle rule are:
     \item \textit{Jump} or taken \textit{branch} instructions,
         where the processor has to flush three stages.
 \end{itemize}
-

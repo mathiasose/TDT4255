@@ -1,4 +1,4 @@
-\chapter{Architecture Suggestions}
+\chapter{Architecture Sketches}
 \label{app:architecture}
 
 \begin{figure}[h]
@@ -19,3 +19,33 @@
     \label{fig:book_architecture}
 \end{figure}
 
+\chapter{Instruction Set Architecture}
+\label{app:isa}
+\begin{table}[h]
+  \centering
+    \begin{tabular}{l|c|c}
+    Instruction & Type & Required \\ \hline
+    ADD         & R    & X        \\
+    SUB         & R    & X        \\
+    ADDI        & I    & -        \\
+    AND         & R    & X        \\
+    OR          & R    & X        \\
+    NOR         & R    & -        \\
+    XOR         & R    & -        \\
+    ANDI        & I    & -        \\
+    ORI         & I    & -        \\
+    XORI        & I    & -        \\
+    SLL         & R    & -        \\
+    SRL         & R    & -        \\
+    SRA         & R    & -        \\
+    SLT         & R    & X        \\
+    SLTI        & I    & -        \\
+    J           & J    & X        \\
+    BEQ         & I    & X        \\
+    LUI         & I    & X        \\
+    LW          & I    & X        \\
+    SW          & I    & X        \\
+    \end{tabular}
+    \caption {Implented instruction set}
+    \label{table:instruction-types}
+\end{table}

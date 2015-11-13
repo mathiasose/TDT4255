@@ -2,7 +2,7 @@
 The following sections descriptibes how the processor detects and corrects various hazards.
 
 \subsection{Structural Hazards}
-Structural hazards are avoided entirely with this design.
+Structural hazards are avoided entirely in the implemented design.
 The separation of instruction memory from data memory means that the IF stage may read the instruction memory concurrently with the WB stage reading or writing the data memory.
 
 \subsection{Data Hazards}
@@ -22,6 +22,8 @@ This generic component is instantiated twice in the ID stage and twice in the EX
 A register value and its associated register address comes from a previous stage.
 If the selecter unit detects that the selected register has an updated value in the MEM or WB stage,
 it will reroute this value to replace the value from the earlier stage.
+
+Figure \ref{fig:forwarders} shows the placement of the forwarders in the pipeline.
 
 \begin{figure}[h]
     \centering
@@ -43,8 +45,6 @@ end if;
         \end{lstlisting}
     \end{minipage}
 }
-
-Figure \ref{fig:forwarders} shows the placement of the forwarders in the pipeline.
 
 \begin{figure}[h]
     \centering
@@ -105,4 +105,3 @@ if jump = '1' or (branch = '1' and alu_zero = '1') then
 
 The \texttt{flush} signal is connected to the reset on the registers that are to be flushed,
 and the result of resetting these registers is a \texttt{no\_op}.
-
