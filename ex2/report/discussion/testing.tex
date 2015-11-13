@@ -1,11 +1,11 @@
 \section{Test Coverage}
-A pipelined processor introduces new hazards in the design as mentioned earlier.
-During development testbenches for each hazard were created to make sure they were properly handled.
-Each testbench requires a specific method to handle a specific hazard.
+During development testbenches for each hazard correction method were created to make sure they were properly handled.
+Each testbench tests a specific method to handle a specific hazard.
 
-The provided testbench contains multiple hazards and tests that the different hazard mitigation methods work together.
+The provided testbench contains multiple hazards and tests that the different hazard correction methods work together.
 %Towards the end of development all the given tests passed, but the results on the FPGA was wrong.
 %We discovered that the system test didn't cover all the hazard cases.
 
 For better test coverage we could have created more programs for system testing,
-to test the interaction between more instructions, hazards and hazard mitigations methods.
+to test the interaction between more instructions, hazards and hazard correction methods.
+

@@ -2,8 +2,7 @@
 \subsection{Simulated Testbenches}
 For the modules that were reused from exercise 1,
 the associated testbenches were also reused.
-When modules were modified,
-so were the tests.
+Changes to the modules were followed by changes to the associated testbench.
 
 In addition to the provided processor testbench,
 there are three separate testbenches created that each test the pipeline's ability to handle a specific hazard.
@@ -43,7 +42,7 @@ and where the ID stage needs register values before they are written.
     10 & ~                 & ~                                   & ~                                                       & sw \$5, 5(\$0)                        & sw \$4, 4(\$0)   \\
     11 & ~                 & ~                                   & ~                                                       & ~                                     & sw \$5, 5(\$0)   \\
     \end{tabular}
-\caption{Pipeline containing RAW hazards}
+\caption{Pipeline containing RAW hazards requiring forwarding to correct.}
 \label{tbl:forwarding}
 \end{table}
 
@@ -58,14 +57,14 @@ Because forwarding has also been implemented, only one cycle of stalling is requ
     PC & IF                & ID                & EX                & MEM               & WB                \\ \hline
     0  & lw \$1, 2(\$0)    & ~                 & ~                 & ~                 & ~                 \\
     1  & add \$1, \$1, \$1 & lw \$1, 2(\$0)    & ~                 & ~                 & ~                 \\
-    2  & sw \$1, 3(\$0)    & add \$1, \$1, \$1 & lw \$1, 2(\$0)    & ~                 & ~                 \\
+        2  & sw \$1, 3(\$0)    & add \$1, \textcolor{red}{\$1}, \textcolor{red}{\$1} & lw \textcolor{red}{\$1}, 2(\$0)    & ~                 & ~                 \\
     2  & sw \$1, 3(\$0)    & add \$1, \$1, \$1 & ~                 & lw \$1, 2(\$0)    & ~                 \\
     3  & ~                 & sw \$1, 3(\$0)    & add \$1, \$1, \$1 & ~                 & lw \$1, 2(\$0)    \\
     4  & ~                 & ~                 & sw \$1, 3(\$0)    & add \$1, \$1, \$1 & ~                 \\
     5  & ~                 & ~                 & ~                 & sw \$1, 3(\$0)    & add \$1, \$1, \$1 \\
     6  & ~                 & ~                 & ~                 & ~                 & sw \$1, 3(\$0)    \\
     \end{tabular}
-\caption{Pipeline containing structural hazards}
+\caption{Pipeline containing a RAW hazard that requires stalling to correct.}
 \label{tbl:stalling}
 \end{table}
 
@@ -89,13 +88,16 @@ the instructions from the wrong branch are flushed.
 \label{tbl:branching}
 \end{table}
 
+\newpage
 \subsection{Testing on an FPGA}
-The test program from exercise 1 was reused when implementing the new processor design on an FPGA.
+The test program from exercise 1 was reused when implementing the new processor design on an \gls{fpga}.
+After ensuring all the testbenches described above passed,
+the \gls{fpga} version also produced correct results.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{img/hostcomm}
-    \caption{Resulting date memory loaded from FPGA after running the pipelined processor implementation with the test program.}
+    \caption{Resulting date memory loaded from the FPGA after running the pipelined processor implementation with the test program.}
     \label{fig:hostcomm}
 \end{figure}
 

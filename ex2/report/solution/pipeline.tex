@@ -11,7 +11,7 @@ Thus the clock frequency of the entire processor is dependent upon the time it t
 \subsection{Pipeline Stages}
 Figure~\ref{fig:architecture} illustrates which components are used by each pipeline stage.
 The forwarding unit and the hazard detection unit is left out to simplify the figure.
-These modules are described in sections \ref{sec:forwarding} and \ref{sec:hazard-detection}.
+These modules are described in section \ref{sec:data-hazards}.
 
 \begin{figure}[h]
     \centering
@@ -45,7 +45,14 @@ these outputs bypass registers and will arrive directly from the output of the m
 \subsubsection{VHDL Register Modules}
 The values that pass through the registers are of different sizes,
 from 32-bit instructions and operands to single bit signals.
-Registers for these values are implemented in \gls{vhdl} as generic components that can be re-used.
+The registers for these transfers are implemented in \gls{vhdl} as generic components that can be re-used.
+
+With the exception of the type of data they hold,
+all the registers are the same.
+They have an asynchronous reset that can be used both for a system reset and a pipeline flush,
+they take in an input on each rising clock edge.
+They also have a write enable input that defaults to enable,
+but can be deasserted to hold the current value instead of replacing it with input.
 
 \begin{description}
     \item[\texttt{bit\_register}]

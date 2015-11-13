@@ -13,8 +13,8 @@ there is a \textit{hazard} which must be handled in a some way.
     E.g. with a shared instruction and data memory,
     instructions cannot be fetched at the same time as data is being written.
 \item[Data Hazards] \hfill \\
-    Instructions that use some value (i.e. registers) depend on the preceding instructions that modify the same state value.
-    Executing an instruction before without first receiving the new value for the dependency will yield erroneuous results.
+    Instructions that use some value (i.e. registers) depend on the preceding instructions that modify the same value.
+    Executing an instruction without first receiving the new value for the dependency will yield erroneuous results.
 \item[Control Hazards] \hfill \\
     Also called \textbf{branch hazards}.
     When a branch instruction is executed,
