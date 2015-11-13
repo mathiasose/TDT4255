@@ -1,0 +1,30 @@
+\section{Five-stage MIPS Pipeline}
+The \gls{mips} instruction set is designed to enable pipelining.
+The pipeline that is described in this report is a typical \gls{mips} pipeline,
+with the following five stages:
+
+\begin{description}
+    \item[Instruction Fetch (IF)]
+        \hfill\\
+        In this stage the instruction memory receives an address and outputs the corresponding instruction.
+    \item[Instruction Decode (ID)]
+        \hfill\\
+        In this stage the instruction that was read in the IF stage is decoded.
+        Control signal values are determined here that will be used in the following pipeline stages.
+
+        It is also in this stage that registers are read,
+        and the read values are passed to the next stage.
+    \item[Execute Instruction (EX)]
+        \hfill\\
+        In this stage the \gls{alu} receives its input values and operation and outputs a result.
+    \item[Memory Access (MEM)]
+        \hfill\\
+        In this stage a value can be either read from or written to data memory.
+
+        If the instruction is a jump or a branch that is taken,
+        this is the stage where the new program counter will be set.
+    \item[Write to Registers (WB)]
+        \hfill\\
+        In the final stage of the pipeline, a new value may be written to its destination register.
+\end{description}
+

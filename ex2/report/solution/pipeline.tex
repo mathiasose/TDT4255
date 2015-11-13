@@ -1,0 +1,70 @@
+\section{Pipelined Design}
+A pipelined processor requires synchronous separation between the different stages.
+When a clock cycle begins,
+each stage must get some input, process it, then output the result by the end of the cycle.
+The next stage gets its next cycle input from the previous stage output.
+
+This is implemented by adding registers between the executing units of the stages.
+Each stage reads its input register at the beginning of the cycle and writes its result to an output register which is the input register for the next stage.
+Thus the clock frequency of the entire processor is dependent upon the time it takes for the slowest stage to read input, process it, then write output.
+
+\subsection{Pipeline Stages}
+Figure~\ref{fig:architecture} illustrates which components are used by each pipeline stage.
+The forwarding unit and the hazard detection unit is left out to simplify the figure.
+These modules are described in section \ref{sec:data-hazards}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/architecture}
+    \caption{
+      Simplified overview of the architecture.
+    }
+    \label{fig:architecture}
+\end{figure}
+
+\noindent
+During development, the group used two design sketches for reference.
+These are attached to the report in appendix \ref{app:architecture}.
+
+\subsubsection{Resources Shared by Stages}
+One thing to note in figure \ref{fig:architecture} is that the PC module and the registers module take inputs from multiple stages.
+The PC module will select the input from MEM if a control signal is asserted,
+or else it defaults to the input from the IF stage.
+For the registers module,
+the input from the ID stage is asking to read registers, while the input from the WB stage is writing to a register.
+The registers module is designed to allow these actions concurrently.
+This way structural hazards are avoided.
+
+\subsection{Information-passing Between Stages}
+The registers simplified as yellow blocks in figure \ref{fig:architecture} are implemented as separate entities of the same VHDL sources.
+
+The outputs from the instruction and data memories are the slowest part of the pipeline.
+To avoid having to wait too long between cycles,
+these outputs bypass registers and will arrive directly from the output of the memory to the next stage.
+
+\subsubsection{VHDL Register Modules}
+The values that pass through the registers are of different sizes,
+from 32-bit instructions and operands to single bit signals.
+The registers for these transfers are implemented in \gls{vhdl} as generic components that can be re-used.
+
+With the exception of the type of data they hold,
+all the registers are the same.
+They have an asynchronous reset that can be used both for a system reset and a pipeline flush,
+they take in an input on each rising clock edge.
+They also have a write enable input that defaults to enable,
+but can be deasserted to hold the current value instead of replacing it with input.
+
+\begin{description}
+    \item[\texttt{bit\_register}]
+        \hfill\\
+        Holds a single bit value.
+    \item[\texttt{generic\_register}]
+        \hfill\\
+        Has a generic \texttt{WIDTH} property that is specified when an entity is created.
+        Holds a bit vector of the specified width.
+    \item[\texttt{EX\_register}, \texttt{MEM\_register}, \texttt{WB\_register}]
+        \hfill\\
+        These special registers hold the record control signal bundles that the control module outputs.
+        These registers can be seen in figure \ref{fig:suggested_architecture} labeled EX, M and WB.
+\end{description}
+
